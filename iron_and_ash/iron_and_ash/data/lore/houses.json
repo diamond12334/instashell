@@ -1,0 +1,176 @@
+[
+  {
+    "id": "house_stark",
+    "name": "House Stark of Winterfell",
+    "summary": "Kings of Winter for eight thousand years, now Wardens of the North.",
+    "facts": {"Words": "Winter is Coming", "Sigil": "A grey direwolf on ice-white", "Seat": "Winterfell"},
+    "tags": ["north", "first men", "old gods", "great house"],
+    "body": [
+      "The Starks trace their line to Brandon the Builder, who in the Age of Heroes is said to have raised both Winterfell and the Wall with the help of giants and the children of the forest. For eight thousand years they ruled as Kings of Winter, warring down rival kings one by one - the Red Kings of the Dreadfort, the Marsh Kings of the Neck, the Kings of the Barrowlands - until all the North bent the knee to Winterfell.",
+      "When Aegon the Conqueror came with dragons, King Torrhen Stark marched south with his banners, saw the ashes of the Field of Fire, and knelt rather than see his people burn. Men named him the King Who Knelt, but his kneeling preserved the North whole, and the Starks have ruled it since as Lords of Winterfell and Wardens of the North.",
+      "The Starks keep the old gods and the old ways. Their dead sit in the dark of the crypts below Winterfell, stone direwolves at their feet and iron swords across their knees to keep the vengeful spirits within. Alone among the great houses they still hold to the custom that the man who passes the sentence should swing the sword. Their words are no boast but a warning, the only such words among the great houses: Winter is Coming."
+    ]
+  },
+  {
+    "id": "house_lannister",
+    "name": "House Lannister of Casterly Rock",
+    "summary": "The richest house in Westeros, lions of the golden Rock.",
+    "facts": {"Words": "Hear Me Roar", "Sigil": "A golden lion on crimson", "Seat": "Casterly Rock"},
+    "tags": ["westerlands", "andal", "gold", "great house"],
+    "body": [
+      "The Lannisters descend, they claim, from Lann the Clever, the golden-haired trickster of the Age of Heroes who winkled Casterly Rock from the Casterlys armed with nothing but his wits. The Rock sits above the richest gold mines in the known world, and the wealth of the west has flowed through Lannister hands for thousands of years - first as Kings of the Rock, then, after Loren the Last knelt to Aegon on the Field of Fire, as Lords Paramount of the Westerlands.",
+      "The lion's pride has been humbled more than once. In the years of the weak lord Tytos, his own bannermen mocked him openly, until his son Tywin drowned the revolt of the Reynes of Castamere and the Tarbecks so utterly that a singer's song about it is now worth more than an army. When Lannister harpers play 'The Rains of Castamere,' silence falls, for every lord in Westeros knows what the song means.",
+      "Gold buys much, and the Lannisters have never been shy of spending it - on crowns, on alliances, on debts owed to them by kings. It is said of them, half in envy and half in fear, that a Lannister always pays his debts. The words are not their house words, but they are the ones men remember."
+    ]
+  },
+  {
+    "id": "house_targaryen",
+    "name": "House Targaryen of Dragonstone",
+    "summary": "The blood of old Valyria, dragonlords who forged the Seven Kingdoms into one.",
+    "facts": {"Words": "Fire and Blood", "Sigil": "A three-headed red dragon on black", "Seat": "Dragonstone; later the Red Keep"},
+    "tags": ["valyria", "dragons", "crownlands", "great house"],
+    "body": [
+      "The Targaryens were dragonlords of the Valyrian Freehold, one of forty such families - and far from the greatest - until Daenys the Dreamer foresaw the Doom. Her father Aenar sold his holdings and removed his family, his dragons, and his gods to the bleak island of Dragonstone at the edge of the world. Twelve years later Valyria was destroyed in a single day, and the Targaryens were suddenly the last dragonlords on earth.",
+      "A century after the Doom, Aegon Targaryen and his sister-wives Visenya and Rhaenys landed at the mouth of the Blackwater with three dragons and a dream, and in two years of fire broke six of the seven kingdoms to their will. Aegon melted the swords of his defeated foes into a throne of blades, and for nearly three hundred years his descendants sat upon it, wedding brother to sister in the Valyrian fashion to keep the dragon's blood pure.",
+      "Greatness and madness ran twinned in the line; it was said that when a Targaryen was born, the gods flipped a coin. The dragons themselves dwindled and died after the ruinous civil war called the Dance of the Dragons, and without them the dynasty was mortal. It ended with Aerys the Second, the Mad King, whose cruelties raised the realm against him and whose fall gave the throne to the stag."
+    ]
+  },
+  {
+    "id": "house_baratheon",
+    "name": "House Baratheon of Storm's End",
+    "summary": "The youngest of the great houses, storm-born and strong, now royal.",
+    "facts": {"Words": "Ours is the Fury", "Sigil": "A crowned black stag on gold", "Seat": "Storm's End"},
+    "tags": ["stormlands", "rebellion", "great house"],
+    "body": [
+      "The youngest of the great houses, the Baratheons were founded during Aegon's Conquest by Orys Baratheon, the Conqueror's fiercest commander and, men whispered, his bastard half-brother. When Orys slew Argilac the Arrogant, last Storm King of the ancient Durrandon line, he took Argilac's castle, his daughter, and his sigil and words for his own - so the fury of the storm kings runs on in Baratheon blood.",
+      "Storm's End itself is older than the house that holds it, raised - the tales say - by Durran Godsgrief, who wed the daughter of the sea god and the wind goddess and defied her parents' storms through seven castles until the seventh stood. Its single massive curtain wall has never been breached by storm, siege, or sorcery.",
+      "The stag was crowned when Robert Baratheon, wronged by the Mad King and burning for Lyanna Stark, raised his warhammer in rebellion and crushed the dragon on the Trident. Robert's claim ran through his Targaryen grandmother, but as he himself was heard to say, it was the hammer that made him king."
+    ]
+  },
+  {
+    "id": "house_tyrell",
+    "name": "House Tyrell of Highgarden",
+    "summary": "Wardens of the South, masters of the Reach's boundless wealth and chivalry.",
+    "facts": {"Words": "Growing Strong", "Sigil": "A golden rose on green", "Seat": "Highgarden"},
+    "tags": ["reach", "andal", "chivalry", "great house"],
+    "body": [
+      "For thousands of years the Tyrells served as high stewards to the Gardener kings of the Reach, who claimed descent from Garth Greenhand himself. When King Mern the Ninth and every Gardener of his line burned on the Field of Fire, the steward Harlen Tyrell yielded Highgarden to Aegon - and was raised to lord of it, over the bitter and enduring objections of houses like the Florents who claimed better blood.",
+      "What the Tyrells lack in ancient right they repay in abundance. The Reach is the richest and most populous of the Seven Kingdoms, its fields feed half the realm, and Highgarden can call more swords to its banners than any lord save perhaps the Rock. The Reach is likewise the heartland of chivalry, where knighthood, tourneys, and courtesy are practiced as high arts.",
+      "The golden rose has thorns, for all its courtesies. The Tyrells have proved patient players of the great game, growing strong - as their words promise - by marriage, stewardship, and knowing which way the wind blows before it turns."
+    ]
+  },
+  {
+    "id": "house_martell",
+    "name": "House Nymeros Martell of Sunspear",
+    "summary": "Princes of Dorne, the one kingdom the dragons never conquered.",
+    "facts": {"Words": "Unbowed, Unbent, Unbroken", "Sigil": "A red sun pierced by a golden spear", "Seat": "Sunspear"},
+    "tags": ["dorne", "rhoynar", "great house"],
+    "body": [
+      "When the warrior-queen Nymeria led ten thousand ships of Rhoynar refugees across the world to escape Valyria's dragons, she landed in Dorne and wed Mors Martell, a minor lord of the coast. She burned her ships so her people could not look back, and together the Martells and the Rhoynar conquered all of Dorne. From that union the house styles itself Nymeros Martell, and its rulers are called Prince and Princess in the Rhoynish fashion, not lord.",
+      "Dorne alone of the Seven Kingdoms was never conquered. Aegon's dragons burned its castles, but the Dornish melted into their deserts and mountains and made the occupation a bleeding wound until the dragons gave it up. Dorne joined the realm a century later by marriage, not by conquest, and on its own terms - keeping its princely titles and its own laws, under which the eldest child inherits, daughter or son alike.",
+      "The Dornish are a people apart - Rhoynish blood mingled with the First Men and Andals, hotter of temper, freer in custom, and long of memory. Their words are unique among the great houses in describing not what they threaten, but what they are: Unbowed, Unbent, Unbroken."
+    ]
+  },
+  {
+    "id": "house_greyjoy",
+    "name": "House Greyjoy of Pyke",
+    "summary": "Lords Reaper of Pyke, keepers of the Old Way and the iron price.",
+    "facts": {"Words": "We Do Not Sow", "Sigil": "A golden kraken on black", "Seat": "Pyke"},
+    "tags": ["iron islands", "drowned god", "reavers", "great house"],
+    "body": [
+      "The Greyjoys of Pyke claim descent from the Grey King of the Age of Heroes, who is said to have wed a mermaid, slain the sea dragon Nagga, and ruled the Iron Islands for a thousand years from a hall made of the dragon's bones. In the old days the ironborn chose their kings at a kingsmoot on Old Wyk, where any captain who owned a ship might put himself forward for the driftwood crown.",
+      "The islands' true faith is the Old Way: the creed that an ironman pays the iron price, taking what he needs from the men he kills rather than buying it with gold like a kneeler. Under the Old Way the longships of the isles harried every coast of Westeros, and ironborn kings once held the riverlands itself - until Black Harren of House Hoare finished his great castle of Harrenhal on the very day Aegon's dragons came to burn him in it.",
+      "With the Hoares extinguished, Aegon let the ironborn choose their own lord paramount, and they chose Vickon Greyjoy of Pyke. The kraken has chafed under the greenland yoke ever since. Within living memory Balon Greyjoy crowned himself king and rose in rebellion, and saw his fleets burned, his walls broken, and his last living son carried off a hostage for his obedience."
+    ]
+  },
+  {
+    "id": "house_tully",
+    "name": "House Tully of Riverrun",
+    "summary": "Lords Paramount of the Trident, raised by rebellion, bound by family, duty, honor.",
+    "facts": {"Words": "Family, Duty, Honor", "Sigil": "A leaping silver trout on red and blue", "Seat": "Riverrun"},
+    "tags": ["riverlands", "andal", "great house"],
+    "body": [
+      "Alone among the great houses, the Tullys were never kings. The riverlands, rich and flat and open, have been the battleground of Westeros since the Dawn Age, ruled in turn by river kings, storm kings, and at the last the ironborn under the black line of Hoare. When Aegon the Conqueror landed, it was Edmyn Tully of Riverrun who first raised his banners against Harren the Black - and after Harren burned, Aegon raised the Tullys over all the lords of the Trident.",
+      "Riverrun is a three-sided castle at the joining of the Tumblestone and the Red Fork, and in war its sluice gates can be opened to flood the channel and make the castle an island, all but impossible to storm. The Tullys bury their dead in the rivers themselves, sending them downstream in burning boats.",
+      "Their words - Family, Duty, Honor - are a creed rather than a threat, and Tully lords have long practiced the statecraft of marriage, binding the quarrelsome river lords and greater houses alike to Riverrun by blood. It has made them kin to half the realm, which in peace is a strength and in war a tearing wound."
+    ]
+  },
+  {
+    "id": "house_arryn",
+    "name": "House Arryn of the Eyrie",
+    "summary": "The oldest and purest line of Andal nobility, kings of mountain and vale.",
+    "facts": {"Words": "As High as Honor", "Sigil": "A white moon-and-falcon on sky-blue", "Seat": "The Eyrie"},
+    "tags": ["vale", "andal", "great house"],
+    "body": [
+      "The Arryns descend from Ser Artys Arryn, the Falcon Knight, who by legend flew a giant falcon to the peak of the Giant's Lance and slew the Griffin King, winning the Vale for the Andals. The house boasts the oldest and purest Andal blood in Westeros, and for thousands of years its members ruled as Kings of Mountain and Vale.",
+      "Their seat, the Eyrie, is a castle of white stone perched on a shoulder of the Giant's Lance high above the Vale, reachable only by a narrow track past three waycastles. It is small, and cruel in winter - the household descends to the Gates of the Moon when the snows come - but in all its history it has never once been taken by storm.",
+      "The Vale's mountain clans - the descendants of the First Men driven into the heights by the Andal conquest - still raid the high roads, unbowed after six thousand years. The Arryns hold the Bloody Gate against the world, and hold themselves to their words: As High as Honor."
+    ]
+  },
+  {
+    "id": "house_bolton",
+    "name": "House Bolton of the Dreadfort",
+    "summary": "The flayed man of the Dreadfort - the Starks' oldest and darkest rivals.",
+    "facts": {"Sigil": "A flayed man on pink", "Seat": "The Dreadfort"},
+    "tags": ["north", "first men", "minor house"],
+    "body": [
+      "For thousands of years the Red Kings of House Bolton warred against the Kings of Winter, and the tales of those wars are not told to children. The Boltons flayed their enemies - some say they wore their skins as cloaks, and that flayed Stark skins hung in the cellars of the Dreadfort within recent centuries. Their sigil does not deny it.",
+      "The Boltons bent the knee to Winterfell a thousand years ago, the last of the northern kings to do so, and have been outwardly loyal bannermen since, though flaying was outlawed in the North and the Dreadfort keeps its own counsel. It is an article of northern wisdom, seldom spoken above a whisper, that the Boltons' loyalty lasts exactly as long as Stark strength does."
+    ]
+  },
+  {
+    "id": "house_frey",
+    "name": "House Frey of the Crossing",
+    "summary": "Upstart lords of the Twins, grown rich on six hundred years of bridge tolls.",
+    "facts": {"Sigil": "Two blue towers joined by a bridge, on grey", "Seat": "The Twins"},
+    "tags": ["riverlands", "minor house"],
+    "body": [
+      "Six hundred years ago the Freys raised a bridge over the narrowest crossing of the Green Fork, and then a castle on either bank to guard it - and to charge for it. The Twins have made them rich, for their bridge is the only crossing of the river for hundreds of leagues, and armies and merchants alike must pay the Freys' toll or ride weeks out of their way.",
+      "Wealth has not bought respect. The older river houses regard the Freys as jumped-up toll collectors, and their liege lords the Tullys have found them grudging and late in their duty - it is said the Lord of the Crossing brought his levies to the Trident only when the battle was safely won. Lord Walder Frey has outlived seven wives and sired more descendants than any lord in Westeros, and keeps count of every slight ever paid him."
+    ]
+  },
+  {
+    "id": "house_mormont",
+    "name": "House Mormont of Bear Island",
+    "summary": "Poor in gold, rich in honor - the bears of the northern sea.",
+    "facts": {"Words": "Here We Stand", "Sigil": "A black bear in a green wood", "Seat": "Bear Island"},
+    "tags": ["north", "first men", "minor house"],
+    "body": [
+      "Bear Island is a cold, remote place of gnarled oaks and old pines, granted to the Mormonts - legend says - when a King of Winter won it from the Greyjoys in a wrestling match. Its people are poor, hardy, and often raided by ironborn and wildlings alike, which is why Mormont women learn the axe as well as the needle: a carving on their gate shows a woman in a bearskin with a babe in one arm and a battleaxe in the other.",
+      "What the Mormonts lack in wealth they hold in honor. Their loyalty to Winterfell is a byword in the North, and the house has given the Night's Watch some of its finest officers. They keep a Valyrian steel blade, Longclaw, passed down five hundred years - a treasure many richer houses would kill for, held by a house too proud to sell it."
+    ]
+  },
+  {
+    "id": "house_reed",
+    "name": "House Reed of Greywater Watch",
+    "summary": "Crannogmen of the Neck, whose moving castle no enemy has ever found.",
+    "facts": {"Sigil": "A black lizard-lion on grey-green", "Seat": "Greywater Watch"},
+    "tags": ["north", "first men", "crannogmen", "minor house"],
+    "body": [
+      "The crannogmen dwell in the vast swamp called the Neck, in houses of woven reeds raised on stilts and floating islands. Small and quiet, they fight with nets, poisoned arrows, and patience, and larger folk who mock them as frog-eaters have a way of disappearing into the bogs. Their lords, the Reeds, are said to keep closer to the old ways than any house in the North, and the old tales credit them with greensight and stranger gifts.",
+      "Greywater Watch, their seat, is built upon a crannog that moves upon the waters, and neither raven nor army has ever found it twice. The Neck itself is the North's great shield: the causeway through it is narrow, sucking bog to either side, and the crannogmen have bled every southron host that ever tried it. The Reeds swear their oaths to Winterfell by earth and water, bronze and iron, ice and fire."
+    ]
+  },
+  {
+    "id": "house_umber",
+    "name": "House Umber of Last Hearth",
+    "summary": "Huge, loud, and fierce - the northmost lords below the Wall.",
+    "facts": {"Sigil": "A roaring giant in shattered chains, on flame-red", "Seat": "Last Hearth"},
+    "tags": ["north", "first men", "minor house"],
+    "body": [
+      "The Umbers hold the lands between the Last River and the Wall, the harshest seat of any lordly house in the Seven Kingdoms. They claim descent from giants, and looking at an Umber it is hard to argue: the men of the house run to enormous size, enormous voices, and enormous appetites in all things.",
+      "Living hard against the Gift, the Umbers bear the brunt of every wildling raid that slips the Wall, and their hatred of the free folk is old and personal. For all their bluster they are bone-loyal to Winterfell - though an Umber's loyalty is a thing a Stark must sometimes wrestle for, and be respected the more for winning."
+    ]
+  },
+  {
+    "id": "house_manderly",
+    "name": "House Manderly of White Harbor",
+    "summary": "Exiles from the Reach who built the North's only city, keeping the Seven in the land of the old gods.",
+    "facts": {"Sigil": "A white merman with trident, on blue-green", "Seat": "New Castle, White Harbor"},
+    "tags": ["north", "andal", "faith", "minor house"],
+    "body": [
+      "A thousand years ago the Manderlys were mighty lords of the Mander in the Reach, until the Gardener kings, fearing their power, drove them out. The Starks took the exiles in and granted them the mouth of the White Knife, and the Manderlys have repaid that debt with a thousand years of unbroken loyalty - a debt they still speak of as if it were sworn yesterday.",
+      "White Harbor, their seat, is the North's only true city: small beside Oldtown or King's Landing, but clean, prosperous, and white-walled, guarding the North's trade. The Manderlys alone among the great northern houses keep the Faith of the Seven, and the Sept of the Snows stands in their city - yet no northern house is quicker to call the Starks their liege. They are fat, rich, and shrewd, and only fools take the first two for the whole of the tale."
+    ]
+  }
+]

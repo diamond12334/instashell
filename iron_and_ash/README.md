@@ -99,6 +99,33 @@ memory-aware conversations, skill checks, quest hooks, and rippling consequences
 The systems are built to be extended — regions, NPCs, houses, quests, and traits are
 all data-driven.
 
+### The lore library
+
+An in-depth, structured lore codex lives in `iron_and_ash/data/lore/` as JSON —
+**70+ original-prose entries** across seven categories:
+
+- **Houses** — the nine great houses plus notable minor houses (Bolton, Frey,
+  Mormont, Reed, Umber, Manderly), each with words, sigil, seat, and a full history.
+- **History** — a timeline from the Dawn Age through the Long Night, the Andal
+  invasion, Valyria and its Doom, Aegon's Conquest, the Dance of the Dragons, the
+  Blackfyre Rebellions, and Robert's Rebellion.
+- **Faiths** — the old gods, the Seven, the Drowned God, R'hllor, and the
+  Many-Faced God, each in depth.
+- **Places** — Winterfell, the Wall, King's Landing, Harrenhal, the Citadel,
+  Braavos, the ruins of Valyria, and more.
+- **Legends & creatures** — the Others, dragons, direwolves, wargs and greenseers,
+  Azor Ahai, the Night's King, the Rat Cook, the Horn of Winter.
+- **Orders** — the Night's Watch, Kingsguard, maesters, Faceless Men, the
+  Alchemists' Guild, the Golden Company.
+- **Customs** — guest right, trial by combat, knighthood, fostering, tourneys,
+  the iron price, and the wild seasons.
+
+The in-game **codex** browses and full-text-searches all of it, and lore is woven
+into play: Maester Wyllis teaches histories and the woods witch tells legends —
+each lesson is marked in your codex, recorded as a `DISCOVERY` in the memory
+system, and grants XP. Your "studies" progress persists in the save. Adding lore
+means adding JSON entries — no code changes.
+
 ## Roadmap
 
 - More regions of Westeros and Essos on the same location/faction/NPC data model.

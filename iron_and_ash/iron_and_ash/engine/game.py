@@ -152,7 +152,7 @@ class Game:
         self.ui.print(f"Silver: {c.gold}")
 
     def _do_codex(self, _arg) -> None:
-        open_codex(self.ui)
+        open_codex(self.ui, self.gs.world)
 
     def _do_save(self, _arg) -> None:
         self.saves.save_game(self.gs)

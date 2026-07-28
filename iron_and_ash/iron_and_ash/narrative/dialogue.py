@@ -11,11 +11,13 @@ from __future__ import annotations
 import random
 from typing import Callable, Dict, List, Optional
 
+from ..engine import codex
 from ..engine.mechanics import skill_check
 from ..engine.state import GameState
 from ..memory import Event, EventType
 from ..ui.console import UI
 from ..world import data as world_data
+from ..world import lore
 from ..world import reactivity
 
 
@@ -58,6 +60,34 @@ def _record_dialogue(gs: GameState, npc_id: str, note: str, importance: int = 1)
         game_day=gs.world.day, type=EventType.DIALOGUE, summary=note,
         actors=[npc_id], location=gs.character.location, importance=importance,
     ))
+
+
+def _teach_lore(ui: UI, gs: GameState, npc_id: str, categories: list,
+                teacher_line: str, xp: int = 15) -> bool:
+    """An NPC teaches the player a lore entry they have not yet studied.
+
+    The entry is shown in full, marked as studied in the codex, and recorded as
+    a DISCOVERY event so the memory system knows what the character has learned
+    and from whom. Returns False when the teacher has nothing new left.
+    """
+    entry = lore.random_entry(exclude_ids=codex.studied_ids(gs.world),
+                              categories=categories)
+    if entry is None:
+        return False
+    ui.narrate(teacher_line)
+    codex.show_entry(ui, entry)
+    codex.mark_studied(gs.world, entry.id)
+    gs.memory.record(Event(
+        game_day=gs.world.day, type=EventType.DISCOVERY,
+        summary=f"You learned the lore of '{entry.name}' from {world_data.NPCS[npc_id].name}.",
+        actors=[npc_id], location=gs.character.location, importance=2,
+        data={"lore_id": entry.id},
+    ))
+    for m in gs.character.grant_xp(xp):
+        ui.print(f"[green]{m}[/green]")
+    ui.print(f"[dim]'{entry.name}' is now marked in your codex under "
+             f"{lore.CATEGORIES[entry.category]}.[/dim]")
+    return True
 
 
 # -- specific NPC handlers ----------------------------------------------------
@@ -150,9 +180,16 @@ def _maester(ui: UI, gs: GameState, npc_id: str) -> None:
                 data={"quest_hook": "unknown_raven"}))
             gs.world.quests["unknown_raven"] = "heard"
         elif choice == 2:
-            ui.narrate("\"The Starks have held Winterfell since the Age of Heroes, when Bran "
-                       "the Builder raised these walls. The old blood runs deep here - deeper "
-                       "than most southrons dare believe.\"")
+            taught = _teach_lore(
+                ui, gs, npc_id,
+                categories=["history", "houses", "orders", "places"],
+                teacher_line="Wyllis's eyes brighten. \"Ah - sit, sit. Few enough "
+                             "care for the old accounts. Attend, now...\"",
+                xp=20,
+            )
+            if not taught:
+                ui.narrate("\"I have taught you all the histories I keep, I think. "
+                           "You begin to sound like a maester yourself.\"")
 
 
 def _woodswitch(ui: UI, gs: GameState, npc_id: str) -> None:
@@ -161,7 +198,8 @@ def _woodswitch(ui: UI, gs: GameState, npc_id: str) -> None:
             "Old Nan of the Wood",
             ["Pray before the weirwood",
              "Ask her to read your fate",
-             "Ask about the free folk beyond the Wall"],
+             "Ask about the free folk beyond the Wall",
+             "Ask for one of her old tales"],
             allow_back=True,
         )
         if choice == -1:
@@ -185,6 +223,17 @@ def _woodswitch(ui: UI, gs: GameState, npc_id: str) -> None:
             ui.narrate("\"Free folk, wildlings, the men beyond the Wall - call them what you like. "
                        "They run from something, child. Something that doesn't tire and doesn't warm.\"")
             gs.world.quests.setdefault("the_cold", "heard")
+        elif choice == 3:
+            taught = _teach_lore(
+                ui, gs, npc_id,
+                categories=["legends", "religions", "customs"],
+                teacher_line="She settles onto a root of the heart tree, and her voice "
+                             "goes soft and far away. \"Now this is a true tale, mind...\"",
+                xp=15,
+            )
+            if not taught:
+                ui.narrate("\"You've had all my tales, child. Now you carry them - "
+                           "see you tell them true.\"")
 
 
 def _merchant(ui: UI, gs: GameState, npc_id: str) -> None:

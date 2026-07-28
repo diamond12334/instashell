@@ -1,0 +1,176 @@
+[
+  {
+    "id": "dawn_age",
+    "name": "The Dawn Age",
+    "summary": "The children of the forest, the coming of the First Men, and the Pact.",
+    "facts": {"When": "More than 10,000 years before the Conquest"},
+    "tags": ["first men", "children of the forest", "ancient"],
+    "body": [
+      "Before men, Westeros belonged to the children of the forest - a small, elder people who worshipped the nameless gods of stream and stone and tree, and carved faces into the weirwoods so their gods might watch the world. With them lived the giants, and older things that have no names now.",
+      "Then the First Men came out of the east, crossing the land bridge called the Arm of Dorne with bronze swords and horses, felling the sacred groves as they came. For two thousand years men and children fought. The children's greenseers worked their deepest magic and shattered the Arm into the islands called the Stepstones - too late to stem the tide.",
+      "In the end the two peoples made peace on the Isle of Faces, in the great lake called the Gods Eye. By the Pact, men took the open lands and the children kept the deep woods, and the First Men took the children's gods for their own. Every weirwood heart tree in the North remembers that oath, if men no longer do."
+    ]
+  },
+  {
+    "id": "age_of_heroes",
+    "name": "The Age of Heroes",
+    "summary": "Four thousand years of legend: Bran the Builder, Lann the Clever, Durran Godsgrief, the Grey King.",
+    "facts": {"When": "Roughly 10,000 to 6,000 years before the Conquest"},
+    "tags": ["legend", "first men", "founders"],
+    "body": [
+      "The centuries after the Pact were an age of peace and legend, when the hundred kingdoms of the First Men rose and every great house that matters traces its founder. Brandon the Builder raised Winterfell and, later, the Wall. Lann the Clever tricked the Casterlys out of their Rock. Durran Godsgrief defied the very gods of storm to build Storm's End. The Grey King of the ironborn slew the sea dragon Nagga and wed, the priests say, a mermaid.",
+      "How much of it is true, not even the maesters can say - the First Men kept no records but runes on stone, and eight thousand years of singers have improved every tale. But the castles are real, and old past reckoning, and something built them."
+    ]
+  },
+  {
+    "id": "long_night",
+    "name": "The Long Night",
+    "summary": "The generation-long winter when the Others came, and the war that drove them back.",
+    "facts": {"When": "Some 8,000 years before the Conquest"},
+    "tags": ["others", "winter", "wall", "legend"],
+    "body": [
+      "In the midst of the Age of Heroes fell a winter that lasted a generation, and a night that seemed to have no end. Out of the farthest north came the Others - cold dead things, beautiful and terrible, riding pale spiders and dead horses, raising the slain to fight for them. Kingdoms froze and kings starved in their halls, and mothers smothered their children rather than see them starve, and wept, and felt the tears freeze on their cheeks.",
+      "The tales say a last hero went into the dead lands to seek the children of the forest and their magic, losing his companions one by one, and that at the last men and children together threw the Others back in the Battle for the Dawn. However it was won, the dawn came.",
+      "Afterward Bran the Builder raised the Wall - seven hundred feet of ice and old magic across the top of the world - and the Night's Watch was founded to hold it, against the day the Others come again. Eight thousand years on, the south counts the Others a tale for children. The Watch still says the words."
+    ]
+  },
+  {
+    "id": "andal_invasion",
+    "name": "The Coming of the Andals",
+    "summary": "Iron-armed invaders from Essos who conquered the south and brought the Seven.",
+    "facts": {"When": "Perhaps 6,000 years before the Conquest"},
+    "tags": ["andals", "faith", "conquest"],
+    "body": [
+      "The Andals crossed the narrow sea from the eastern lands of Andalos, landing first in the Vale - warriors with iron swords against the First Men's bronze, the seven-pointed star of their new gods carved into their flesh. Kingdom by kingdom the south fell to them over centuries of war. The Andals burned the weirwood groves wherever they conquered, hacked down the carved faces, and slaughtered the children of the forest where they found them.",
+      "The First Men's blood was not destroyed but married into: the Andal kings took First Men wives and vice versa, and the peoples merged everywhere south of the Neck. Only the North, behind the swamps of the Neck and the swords of the Kings of Winter, threw back every Andal host - which is why the North alone keeps the old gods, and why northmen still say the south has forgotten what it owes the trees."
+    ]
+  },
+  {
+    "id": "valyria_rise",
+    "name": "The Valyrian Freehold",
+    "summary": "The dragon-riding empire that ruled half the world for five thousand years.",
+    "facts": {"When": "Rose c. 5,000 years ago; ruled until the Doom"},
+    "tags": ["valyria", "dragons", "essos"],
+    "body": [
+      "On a peninsula of Essos rich with volcanoes, the shepherds of Valyria found dragons lairing in the Fourteen Flames - and, alone of all peoples, learned to master them. With dragons and sorcery the Valyrians broke the ancient empire of Old Ghis in five great wars, and grew over millennia into the mightiest civilization the world has known.",
+      "Valyria was no kingdom but a freehold: every citizen who held land had a voice, though in truth forty dragonlord families ruled all. Their roads of fused stone ran straight as spears across a continent; their sorcerers raised towers without joints or seams; their smiths spell-forged steel that holds an edge forever. Half the tongues of the east are daughters of High Valyrian, and half the Free Cities began as Valyrian colonies.",
+      "Their glory was built on bones. Valyria's mines beneath the Fourteen Flames devoured slaves by the hundred thousand, and its wars fed the markets of the world with captives. When the end came, few of Valyria's slaves wept."
+    ]
+  },
+  {
+    "id": "doom_of_valyria",
+    "name": "The Doom of Valyria",
+    "summary": "The day the Fourteen Flames tore the Freehold apart.",
+    "facts": {"When": "About a century before the Conquest"},
+    "tags": ["valyria", "cataclysm", "dragons"],
+    "body": [
+      "On a single day, every hill of the Fourteen Flames burst asunder. Ash and fire and smoking rock rained on Valyria; the earth split; the sea rushed boiling into the wound. The city of the dragonlords, its sorceries, its libraries, its dragons, and nearly all its blood perished in hours. The peninsula shattered into the smoking islands men now call the ruins of Valyria, and the sea between them, the Smoking Sea, is cursed - sailors say no ship that beholds those shores returns.",
+      "What caused the Doom, no one living knows. Some maesters hold it was the natural wrath of the volcanoes; others whisper that the spells binding the Fourteen Flames failed, or were broken. The Freehold's empire fell with it - the Free Cities tore free, slaves rose, and a century of blood followed in the east.",
+      "One dragonlord family survived entire: the Targaryens, who had removed to Dragonstone twelve years before on the strength of a daughter's dream. The world would learn what that meant."
+    ]
+  },
+  {
+    "id": "nymeria_migration",
+    "name": "Nymeria's Ten Thousand Ships",
+    "summary": "The Rhoynar flight from the dragons, and the making of Dorne.",
+    "facts": {"When": "About 1,000 years before the Conquest"},
+    "tags": ["rhoynar", "dorne", "nymeria"],
+    "body": [
+      "The Rhoynar were a river people of Essos, dwellers in beautiful cities along the great river Rhoyne, workers of water-magic, lovers of song. When their prince finally rose against the encroaching Valyrian colonies, the Freehold answered with three hundred dragons. Rather than see her people enslaved, the warrior-queen Nymeria gathered every ship that would float - ten thousand, the tales say - and fled with the remnant of her nation across the bottom of the world.",
+      "After years of wandering and false havens, Nymeria's fleet came ashore in Dorne, where she wed Mors Martell of Sunspear and burned her ships so that her people could never again dream of flight. Rhoynar and Dornishmen together conquered the whole of Dorne, and Nymeria sent six defeated kings to the Wall in golden chains.",
+      "The Rhoynar brought their customs with them - equal inheritance for daughters, the title of prince, an easier way with love and law - and Dorne has been a country apart ever since."
+    ]
+  },
+  {
+    "id": "aegons_conquest",
+    "name": "Aegon's Conquest",
+    "summary": "Three dragons against seven kingdoms - and the making of one realm.",
+    "facts": {"When": "2 BC - 1 AC; the reckoning of years dates from it"},
+    "tags": ["targaryen", "dragons", "conquest"],
+    "body": [
+      "Aegon Targaryen landed at the mouth of the Blackwater Rush with fewer than three thousand men, his sister-wives Visenya and Rhaenys, and the last three dragons in the world - Balerion the Black Dread, Vhagar, and Meraxes. The proud kings of Westeros learned in turn what that meant. Harren the Black, who had built the greatest castle ever raised, burned inside it the day it was finished. The joined hosts of the Rock and the Reach - the greatest army ever fielded - broke in an hour on the Field of Fire, the only battle where all three dragons flew together.",
+      "Torrhen Stark marched south, weighed the ashes, and knelt, keeping the North whole. The Arryns yielded when Visenya landed her dragon in the Eyrie's own courtyard. Only Dorne refused - and Dorne, fighting with sand and thirst and patience instead of armies, was never conquered.",
+      "Aegon was crowned in Oldtown by the High Septon, took the submitted kings as his lords paramount, and had the swords of his fallen enemies beaten into an Iron Throne. Every year since is counted from his conquest."
+    ]
+  },
+  {
+    "id": "faith_militant_uprising",
+    "name": "The Faith Militant Uprising",
+    "summary": "The Faith's armed orders against the dragon kings - and Maegor the Cruel's answer.",
+    "facts": {"When": "41 - 48 AC"},
+    "tags": ["faith", "targaryen", "war"],
+    "body": [
+      "The Faith of the Seven had suffered the Conqueror's incestuous marriages in silence, but when his heir Aenys wed brother to sister anew, the High Septon named it abomination and the Faith's military orders - the Warrior's Sons and the Poor Fellows - rose in armed revolt. Gentle Aenys died of his troubles; his half-brother Maegor took the throne, and Maegor did not do gentleness.",
+      "Maegor the Cruel broke the Faith Militant in battle after battle and paid bounties on their scalps, murdered kin and wives and builders alike, and died mysteriously on the throne itself - leaving the crown to his nephew Jaehaerys. The young king offered amnesty where Maegor had offered slaughter: the Faith disbanded its orders and gave up its right to judge kings, and in exchange the crown swore to be the Faith's protector.",
+      "The peace of Jaehaerys the Conciliator held for two centuries: the Faith kept its septs and its voice, and no High Septon since has called his swords - though the orders were outlawed, not forgotten."
+    ]
+  },
+  {
+    "id": "dance_of_dragons",
+    "name": "The Dance of the Dragons",
+    "summary": "The Targaryen civil war that killed the dragons.",
+    "facts": {"When": "129 - 131 AC"},
+    "tags": ["targaryen", "dragons", "civil war"],
+    "body": [
+      "When King Viserys the First died, he left a daughter, Rhaenyra, named heir before the lords of the realm - and a son, Aegon, by a second wife, whose party crowned him before the king was cold. The realm split, and for the first and last time, dragon fought dragon in the skies of Westeros.",
+      "The war was a butchery beyond anything the Seven Kingdoms had known. Princes fed one another's sons to dragons; King's Landing fell and burned; the smallfolk rose in the Storming of the Dragonpit and tore dragons apart with axes and spears in the dark. Rhaenyra died in dragonfire before her half-brother's eyes, and Aegon the Second outlived her by half a year before his own men poisoned him to end the war.",
+      "A boy king was crowned over the ruins, but the true casualty was the dragons themselves: of more than a score living when the Dance began, four broken beasts survived it, and the last dragon died a stunted thing a generation later. Without dragons, the Targaryens held the realm by habit and awe - and awe fades."
+    ]
+  },
+  {
+    "id": "dorne_union",
+    "name": "Dorne and the Iron Throne",
+    "summary": "The conquest that failed, and the marriage that succeeded.",
+    "facts": {"When": "157 - 187 AC"},
+    "tags": ["dorne", "targaryen"],
+    "body": [
+      "The Young Dragon, Daeron the First, conquered Dorne at fourteen with fifty thousand men, and wrote a book about it. Holding Dorne cost him three years, ten thousand more men, and finally his life beneath a Dornish peace banner. His conquest evaporated within a fortnight of his death.",
+      "A generation later Daeron the Second did with a wedding what armies could not: he wed Myriah Martell and gave his sister to the Prince of Dorne, and Dorne came into the realm whole - keeping its princes, its laws, and its pride. There are marcher lords in the stormlands who mutter to this day that the Dornish got the better of that bargain, having won by treaty everything they had defended by spear."
+    ]
+  },
+  {
+    "id": "blackfyre_rebellions",
+    "name": "The Blackfyre Rebellions",
+    "summary": "The black dragon against the red - a wound that bled for five generations.",
+    "facts": {"When": "196 AC and after"},
+    "tags": ["targaryen", "blackfyre", "civil war"],
+    "body": [
+      "King Aegon the Unworthy, dying, legitimized all his bastards and left the royal sword Blackfyre to the most splendid of them, Daemon - and with the sword, men said, the kingship. Daemon Blackfyre was everything a king should look like; his trueborn half-brother Daeron was bookish, peaceable, and Dornish-wed. Half the realm's swords went to the black dragon when he rose.",
+      "The First Blackfyre Rebellion died with Daemon and his elder sons under a rain of arrows at the Redgrass Field, where the king's bastard brother Brynden 'Bloodraven' Rivers, sorcerer and archer, broke him - and Bittersteel, another royal bastard, carried Blackfyre and Daemon's remaining sons across the narrow sea. From exile Bittersteel founded the Golden Company, finest of the free companies, and Blackfyre pretenders returned generation after generation, each rising drowned in blood. The male line is said to be extinguished now. The Golden Company remains, and has never broken a contract - waiting, some say, for a contract worth breaking."
+    ]
+  },
+  {
+    "id": "summerhall",
+    "name": "The Tragedy at Summerhall",
+    "summary": "The fire that consumed a king who dreamed of dragons.",
+    "facts": {"When": "259 AC"},
+    "tags": ["targaryen", "fire", "prophecy"],
+    "body": [
+      "King Aegon the Fifth - Egg, who had squired for a hedge knight and loved the smallfolk as no king before him - grew convinced in his age that only dragons could give him the strength to force his reforms on his lords. At his summer palace of Summerhall, with seven dragon eggs and wildfire and prayers, he tried to wake them.",
+      "What happened that night is hidden - the fullest account in the Citadel's records is burned and blotted - but the fire that answered consumed the palace, the king, his eldest son, and the Lord Commander of his Kingsguard, Ser Duncan the Tall. In the midst of the flames and grief, Prince Rhaegar Targaryen was born. The ruin still stands, and singers say the prince would go there alone with his harp, and return with songs that made women weep."
+    ]
+  },
+  {
+    "id": "roberts_rebellion",
+    "name": "Robert's Rebellion",
+    "summary": "The war that broke the dragon's throne - within living memory.",
+    "facts": {"When": "282 - 283 AC"},
+    "tags": ["rebellion", "baratheon", "stark", "targaryen", "recent"],
+    "body": [
+      "It began, as the singers tell it, with a crown of winter roses: Prince Rhaegar riding past his own wife to crown Lyanna Stark queen of love and beauty at the great tourney of Harrenhal. A year later Lyanna - betrothed to Robert Baratheon - vanished with the prince, and her brother Brandon rode to King's Landing shouting for Rhaegar to come out and die. Mad King Aerys arrested him, summoned his father Lord Rickard, and burned the Lord of Winterfell alive in his own armor while Brandon strangled himself trying to reach him. Then Aerys demanded of the Vale the heads of Eddard Stark and Robert Baratheon.",
+      "Instead Jon Arryn raised his banners, and Stark, Baratheon, and Tully rose with him. The war's end came in a single day at the Trident, where Robert's warhammer caved in Rhaegar's breastplate and scattered rubies in the ford. While Eddard Stark raced for King's Landing, Tywin Lannister - neutral until the outcome was sure - arrived first, professed friendship, and sacked the city. Ser Jaime Lannister of the Kingsguard opened the Mad King's throat; Lannister men brought Rhaegar's murdered children wrapped in crimson cloaks to Robert's feet.",
+      "Eddard Stark found his sister dying in a tower in Dorne, and came home with her bones and a bastard son. Robert took the throne, wed Cersei Lannister, and the realm has had fourteen years of summer peace - with the Mad King's last two children grown to adulthood in exile across the narrow sea."
+    ]
+  },
+  {
+    "id": "greyjoy_rebellion",
+    "name": "The Greyjoy Rebellion",
+    "summary": "Balon Greyjoy's bid for the driftwood crown, drowned in six months.",
+    "facts": {"When": "289 AC"},
+    "tags": ["greyjoy", "rebellion", "recent"],
+    "body": [
+      "Six years into King Robert's reign, Balon Greyjoy declared the Iron Islands free and himself their king, wagering that the realm forged by rebellion would not hold together to stop him. His brother Euron burned the Lannister fleet at anchor in a daring night raid, and for a season the Old Way lived again.",
+      "The realm held. Stannis Baratheon smashed the Iron Fleet off Fair Isle; Robert and Eddard Stark stormed Pyke itself, Thoros of Myr first through the breach with a flaming sword. Balon's two elder sons died in the war, and Balon knelt anew - keeping his lordship, his islands, and his bitterness. His last living son, Theon, was carried off to Winterfell as Eddard Stark's ward and hostage, surety for a broken king's good behavior."
+    ]
+  }
+]

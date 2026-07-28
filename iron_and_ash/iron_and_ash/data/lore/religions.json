@@ -1,0 +1,62 @@
+[
+  {
+    "id": "faith_old_gods",
+    "name": "The Old Gods of the Forest",
+    "summary": "The nameless gods of the First Men, who watch through the eyes of the weirwoods.",
+    "facts": {"Followed in": "The North, the crannogs, beyond the Wall", "Holy places": "Godswoods and weirwood heart trees"},
+    "tags": ["north", "first men", "weirwood"],
+    "body": [
+      "The old gods have no names, no holy books, no priests, and no hymns. They are the innumerable spirits of stream and stone and forest, worshipped first by the children of the forest, who carved solemn faces into the white bark of the weirwoods so that the gods might watch the world through red eyes. When the First Men made their peace with the children, they took these gods for their own, and have kept them for ten thousand years.",
+      "Worship is silence. A man prays before a heart tree, alone, and the rustling of the leaves is as much answer as he should expect. Oaths sworn before a weirwood are held to bind absolutely, for the tree sees and the tree remembers - the children believed the faces themselves held the memories of all they had witnessed, and that their greenseers could look out of any weirwood eye, into any time.",
+      "The Andals burned the weirwoods through all the south; only a few great castles keep a true heart tree now, and southron godswoods are mostly gardens. But north of the Neck the old gods rule yet, and there are those - wargs, greendreamers, the odd quiet child who knows things - in whom the old blood still shows. No institution defends this faith. It has never needed one."
+    ]
+  },
+  {
+    "id": "faith_seven",
+    "name": "The Faith of the Seven",
+    "summary": "The dominant religion of Westeros: one god with seven faces.",
+    "facts": {"Followed in": "Everywhere south of the Neck", "Head": "The High Septon in Oldtown... now King's Landing", "Holy places": "Septs; the Great Sept of Baelor"},
+    "tags": ["andal", "south", "seven"],
+    "body": [
+      "The Faith teaches one god with seven aspects: the Father, who judges; the Mother, who gives mercy; the Warrior, who gives courage; the Maiden, who guards innocence; the Smith, who mends and makes; the Crone, who gives wisdom and lights the way; and the Stranger, who is death and the unknown, whose face men fear to pray to. The Andals carried the Seven out of Essos on their swordpoints six thousand years ago, and it has been the faith of the south ever since.",
+      "The Faith is a great ordered institution - the closest thing Westeros has to one. Septons and septas minister in seven-walled septs; the silent sisters dress the dead; begging brothers walk the roads. Over all sits the High Septon, the Father's voice on earth, who surrenders his name on elevation. It is the Faith that anoints kings, sanctifies marriages and knighthood - the seven vigils of a knight belong to it - and its seven-pointed star is stamped on the customs of the realm at every turn.",
+      "Once the Faith bore swords of its own: the Warrior's Sons, knights sworn to the Seven, and the ragged Poor Fellows. They rose against the Targaryens' incest, were broken by Maegor the Cruel, and were disbanded under Jaehaerys in exchange for the crown's protection. The number seven is holy in all things - seven gods, seven kingdoms, seven vows, seven blessings - and even those who scoff pray fast enough when the Stranger comes near."
+    ]
+  },
+  {
+    "id": "faith_drowned_god",
+    "name": "The Drowned God",
+    "summary": "The hard god of the ironborn, who made them to reave and take.",
+    "facts": {"Followed in": "The Iron Islands", "Priests": "The drowned men", "Credo": "What is dead may never die"},
+    "tags": ["ironborn", "sea", "old way"],
+    "body": [
+      "The ironborn say the Drowned God made them in his likeness - to reave and rape, to carve out kingdoms and make their names in fire and blood and song. He dwells in watery halls beneath the waves, where mermaids attend the drowned and heroes feast forever. Against him strives the Storm God, who dwells in the sky with his thunder and hates men, and their war is without end.",
+      "His priests are the drowned men: wild-haired holy men in mottled sea-robes who carry driftwood cudgels and skins of seawater. To be consecrated, a man is drowned in truth - held under until the sea takes him - and returned to life by the rough pressing-out of the water his priests call the kiss of life. What is dead may never die, the faithful answer, but rises again, harder and stronger. Most ironborn now settle for a symbolic dousing as infants; the priests despise the practice, and true believers still take the true drowning.",
+      "The faith and the Old Way are one creed: the iron price paid in blood stands holy, the gold price is shame, and no ironborn king was ever truly king until the priests and the kingsmoot named him so. The drowned men bow to no septon and no green-land god, and the Storm God's ravens whisper wherever ironborn hearts turn soft."
+    ]
+  },
+  {
+    "id": "faith_rhllor",
+    "name": "R'hllor, the Lord of Light",
+    "summary": "The red god of flame and shadow, mighty in Essos, alien in Westeros.",
+    "facts": {"Followed in": "The Free Cities and the east; rare in Westeros", "Priests": "The red priests of the temples", "Credo": "The night is dark and full of terrors"},
+    "tags": ["essos", "fire", "prophecy"],
+    "body": [
+      "The faith of R'hllor is a war creed: on one side the Lord of Light, God of Flame and Shadow, giver of life and heat; on the other the Great Other, whose name may not be spoken, god of ice and darkness and death. All the world is their battlefield, and every soul a soldier of one or the other. The nightfires that burn before every red temple are lit against the dark, for the night is dark and full of terrors.",
+      "In Essos the red god is mighty: his temples in Volantis and Lys and Myr are among the greatest buildings of the world, staffed by priest-slaves bought as children and given to the flame. The red priests see visions in their fires - true ones, at times - and the stories credit their higher mysteries with stranger powers: shadows given flesh, the glamor that changes faces, and here and there, whispered and terrible, the dead breathed back to life by the last kiss.",
+      "Their prophecies center on Azor Ahai, the hero of the Long Night, who will be born again amid salt and smoke to draw the burning sword Lightbringer and stand against the Great Other's rising dark. In Westeros the red faith has scarcely a foothold - a sailor's temple here, a wandering priest there - and septons dismiss it as an eastern fever. The red priests only smile at that, and watch their flames."
+    ]
+  },
+  {
+    "id": "faith_many_faced",
+    "name": "The Many-Faced God",
+    "summary": "The god of death himself, worshipped in Braavos, served by the Faceless Men.",
+    "facts": {"Followed in": "Braavos", "Holy place": "The House of Black and White", "Gift": "Death"},
+    "tags": ["braavos", "death", "faceless men"],
+    "body": [
+      "The cult of the Many-Faced God teaches that all the death gods of all the world's faiths are one god wearing many faces: the Stranger of the Seven, the Storm God's drowning, the Great Other of the red priests, the Black Goat of Qohor, the Lion of Night - a thousand names for the one certainty. To him death is not terror but mercy: the gift, which ends all pain, and which comes at last for great and small alike.",
+      "The faith was born in the deepest misery of the world: the slave mines of old Valyria, beneath the Fourteen Flames, where slaves of a hundred lands prayed each to their own gods for a deliverance that never came. The first Faceless Man understood that all of them prayed to the same god, and gave the gift to the most wretched - and then, the tale runs, to a master. Whether the Faceless Men had a hand in the Doom itself is a thing men only whisper.",
+      "When the escaped slaves who founded Braavos fled across the sea, the cult came with them. Its temple, the House of Black and White, stands on its own island in the lagoon: within are shrines to the death gods of every faith, a black pool whose waters grant a painless end to those who come seeking it, and quiet servants who ask nothing of the dying but their pain. The Faceless Men, the temple's dread arm, hire out the gift itself - the costliest assassins in the world, who count the price in more than gold, and who hold that a Faceless Man is no one at all."
+    ]
+  }
+]

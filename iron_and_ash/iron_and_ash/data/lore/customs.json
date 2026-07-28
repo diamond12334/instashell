@@ -1,0 +1,77 @@
+[
+  {
+    "id": "custom_guest_right",
+    "name": "Guest Right",
+    "summary": "Bread and salt: the oldest and most sacred law in Westeros.",
+    "tags": ["law", "sacred", "first men"],
+    "body": [
+      "When a guest eats of his host's bread and salt beneath his roof, guest right binds them both: the host may do the guest no harm, and the guest none to the host, for so long as the guest remains. The custom is older than the Andals, older than the kingdoms - the First Men held it sacred, and the old gods and new alike are held to curse its breakers beyond all forgiveness. The tale of the Rat Cook exists to teach exactly this: the gods will pardon murder before they pardon the murder of a guest.",
+      "The forms are simple and universal. A guest asks hospitality; the host offers bread and salt - wine serves as well, and in great halls the offering may be a feast - and from the moment the guest eats, both are safe. A careful man in a doubtful hall eats early and visibly. A host who means treachery must withhold the offering, and a guest who has not been offered bread and salt sleeps, sensibly, in his armor.",
+      "Guest right protects high and low, king and beggar, in castle and croft alike. It is one of the few laws in Westeros that needs no lord to enforce it: a man known to have broken it is finished - accursed, unwelcome at every hearth, his word void - for if a man's roof is not safe, nothing is."
+    ]
+  },
+  {
+    "id": "custom_trial",
+    "name": "Trial by Combat and the King's Justice",
+    "summary": "How guilt is judged: by lords, by battle, or by the headsman.",
+    "tags": ["law", "justice"],
+    "body": [
+      "Justice in Westeros flows from the lord's seat. A lord hears cases in his own hall and his word binds his lands; over him stands his liege, and over all the king, to whom any free man may in principle appeal - in practice, the higher the appeal, the higher the cost of losing it. Punishments run from the wall of a cell to the wall of ice: many a thief is offered the black as mercy, which is why the Watch is manned as it is.",
+      "An accused man of noble blood may demand trial by combat, wagering that the gods will strengthen the arm of the innocent. Champions are permitted - the accuser or accused may fight in person or name a sword - and the verdict of the duel is final, for it is accounted the gods' own. Cynics observe that the gods show a marked preference for whoever hired the better swordsman. The custom persists, because the cynics have never proposed a court a lord cannot buy.",
+      "In the North, the old way adds one more law: the man who passes the sentence should swing the sword. A lord who would take a life owes it his own eyes and his own arm, and a lord who grows too fond of the taking - or too dainty to do it himself - is measured accordingly. Southrons keep a headsman for the work. The North says that this, too, is a measurement."
+    ]
+  },
+  {
+    "id": "custom_knighthood",
+    "name": "Knighthood",
+    "summary": "The vows, the vigil, and the wide gap between the songs and the men.",
+    "tags": ["chivalry", "faith", "war"],
+    "body": [
+      "Any knight can make a knight: that is the whole of the law of it. The forms are of the Faith - a night's vigil in a sept, sword laid on the altar; the dubbing in the name of the Seven, charging the new-made knight to be brave, just, and true, to defend the young and innocent, to protect all women. A knight is 'ser,' entitled to arms, and expected to answer his lord's call horsed and armored; a landed knight holds a keep in his own right, while a hedge knight owns his horse, his arms, and the hedge he sleeps under.",
+      "Because any knight can make a knight, knighthood is what the knight makes it. The songs are full of Serwyn of the Mirror Shield and Ryam Redwyne; the roads are full of freeriders one bad harvest from banditry, and the courts of anointed knights who recite the vows about protecting women in the morning and forget them by dark. The smallfolk, who bear the difference, keep their own ledger of which sort a given ser is.",
+      "Knighthood being an institution of the Seven, it runs shallow where the Faith does: in the North men fight as heavy horse and hold to honor without the anointing, and only rare northmen - Manderly men, mostly - kneel for the sword. An ironborn who knelt for it would never live down the kneeling. Dorne knights in the southron fashion, and its sand steeds and spears make southron knights unhappy in a fashion all their own."
+    ]
+  },
+  {
+    "id": "custom_fostering",
+    "name": "Fostering, Wardship, and Squiring",
+    "summary": "How the great houses raise - and bind - one another's children.",
+    "tags": ["nobility", "politics"],
+    "body": [
+      "Highborn children are commonly raised, in part, in other men's castles. A boy of eight or so goes as page and then squire to a lord or knight who polishes him for knighthood; girls go as companions and wards to great ladies who finish their courtesies. The practice webs the great houses together: a man is bound for life to the lord who fostered him and the boys he served beside - Robert Baratheon and Eddard Stark, fostered together at the Eyrie, made a rebellion of that bond, and Jon Arryn made a war rather than give up his two wards.",
+      "Wardship has an edge. A ward may be an honored foster son, or a hostage in all but name - the distinction lives entirely in how matters stand between the houses, and can change without the boy changing rooms. Theon Greyjoy, ward of Winterfell since his father's rebellion failed, is treated as near a son by the Starks and knows precisely what his treatment is worth if Balon rises again. The custom is accounted gentle, by the standard of customs for ending rebellions - the hostage is raised, schooled, and armed like a lord's own - and every party understands the arithmetic beneath the gentleness."
+    ]
+  },
+  {
+    "id": "custom_tourney",
+    "name": "Tourneys",
+    "summary": "The great game of chivalry: glory, ruin, and politics at the tilt.",
+    "tags": ["chivalry", "sport", "politics"],
+    "body": [
+      "A great tourney is the realm in miniature: lords and hedge knights, silks and siege-tents, singers, cutpurses, and half the peerage gathered in one field. The joust is the heart of it - knight against knight at the tilt with blunted lances, unhorsing and being unhorsed until one champion stands - flanked by the melee, a mock battle fought for ransoms that is only somewhat mock, and archery butts for the commons. Champions win purses that can make a hedge knight a landed one, and the victor crowns a queen of love and beauty from the watching ladies.",
+      "By custom the crown goes to the victor's wife, his lady, or a great lady honored for courtesy; the wreath of flowers is a pretty gesture and the whole field understands it as such. It is also a loaded one. When Rhaegar Targaryen won at Harrenhal and rode past his own wife, Elia of Dorne, to lay winter roses in the lap of Lyanna Stark - betrothed of Robert Baratheon - the smiles, one chronicler wrote, died like candles in a gust. What followed followed.",
+      "Tourneys beggar the lords who host them and lame the knights who ride in them, and the realm loves them without reservation. A ransomed harness has started more than one knightly fortune; a shattered lance point has ended more than one; and matches, alliances, feuds, and rebellions have all been seeded in the stands while the crowd watched the tilt."
+    ]
+  },
+  {
+    "id": "custom_iron_price",
+    "name": "The Old Way and the Iron Price",
+    "summary": "The ironborn creed: what is bought is base, what is taken is holy.",
+    "tags": ["ironborn", "old way"],
+    "body": [
+      "An ironman of the Old Way wears no jewel he paid coin for. Gold, silk, a wife's necklace - to buy such things is to pay the gold price, and it shames the buyer; to take them from the corpse of a man you slew yourself is to pay the iron price, and it honors both the taker and, the priests would add, the Drowned God who made him to take. The Old Way is the whole creed of which the iron price is the coin: the reaving life, kingship by kingsmoot, thralls to work the land and salt wives taken on raid, and the drowned dead feasting in the god's watery halls.",
+      "The green lands broke the practice of it long ago - Aegon and his heirs forbade the reaving of their own coasts, and the New Way of trade has crept even into Pyke - but the creed never recanted. It waits in the priests' sermons and the fathers' scorn: sea-wife or rock-wife, iron price or gold, reaver or merchant, and every ironborn son is measured between the two whether he asks to be or not. Balon Greyjoy's rebellion was, before it was anything else, a sermon on the Old Way delivered with the longships - and its failure settled the argument only in the way that lost battles ever settle arguments among the ironborn, which is not at all."
+    ]
+  },
+  {
+    "id": "custom_seasons",
+    "name": "The Seasons",
+    "summary": "Summers of years, winters of years - and no man knows how long.",
+    "tags": ["winter", "nature"],
+    "body": [
+      "The seasons of this world keep no calendar. A summer may last two years or ten; a winter, one year or a generation - and no maester, for all the Citadel's measuring, can say why, or when the turn will come. The Citadel tracks the shortening days and loosens white ravens from Oldtown to proclaim each season's official coming, which is the closest the realm gets to a warning.",
+      "Every kingdom lives by winter's arithmetic. The harvests of a long summer are hoarded against the coming dark; a long summer breeds fat harvests and long wars - there is time and food for them - while the smallfolk reckon that the longer the summer, the longer the winter that pays for it. In the North the reckoning is mortal: winter towns fill, the old folk speak of 'going hunting' when the food runs short and mean that they will not come back, and children born in a long summer, who have never known snow, are watched with a certain pity by their elders.",
+      "The old tales insist the seasons were not always so - that the world broke somehow in the Long Night, and the wild seasons are its limp. The maesters have sounder theories, they say. The current summer has run near nine years now, the longest in living memory, and the older the northman, the less he likes the length of it. The Stark words are about exactly this. Winter is coming: it is not a threat, it is the weather."
+    ]
+  }
+]
