@@ -105,6 +105,49 @@ dynamic narration — but the base game is fully deterministic and offline.
 - The load menu shows a summary card per save: character, house, in-game day, and a
   notable recent event.
 
+## The strategic map & the wars of the realm
+
+Beyond the streets of Winterfell lies the whole of Westeros and the nearer Free
+Cities, reached from the in-game menu via **"The realm (map, travel & war)."**
+
+- **An ASCII map with a live position tracker.** 27 provinces from Beyond the
+  Wall to Volantis, drawn as a map with your position marked `@`, holdings `#`,
+  and armed forces `x`/`!`. You travel province to province along authored roads
+  and sea-lanes; time passes and the world turns while you march.
+- **Fog of war.** You see only provinces you have discovered, plus what a distant
+  observer could tell of the forces in them - an exact muster only for the men
+  standing in your own province; a vaguer "a great host, bearing no banner you
+  know" for everyone else.
+- **Procedural holdings.** Every seat (Winterfell, the Eyrie, Casterly Rock...) is
+  generated with a size, population, garrison, fortifications, and economy
+  buildings that set its income and the levies it can raise. The *same* generator
+  founds **your own** keep, castle, or town when you claim one - attached to your
+  house, sworn or independent, granting you a title and levies of your own.
+- **Reactive meetings.** Share a province with a lord in his hall or an army in
+  the field and you can hail, parley, trade, negotiate, hire, recruit, bribe,
+  duel, or give battle - the options and outcomes weigh your standing, your
+  history together (from the memory system), the troop-strength disparity, and
+  local custom (guest right binds a lord's hall). Inside Winterfell, NPCs already
+  react to who you are to them the moment you enter a room.
+- **A living military simulation.** Wars break out (and can be ended by exhaustion);
+  hosts are mustered, free companies hired, and - in devastated, lawless country -
+  bandit bands and outlaw gangs boil up. Every armed body is modelled with:
+  - **troop composition** - levies, light foot, archers, men-at-arms, light horse,
+    knights, sellswords, and siege specialists, each with its own combat weight,
+    pay, and rations;
+  - **logistics** - a baggage train measured in rations that empties as the army
+    marches, refilled by foraging (better on friendly ground, worse in the waste),
+    with attrition from terrain and winter;
+  - **finances** - daily pay drawn from the war-chest; when the coin runs dry the
+    men desert, and an unpaid free company will turn its coat and go outlaw;
+  - **morale** - risen by victory, pay, and food; sunk by defeat, hunger, arrears,
+    and distance from home; low morale means a weaker line and men slipping away in
+    the night.
+
+  Armies march toward their orders, fight when they meet an enemy (terrain aids the
+  defender), and can seize provinces they conquer. You can call your own banners
+  from your holdings, order your host to march, and lead it into battle.
+
 ## Project layout
 
 ```
@@ -116,9 +159,11 @@ iron_and_ash/
 │   ├── character/          # models, lore data, creation flow
 │   ├── memory/             # events + tiered SQLite memory store
 │   ├── persistence/        # save/load, slots, atomicity, migration
-│   ├── world/              # geography, factions, NPCs, reactivity
-│   ├── narrative/          # memory-aware NPC dialogue
-│   └── engine/             # game loop, mechanics (skill checks, combat), codex
+│   ├── world/              # local world, plus the strategic map:
+│   │                       #   mapdata/geography (provinces, terrain, roads),
+│   │                       #   holdings (generator), military + campaign (war sim)
+│   ├── narrative/          # memory-aware NPC dialogue and reaction logic
+│   └── engine/             # game loop, mechanics, codex, and the map UI (mapview)
 └── tests/                  # memory, save/load, and character-creation tests
 ```
 

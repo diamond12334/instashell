@@ -18,7 +18,7 @@ import random
 from typing import List, Optional
 
 from ..memory import Event, EventType, MemoryStore
-from . import data
+from . import campaign, data
 from .models import WorldState
 
 # Flavourful background beats. Kept deliberately generic so they read as the
@@ -58,6 +58,9 @@ def advance_time(world: WorldState, memory: MemoryStore, days: int,
         memory.record(Event(game_day=world.day, type=EventType.WORLD,
                             summary=note, importance=2))
         lines.append(note)
+
+    # the strategic map lives on: armies march, fight, forage, and starve
+    lines.extend(campaign.strategic_tick(world, memory, days))
 
     lines.extend(_fire_ripples(world, memory))
     return lines

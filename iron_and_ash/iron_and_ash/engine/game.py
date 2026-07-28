@@ -9,9 +9,11 @@ from ..memory import Event, EventType
 from ..narrative import talk_to
 from ..persistence.saves import SaveManager
 from ..ui.console import UI
+from ..world import campaign
 from ..world import data as wdata
 from ..world import reactivity
 from .codex import open_codex
+from .mapview import open_map
 from .state import GameState
 
 
@@ -22,6 +24,8 @@ class Game:
         self.saves = saves
 
     def run(self) -> None:
+        # make sure the strategic map exists (new game or an older save)
+        campaign.ensure_map(self.gs.world, self.gs.world.player_province or "winterfell")
         self._on_enter_location(first=True)
         while self.gs.running and self.gs.character.is_alive():
             self._describe_location()
@@ -40,6 +44,22 @@ class Game:
         if present:
             names = ", ".join(wdata.NPCS[n].name for n in present)
             self.ui.print(f"[cyan]Here you see:[/cyan] {names}")
+            self._colocation_reactions(present)
+
+    def _colocation_reactions(self, present: List[str]) -> None:
+        """When you and an NPC share a place, they react to who you are to them."""
+        for npc_id in present:
+            npc = wdata.NPCS[npc_id]
+            disposition = self.gs.memory.npc_disposition(npc_id) + npc.base_disposition
+            past = [e for e in self.gs.memory.events_with_actor(npc_id, 3)
+                    if e.type != EventType.DIALOGUE]
+            if disposition >= 25:
+                self.ui.print(f"[dim]{npc.name} brightens at the sight of you.[/dim]")
+            elif disposition <= -25:
+                self.ui.print(f"[dim]{npc.name} stiffens and will not meet your eye.[/dim]")
+            elif past:
+                self.ui.print(f"[dim]{npc.name} gives you a look - they remember "
+                              f"that {past[-1].summary.lower()}[/dim]")
 
     def _on_enter_location(self, first: bool = False) -> None:
         loc = wdata.LOCATIONS[self.gs.character.location]
@@ -65,9 +85,10 @@ class Game:
             actions.append(f"Travel: {label} -> {dest_name}")
             handlers.append(("travel", dest))
 
-        actions += ["Rest a while", "View character", "Journal (memory)",
-                    "Inventory", "Lore codex", "Save game", "Quit to main menu"]
-        handlers += [("rest", None), ("status", None), ("journal", None),
+        actions += ["The realm (map, travel & war)", "Rest a while", "View character",
+                    "Journal (memory)", "Inventory", "Lore codex", "Save game",
+                    "Quit to main menu"]
+        handlers += [("realm", None), ("rest", None), ("status", None), ("journal", None),
                      ("inventory", None), ("codex", None), ("save", None), ("quit", None)]
 
         idx = self.ui.menu("What do you do?", actions)
@@ -150,6 +171,10 @@ class Game:
         else:
             self.ui.print("You carry nothing of note.")
         self.ui.print(f"Silver: {c.gold}")
+
+    def _do_realm(self, _arg) -> None:
+        open_map(self.ui, self.gs, self.saves)
+        self.saves.save_game(self.gs)
 
     def _do_codex(self, _arg) -> None:
         open_codex(self.ui, self.gs.world)
