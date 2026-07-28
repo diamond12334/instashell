@@ -22,7 +22,7 @@ from ..world import reactivity
 
 
 def talk_to(ui: UI, gs: GameState, npc_id: str) -> None:
-    npc = world_data.NPCS.get(npc_id)
+    npc = world_data.get_npc(npc_id, gs.world)
     if npc is None:
         ui.print("There is no one here by that name.")
         return
@@ -32,7 +32,7 @@ def talk_to(ui: UI, gs: GameState, npc_id: str) -> None:
 
 
 def _greet(ui: UI, gs: GameState, npc_id: str) -> None:
-    npc = world_data.NPCS[npc_id]
+    npc = world_data.get_npc(npc_id, gs.world)
     disposition = gs.memory.npc_disposition(npc_id) + npc.base_disposition
     past = gs.memory.events_with_actor(npc_id, count=3)
     ui.heading(f"{npc.name}, {npc.title}")
@@ -362,9 +362,54 @@ def _wildling(ui: UI, gs: GameState, npc_id: str) -> None:
 
 
 def _generic_conversation(ui: UI, gs: GameState, npc_id: str) -> None:
-    npc = world_data.NPCS[npc_id]
-    ui.narrate(f"You exchange a few words with {npc.name}, but they have little to say.")
-    _record_dialogue(gs, npc_id, f"You spoke briefly with {npc.name}.")
+    """A flexible conversation for authored seat NPCs and generated locals.
+
+    The options offered depend on the NPC's role (read from their title), so a
+    trader will barter, a steward will grant or deny an audience, and anyone will
+    trade rumor for a moment of your time.
+    """
+    npc = world_data.get_npc(npc_id, gs.world)
+    title = (npc.title or "").lower()
+    trader = any(w in title for w in ("trader", "merchant", "innkeep", "reeve", "armorer", "smith"))
+    official = any(w in title for w in ("castellan", "steward", "seneschal", "captain",
+                                        "officer", "master", "knight", "maester"))
+    while True:
+        options = ["Ask after news and rumor"]
+        handlers = ["news"]
+        if trader:
+            options.append("Trade and barter"); handlers.append("trade")
+        if official:
+            options.append("Seek their favour"); handlers.append("favour")
+        options.append("Take your leave"); handlers.append("leave")
+        idx = ui.menu(f"{npc.name}, {npc.title}", options, allow_back=True)
+        if idx in (-1, len(options) - 1):
+            _record_dialogue(gs, npc_id, f"You spoke with {npc.name} at {_place(gs)}.")
+            return
+        choice = handlers[idx]
+        if choice == "news":
+            ui.narrate(f"{npc.name} shares what the day has brought - the price of grain, "
+                       "the doings of lords, and who was seen where they ought not to be.")
+            gs.memory.record(Event(
+                game_day=gs.world.day, type=EventType.DISCOVERY,
+                summary=f"{npc.name} told you the local news.", actors=[npc_id], importance=1))
+        elif choice == "trade":
+            ui.narrate(f"{npc.name} lays out their wares and haggles with the ease of long practice.")
+            _record_dialogue(gs, npc_id, f"You traded with {npc.name}.")
+        elif choice == "favour":
+            check = skill_check(gs.character, "presence", "intrigue", "moderate")
+            ui.print(check.describe())
+            if check.success:
+                ui.narrate(f"{npc.name} warms to you, and marks you as someone worth knowing.")
+                gs.memory.record(Event(
+                    game_day=gs.world.day, type=EventType.FAVOR,
+                    summary=f"You won the goodwill of {npc.name}.", actors=[npc_id], importance=2))
+            else:
+                ui.narrate(f"{npc.name} hears you out, but gives you nothing for your trouble.")
+
+
+def _place(gs: GameState) -> str:
+    loc = world_data.get_location(gs.character.location, gs.world)
+    return loc.name if loc else "this place"
 
 
 _HANDLERS: Dict[str, Callable[[UI, GameState, str], None]] = {

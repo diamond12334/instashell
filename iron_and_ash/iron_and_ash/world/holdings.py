@@ -74,11 +74,14 @@ class Holding(BaseModel):
     garrison: int = 0               # standing troops
     buildings: List[str] = Field(default_factory=list)
     defense_works: List[str] = Field(default_factory=list)
+    levy_override: Optional[int] = None   # set for custom-built holdings
     founded_day: int = 0
     description: str = ""
 
     def levy_potential(self) -> int:
         """How many levies this holding can raise for war."""
+        if self.levy_override is not None:
+            return self.levy_override
         pct = KIND_PROFILE.get(self.kind, KIND_PROFILE["keep"])["levy_pct"]
         return int(self.population * pct)
 

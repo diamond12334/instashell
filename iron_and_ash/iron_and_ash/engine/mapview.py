@@ -14,6 +14,7 @@ from ..narrative import reactions
 from ..persistence.saves import SaveManager
 from ..ui.console import UI
 from ..world import campaign, geography, holdings, mapdata
+from ..world import data as wdata
 from ..world import reactivity
 from ..world.military import Army
 from .state import GameState
@@ -38,15 +39,15 @@ def open_map(ui: UI, gs: GameState, saves: SaveManager) -> None:
     campaign.ensure_map(gs.world, gs.world.player_province or "winterfell")
     if not gs.world.player_province:
         gs.world.player_province = "winterfell"
-    home = gs.world.player_province
     while True:
         prov = mapdata.PROVINCES[gs.world.player_province]
         _province_view(ui, gs, prov)
         action = _province_menu(ui, gs, prov)
         if action == "exit":
-            # walk home before leaving the overworld, if adventuring abroad
-            if gs.world.player_province != home:
-                _travel(ui, gs, home)
+            # leaving the map drops you into the local scene of where you stand
+            if wdata.province_of_location(gs.character.location) != gs.world.player_province:
+                gs.character.location = wdata.entry_for_province(gs.world, gs.world.player_province)
+                wdata.ensure_local(gs.world, gs.character.location)
             return
         if action == "handled":
             saves.save_game(gs)
@@ -206,6 +207,12 @@ def _travel(ui: UI, gs: GameState, dest: str) -> None:
     gs.world.discover(dest)
     for nbr in geography.neighbors(dest):
         gs.world.discover(nbr)
+    # arriving drops you at the local scene of the seat you have reached
+    gs.character.location = wdata.entry_for_province(gs.world, dest)
+    wdata.ensure_local(gs.world, gs.character.location)
+    entry = wdata.get_location(gs.character.location, gs.world)
+    if entry:
+        ui.print(f"[green]You arrive at {entry.name}.[/green]")
 
 
 def _advance(ui: UI, gs: GameState, days: int) -> None:

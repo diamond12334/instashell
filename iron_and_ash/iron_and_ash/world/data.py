@@ -7,8 +7,9 @@ without quoting it. New regions can be added by extending these dicts.
 """
 from __future__ import annotations
 
-from typing import Dict, List
+from typing import Dict, List, Optional
 
+from . import localgen, seatscenes
 from .models import Faction, Location, NPCDef, NPCState, WorldState
 
 STARTING_LOCATION = "winterfell_yard"
@@ -113,6 +114,14 @@ NPCS: Dict[str, NPCDef] = {
 }
 
 
+# ids of the original hand-authored Winterfell scene, before other seats merge in
+_WINTERFELL_LOCATION_IDS = set(LOCATIONS)
+
+# fold in the hand-authored scenes for the other great seats
+LOCATIONS.update(seatscenes.SCENE_LOCATIONS)
+NPCS.update(seatscenes.SCENE_NPCS)
+
+
 def new_world_state(era: str = "agot") -> WorldState:
     """Build the initial mutable world overlay from the static definitions."""
     ws = WorldState(day=0, era=era)
@@ -130,3 +139,63 @@ def npcs_at(location_id: str, world: WorldState) -> List[str]:
         if state.alive and state.location == location_id:
             present.append(npc_id)
     return present
+
+
+# ---------------------------------------------------------------------------
+# scene resolver: authored (static) + generated (from the save) locations & NPCs
+# ---------------------------------------------------------------------------
+def province_of_location(location_id: str) -> Optional[str]:
+    """Which strategic province a local location belongs to."""
+    if location_id in _WINTERFELL_LOCATION_IDS:
+        return "winterfell"
+    if location_id in seatscenes.LOC_PROVINCE:
+        return seatscenes.LOC_PROVINCE[location_id]
+    if location_id.startswith("gen:"):
+        return location_id.split(":")[1]
+    return None
+
+
+def get_location(location_id: str, world: Optional[WorldState] = None) -> Optional[Location]:
+    """Resolve a location id to its definition (authored or generated)."""
+    if location_id in LOCATIONS:
+        return LOCATIONS[location_id]
+    if location_id.startswith("gen:") and world is not None:
+        pid = location_id.split(":")[1]
+        return localgen.scene_for_province(world, pid).locations.get(location_id)
+    return None
+
+
+def get_npc(npc_id: str, world: Optional[WorldState] = None) -> Optional[NPCDef]:
+    """Resolve an NPC id to its definition (authored or generated)."""
+    if npc_id in NPCS:
+        return NPCS[npc_id]
+    if npc_id.startswith("gnpc:") and world is not None:
+        pid = npc_id.split(":")[1]
+        return localgen.scene_for_province(world, pid).npcs.get(npc_id)
+    return None
+
+
+def entry_for_province(world: WorldState, province_id: str) -> str:
+    """The local location a traveller arrives at when reaching a province."""
+    if province_id == "winterfell":
+        return STARTING_LOCATION
+    if province_id in seatscenes.PROVINCE_ENTRY:
+        return seatscenes.PROVINCE_ENTRY[province_id]
+    return localgen.entry_for_province(world, province_id)
+
+
+def ensure_local(world: WorldState, location_id: str) -> None:
+    """Make sure a generated scene's NPCs are placed in the world.
+
+    Authored scenes (Winterfell, the great seats) are placed at world creation;
+    generated scenes are populated lazily the first time the player arrives.
+    """
+    if not location_id.startswith("gen:"):
+        return
+    pid = province_of_location(location_id)
+    if pid is None:
+        return
+    scene = localgen.scene_for_province(world, pid)
+    for npc_id, npc in scene.npcs.items():
+        if npc_id not in world.npcs:
+            world.npcs[npc_id] = NPCState(id=npc_id, location=npc.home_location)

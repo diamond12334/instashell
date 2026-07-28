@@ -36,20 +36,24 @@ class Game:
             self.saves.save_game(self.gs)
 
     # -- location -------------------------------------------------------------
+    def _loc(self):
+        wdata.ensure_local(self.gs.world, self.gs.character.location)
+        return wdata.get_location(self.gs.character.location, self.gs.world)
+
     def _describe_location(self) -> None:
-        loc = wdata.LOCATIONS[self.gs.character.location]
+        loc = self._loc()
         self.ui.rule(f"{loc.name}  -  Day {self.gs.world.day}")
         self.ui.narrate(loc.description)
         present = wdata.npcs_at(loc.id, self.gs.world)
         if present:
-            names = ", ".join(wdata.NPCS[n].name for n in present)
+            names = ", ".join(wdata.get_npc(n, self.gs.world).name for n in present)
             self.ui.print(f"[cyan]Here you see:[/cyan] {names}")
             self._colocation_reactions(present)
 
     def _colocation_reactions(self, present: List[str]) -> None:
         """When you and an NPC share a place, they react to who you are to them."""
         for npc_id in present:
-            npc = wdata.NPCS[npc_id]
+            npc = wdata.get_npc(npc_id, self.gs.world)
             disposition = self.gs.memory.npc_disposition(npc_id) + npc.base_disposition
             past = [e for e in self.gs.memory.events_with_actor(npc_id, 3)
                     if e.type != EventType.DIALOGUE]
@@ -62,7 +66,8 @@ class Game:
                               f"that {past[-1].summary.lower()}[/dim]")
 
     def _on_enter_location(self, first: bool = False) -> None:
-        loc = wdata.LOCATIONS[self.gs.character.location]
+        wdata.ensure_local(self.gs.world, self.gs.character.location)
+        loc = wdata.get_location(self.gs.character.location, self.gs.world)
         if not first:
             self.gs.memory.record(Event(
                 game_day=self.gs.world.day, type=EventType.TRAVEL,
@@ -70,19 +75,20 @@ class Game:
                 location=loc.id, importance=1))
 
     def _action_menu(self) -> None:
-        loc = wdata.LOCATIONS[self.gs.character.location]
+        loc = self._loc()
         present = wdata.npcs_at(loc.id, self.gs.world)
         actions: List[str] = []
         handlers: List = []
 
         for npc_id in present:
-            actions.append(f"Speak with {wdata.NPCS[npc_id].name}")
+            actions.append(f"Speak with {wdata.get_npc(npc_id, self.gs.world).name}")
             handlers.append(("talk", npc_id))
         for label, dest in loc.exits.items():
             if dest == loc.id:
                 continue  # a self-loop 'explore' exit; skip to keep the menu clean
-            dest_name = wdata.LOCATIONS[dest].name
-            actions.append(f"Travel: {label} -> {dest_name}")
+            dest_loc = wdata.get_location(dest, self.gs.world)
+            dest_name = dest_loc.name if dest_loc else dest
+            actions.append(f"Go: {label}")
             handlers.append(("travel", dest))
 
         actions += ["The realm (map, travel & war)", "Rest a while", "View character",
@@ -101,16 +107,17 @@ class Game:
         self.saves.save_game(self.gs)  # autosave after meaningful interaction
 
     def _do_travel(self, dest: str) -> None:
-        loc = wdata.LOCATIONS[dest]
-        days = max(1, loc.travel_days)
-        self.ui.print(f"[dim]You travel to {loc.name} ({days} day(s) on the road)...[/dim]")
-        lines = reactivity.advance_time(self.gs.world, self.gs.memory, days)
-        for line in lines:
-            self.ui.print(f"[yellow]* {line}[/yellow]")
+        loc = wdata.get_location(dest, self.gs.world)
+        days = loc.travel_days if loc else 1
+        if days > 0:
+            self.ui.print(f"[dim]You travel to {loc.name} ({days} day(s) on the road)...[/dim]")
+            lines = reactivity.advance_time(self.gs.world, self.gs.memory, days)
+            for line in lines:
+                self.ui.print(f"[yellow]* {line}[/yellow]")
         self.gs.character.location = dest
         self._maybe_summarize()
         self._on_enter_location()
-        self.saves.save_game(self.gs)  # autosave on travel
+        self.saves.save_game(self.gs)  # autosave on moving
 
     def _do_rest(self, _arg) -> None:
         lines = reactivity.advance_time(self.gs.world, self.gs.memory, 1)

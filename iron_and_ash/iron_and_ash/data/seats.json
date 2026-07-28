@@ -1,0 +1,177 @@
+{
+  "kings_landing": {
+    "entry": "kl_gate",
+    "locations": [
+      {"id": "kl_gate", "name": "The Mud Gate", "region": "crownlands",
+       "description": "The busiest of the city's seven gates, choked with carts, beggars, and the reek of the river. Gold cloaks lean on their spears and watch the crowds with practised boredom.",
+       "exits": {"up the Hook toward the keep": "kl_street", "into Flea Bottom": "kl_flea"},
+       "npcs": ["kl_goldcloak"], "travel_days": 0},
+      {"id": "kl_street", "name": "The Street of Steel", "region": "crownlands",
+       "description": "Smoke and the ring of hammers fill the climbing street, where every armorer in the city keeps a forge. The higher you climb, the finer - and dearer - the steel.",
+       "exits": {"down to the river gate": "kl_gate", "up to the Red Keep": "kl_keep"},
+       "npcs": ["kl_armorer"], "travel_days": 0},
+      {"id": "kl_keep", "name": "The Red Keep", "region": "crownlands",
+       "description": "Pale red stone and seven drum-towers crown Aegon's High Hill. Beyond the throne room doors waits the Iron Throne itself, a mountain of blackened, beaten blades.",
+       "exits": {"back down the Hook": "kl_street"},
+       "npcs": ["kl_courtier"], "travel_days": 0},
+      {"id": "kl_flea", "name": "Flea Bottom", "region": "crownlands",
+       "description": "A warren of mud lanes and pot-shops where the smallfolk boil bowls o' brown and ask no questions. A dangerous place to be a stranger, and a fine place to be forgotten.",
+       "exits": {"back to the Mud Gate": "kl_gate"},
+       "npcs": ["kl_whisper"], "travel_days": 0}
+    ],
+    "npcs": [
+      {"id": "kl_goldcloak", "name": "Captain Farring", "title": "Officer of the City Watch",
+       "home_location": "kl_gate", "faction": "iron_throne",
+       "description": "A hard-eyed officer in a gold cloak, grown rich on the tolls and bribes that flow through his gate.", "base_disposition": 0},
+      {"id": "kl_armorer", "name": "Wat the Smith", "title": "Master Armorer",
+       "home_location": "kl_street", "faction": "iron_throne",
+       "description": "A soot-stained master of the Street of Steel, whose plate is worn by knights who can afford the best.", "base_disposition": 5},
+      {"id": "kl_courtier", "name": "Ser Willem Wode", "title": "Courtier of the Red Keep",
+       "home_location": "kl_keep", "faction": "iron_throne",
+       "description": "A silk-clad hanger-on of the court, all perfume and smiling menace, who trades in whispers and favours.", "base_disposition": -5},
+      {"id": "kl_whisper", "name": "Rue", "title": "A Little Bird",
+       "home_location": "kl_flea", "faction": null,
+       "description": "A ragged, sharp-eyed child of Flea Bottom who hears everything and sells it to whoever pays.", "base_disposition": 0}
+    ]
+  },
+  "casterly_rock": {
+    "entry": "cr_gate",
+    "locations": [
+      {"id": "cr_gate", "name": "The Lion's Mouth", "region": "westerlands",
+       "description": "The great gate of Casterly Rock is a tunnel wide enough for horsemen to ride abreast, climbing up into the living mountain by torchlight and switchback stair.",
+       "exits": {"up into the Rock": "cr_hall", "down to the mines": "cr_mine"},
+       "npcs": ["cr_guard"], "travel_days": 0},
+      {"id": "cr_hall", "name": "The Golden Gallery", "region": "westerlands",
+       "description": "A long hall carved from the mountain's heart, its walls veined with gold and hung with the crimson banners of the lion. Even the sconces are worked in gold.",
+       "exits": {"down to the Lion's Mouth": "cr_gate", "deeper to the mines": "cr_mine"},
+       "npcs": ["cr_castellan"], "travel_days": 0},
+      {"id": "cr_mine", "name": "The Gold Mines", "region": "westerlands",
+       "description": "Deep beneath the Rock the mines run on forever, hot and close, where the wealth of the Westerlands is dug from the dark. The clink of picks never truly stops.",
+       "exits": {"back up to the gallery": "cr_hall"},
+       "npcs": ["cr_foreman"], "travel_days": 0}
+    ],
+    "npcs": [
+      {"id": "cr_castellan", "name": "Ser Benedict Broom", "title": "Castellan of the Rock",
+       "home_location": "cr_hall", "faction": "lannister",
+       "description": "A grey, precise knight who has kept the Rock for the lions through three lords, and forgotten more of its secrets than most men ever learn.", "base_disposition": 0},
+      {"id": "cr_guard", "name": "Ser Loras Vikary", "title": "Captain of the Guard",
+       "home_location": "cr_gate", "faction": "lannister",
+       "description": "A broad, watchful knight in crimson and gold who judges every visitor by the coin and steel they carry.", "base_disposition": 0},
+      {"id": "cr_foreman", "name": "Gerion Pyle", "title": "Master of the Mines",
+       "home_location": "cr_mine", "faction": "lannister",
+       "description": "A blunt, calloused man who counts the Rock's true wealth by the wagonload and trusts no one near his ledgers.", "base_disposition": 0}
+    ]
+  },
+  "the_eyrie": {
+    "entry": "ey_ascent",
+    "locations": [
+      {"id": "ey_ascent", "name": "Sky", "region": "vale",
+       "description": "The last of the three waycastles, where the mountain track gives out and the final six hundred feet to the Eyrie must be climbed by ladder and basket. The wind never stops screaming here.",
+       "exits": {"up to the High Hall": "ey_hall"},
+       "npcs": ["ey_knight"], "travel_days": 0},
+      {"id": "ey_hall", "name": "The High Hall", "region": "vale",
+       "description": "A slender white hall of blue-veined marble, its floor patterned in the shape of falcon wings. In the middle of the floor is the Moon Door - a weirwood door that opens on six hundred feet of empty air.",
+       "exits": {"down to Sky": "ey_ascent", "to the sky cells": "ey_cells"},
+       "npcs": ["ey_steward"], "travel_days": 0},
+      {"id": "ey_cells", "name": "The Sky Cells", "region": "vale",
+       "description": "Cells with only three walls, their floors sloping gently toward a lip of open sky. The cold and the drop do the gaolers' work, and prisoners beg to confess before they beg for food.",
+       "exits": {"back to the High Hall": "ey_hall"},
+       "npcs": ["ey_turnkey"], "travel_days": 0}
+    ],
+    "npcs": [
+      {"id": "ey_steward", "name": "Lord Nestor Royce", "title": "High Steward of the Vale",
+       "home_location": "ey_hall", "faction": "arryn",
+       "description": "A heavy, careful lord who has held the Gates and the Vale's keys for years, and knows precisely what his loyalty is worth.", "base_disposition": 0},
+      {"id": "ey_knight", "name": "Ser Albar Ruthermont", "title": "A Knight of the Vale",
+       "home_location": "ey_ascent", "faction": "arryn",
+       "description": "A proud winged knight who guards the ascent, courteous to the highborn and cold to all others.", "base_disposition": 0},
+      {"id": "ey_turnkey", "name": "Mad Osgood", "title": "Keeper of the Sky Cells",
+       "home_location": "ey_cells", "faction": "arryn",
+       "description": "A grim gaoler who speaks of the Moon Door the way other men speak of the weather.", "base_disposition": -5}
+    ]
+  },
+  "storms_end": {
+    "entry": "se_gate",
+    "locations": [
+      {"id": "se_gate", "name": "The Great Curtain Wall", "region": "stormlands",
+       "description": "A single wall a hundred feet high and forty thick on its seaward face, its stones so cunningly fitted the wind finds no purchase. No storm, siege, or sorcery has ever breached it.",
+       "exits": {"into the drum tower": "se_hall", "out to the shore": "se_shore"},
+       "npcs": ["se_castellan"], "travel_days": 0},
+      {"id": "se_hall", "name": "The Round Hall", "region": "stormlands",
+       "description": "The great drum tower's hall, thick-walled and windowless against the storms, warmed by a hearth a man could stand in. The stag of the Baratheons broods above the high seat.",
+       "exits": {"back to the wall": "se_gate"},
+       "npcs": ["se_maester"], "travel_days": 0},
+      {"id": "se_shore", "name": "Shipbreaker Bay", "region": "stormlands",
+       "description": "Below the castle the cliffs fall to a shore littered with the bones of a thousand wrecked ships. The bay earns its name; few captains dare it, and fewer twice.",
+       "exits": {"back to the gate": "se_gate"},
+       "npcs": ["se_smuggler"], "travel_days": 0}
+    ],
+    "npcs": [
+      {"id": "se_castellan", "name": "Ser Gawen Wylde", "title": "Castellan of Storm's End",
+       "home_location": "se_gate", "faction": "baratheon",
+       "description": "A weathered knight who has held the great wall through wind and war, stubborn as the stones he keeps.", "base_disposition": 0},
+      {"id": "se_maester", "name": "Maester Cressen", "title": "Maester of Storm's End",
+       "home_location": "se_hall", "faction": "baratheon",
+       "description": "A gentle, aged maester whose chain and counsel have served the storm lords since before the rebellion.", "base_disposition": 5},
+      {"id": "se_smuggler", "name": "Davos", "title": "Onion Trader",
+       "home_location": "se_shore", "faction": null,
+       "description": "A low-born man of the sea with clever hands and an honest tongue, who knows every rock in Shipbreaker Bay.", "base_disposition": 5}
+    ]
+  },
+  "highgarden": {
+    "entry": "hg_gate",
+    "locations": [
+      {"id": "hg_gate", "name": "The Brier Gate", "region": "reach",
+       "description": "A gate wreathed in climbing roses that never seem to wilt, opening on the fairest castle in the Reach. Even the guards wear green and gold, and smile as they bar your way.",
+       "exits": {"into the Hall of Roses": "hg_hall", "into the gardens": "hg_garden"},
+       "npcs": ["hg_knight"], "travel_days": 0},
+      {"id": "hg_hall", "name": "The Hall of Roses", "region": "reach",
+       "description": "A bright, high hall where singers are never silent and the tables never quite empty. The golden rose of the Tyrells climbs every pillar; courtesy here is a weapon as keen as any sword.",
+       "exits": {"out to the Brier Gate": "hg_gate", "into the gardens": "hg_garden"},
+       "npcs": ["hg_steward"], "travel_days": 0},
+      {"id": "hg_garden", "name": "The Labyrinth Gardens", "region": "reach",
+       "description": "Hedge mazes, briars, and fountains stretch for acres, thick with the hum of bees. Lovers and plotters alike lose themselves here, which is rather the point.",
+       "exits": {"back to the hall": "hg_hall"},
+       "npcs": ["hg_singer"], "travel_days": 0}
+    ],
+    "npcs": [
+      {"id": "hg_steward", "name": "Ser Vortimer Crane", "title": "Steward of Highgarden",
+       "home_location": "hg_hall", "faction": "tyrell",
+       "description": "A smooth, silver-tongued steward who runs the Reach's richest household and misses nothing beneath his courtesies.", "base_disposition": 0},
+      {"id": "hg_knight", "name": "Ser Emmon Cuy", "title": "Knight of the Brier Gate",
+       "home_location": "hg_gate", "faction": "tyrell",
+       "description": "A flower of Reach chivalry, gracious and vain, forever polishing armor he hopes to wear at the next tourney.", "base_disposition": 5},
+      {"id": "hg_singer", "name": "Alaric of Eysen", "title": "A Wandering Singer",
+       "home_location": "hg_garden", "faction": null,
+       "description": "A travelled bard with a fine voice and a finer ear for the secrets great folk let slip when the wine flows.", "base_disposition": 5}
+    ]
+  },
+  "sunspear": {
+    "entry": "ss_gate",
+    "locations": [
+      {"id": "ss_gate", "name": "The Threefold Gate", "region": "dorne",
+       "description": "Three gates and three walls guard the way into Sunspear, opening on a blaze of sun-baked sandstone. Spearmen in orange and red watch you from the shade, unhurried.",
+       "exits": {"to the Tower of the Sun": "ss_tower", "into the shadow city": "ss_shadow"},
+       "npcs": ["ss_captain"], "travel_days": 0},
+      {"id": "ss_tower", "name": "The Tower of the Sun", "region": "dorne",
+       "description": "A great domed hall of a thousand panes of colored glass, where the light falls in shafts of gold and blood. Here the Prince of Dorne sits his twin thrones, unbowed and unhurried.",
+       "exits": {"out to the gate": "ss_gate"},
+       "npcs": ["ss_steward"], "travel_days": 0},
+      {"id": "ss_shadow", "name": "The Shadow City", "region": "dorne",
+       "description": "The winding mud-brick warren beneath Sunspear's walls, all shade and spice and whispered Rhoynish. A cool cup of wine and a knife in the dark are equally easy to find here.",
+       "exits": {"back to the gate": "ss_gate"},
+       "npcs": ["ss_merchant"], "travel_days": 0}
+    ],
+    "npcs": [
+      {"id": "ss_steward", "name": "Ricasso", "title": "Seneschal of Sunspear",
+       "home_location": "ss_tower", "faction": "martell",
+       "description": "The blind old seneschal of Sunspear, whose memory holds every debt, slight, and secret of Dorne.", "base_disposition": 0},
+      {"id": "ss_captain", "name": "Areo of Norvos", "title": "Captain of the Guard",
+       "home_location": "ss_gate", "faction": "martell",
+       "description": "A huge, silent guardsman with a longaxe, sworn to the Martells and utterly without fear.", "base_disposition": 0},
+      {"id": "ss_merchant", "name": "Myria Sand", "title": "Spice Trader",
+       "home_location": "ss_shadow", "faction": null,
+       "description": "A quick, dark-eyed trader of the shadow city who deals in spice, silk, and rarer things besides.", "base_disposition": 5}
+    ]
+  }
+}

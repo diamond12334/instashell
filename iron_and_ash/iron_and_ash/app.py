@@ -7,10 +7,12 @@ from .character.creation import create_character
 from .character import data as cdata
 from .engine.codex import open_codex
 from .engine.game import Game
+from .engine.startloc import choose_start
 from .memory import Event, EventType
 from .persistence.saves import SaveManager
 from .ui.console import UI
 from .world import data as wdata
+from .world import mapdata
 
 
 TITLE_ART = r"""
@@ -64,12 +66,14 @@ class App:
             return
         character = create_character(self.ui)
         world = wdata.new_world_state()
-        character.location = wdata.STARTING_LOCATION
+        choose_start(self.ui, character, world)
         gs = self.saves.new_game(slot, character, world)
         # opening milestone - the first thing the world remembers
+        start = wdata.get_location(character.location, world)
+        place = start.name if start else "the realm"
         gs.memory.record(Event(
             game_day=0, type=EventType.MILESTONE,
-            summary=f"{character.name} of {character.house} began their tale at Winterfell.",
+            summary=f"{character.name} of {character.house} began their tale at {place}.",
             location=character.location, importance=4,
         ))
         self.saves.save_game(gs)
@@ -87,14 +91,18 @@ class App:
 
     def _opening_scene(self, gs) -> None:
         c = gs.character
+        start = wdata.get_location(c.location, gs.world)
+        room = start.name if start else "the realm"
+        pid = wdata.province_of_location(c.location)
+        prov = mapdata.PROVINCES.get(pid) if pid else None
+        place = prov.name if prov else room
         self.ui.panel(
-            f"The year turns cold as {c.name} of {c.house} comes to Winterfell, "
-            f"seat of the Starks and heart of the North. Whatever brought you here - "
-            f"blood, coin, oath, or exile - the grey walls care nothing for it. "
-            f"They have stood ten thousand years, and they will judge you by your "
-            f"deeds alone.\n\n[dim]Faith: {cdata.RELIGIONS[c.religion]}  -  "
+            f"The year turns cold as {c.name} of {c.house} comes to {place}. "
+            f"Whatever brought you here - blood, coin, oath, or exile - the world "
+            f"cares nothing for it, and will judge you by your deeds alone.\n\n"
+            f"[dim]Faith: {cdata.RELIGIONS[c.religion]}  -  "
             f"Born: {cdata.REGIONS[c.region].name}[/dim]",
-            title="Winterfell", style="cyan",
+            title=room, style="cyan",
         )
 
     def _continue(self) -> None:

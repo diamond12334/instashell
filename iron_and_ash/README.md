@@ -105,6 +105,31 @@ dynamic narration — but the base game is fully deterministic and offline.
 - The load menu shows a summary card per save: character, house, in-game day, and a
   notable recent event.
 
+## Where your tale begins, and the places you can walk
+
+Local play is no longer confined to Winterfell. **Every** seat on the map can be
+walked about, and you choose where to start:
+
+- **Any famous seat.** Six great seats have **hand-authored** local scenes -
+  King's Landing (the Mud Gate, the Street of Steel, the Red Keep, Flea Bottom),
+  Casterly Rock, the Eyrie (the sky cells and the Moon Door), Storm's End,
+  Highgarden, and Sunspear - each with its own locations and characters, on top
+  of Winterfell.
+- **Every other castle, town, and city.** A deterministic generator builds a
+  sensible local scene for every remaining seat (a gatehouse, yard, hall, market,
+  keep - scaled to whether it's a holdfast, castle, town, or city), populated with
+  its own castellans, guards, traders, and townsfolk who remember how you treat
+  them. Seatless wilds get a camp-and-trail scene. Generation is seeded and stored
+  nowhere - the same place looks the same every session.
+- **A seat of your own.** Choose *"Found your own seat, built to your design"* at
+  character creation to raise a custom holding: pick the land, name it, choose its
+  kind, and tune its **size, defenses, levy strength, and prosperity** yourself.
+  It's attached to your house, grants you a title, and its levies are yours to
+  call. (You can also found holdings mid-game from the map.)
+
+Travelling the realm on the strategic map drops you straight into the local scene
+of wherever you arrive, so the overworld and the ground-level game are one world.
+
 ## The strategic map & the wars of the realm
 
 Beyond the streets of Winterfell lies the whole of Westeros and the nearer Free
