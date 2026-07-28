@@ -1,0 +1,8 @@
+# Iron & Ash runtime dependencies
+# The game degrades gracefully without `rich` (plain-text fallback), but both
+# are recommended for the intended experience.
+rich>=13.0
+pydantic>=2.0
+
+# Development / tests
+pytest>=7.0

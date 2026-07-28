@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "iron-and-ash"
+version = "0.1.0"
+description = "A persistent text RPG set in the world of A Song of Ice and Fire (fan project)."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "rich>=13.0",
+    "pydantic>=2.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0"]
+
+[project.scripts]
+iron-and-ash = "iron_and_ash.app:main"
+
+[tool.setuptools.packages.find]
+include = ["iron_and_ash*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
