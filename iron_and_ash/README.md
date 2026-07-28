@@ -9,12 +9,43 @@ The design goal is a world that **remembers everything you do, forever**, built 
 three first-class systems: deep character customization, an infinite tiered
 memory system, and robust save/load.
 
-## Quick start
+## Playing on PC
+
+Three ways to play, easiest first:
+
+### 1. One-click launchers (recommended)
+
+- **Windows** — double-click **`play.bat`**. On first run it finds your Python,
+  sets up a private environment, and starts the game; after that it just plays.
+  If Python isn't installed, it tells you exactly what to grab
+  (python.org → tick *"Add python.exe to PATH"*).
+- **Linux / macOS** — run **`./play.sh`**. Same deal: automatic first-run setup,
+  then straight into the game.
+
+Your saves live in your home folder (`~/.iron_and_ash/saves/`), so updating or
+moving the game folder never touches them.
+
+### 2. Standalone executable (no Python needed)
+
+Build a single self-contained file — `iron-and-ash.exe` on Windows:
+
+```bash
+cd iron_and_ash
+python -m pip install pyinstaller
+python packaging/build_exe.py     # result appears in dist/
+```
+
+Build on the OS you want to play on (PyInstaller doesn't cross-compile). The
+repository also ships a GitHub Actions workflow that builds Windows, macOS, and
+Linux executables automatically on every push — grab them from the workflow run's
+artifacts on GitHub.
+
+### 3. Plain Python
 
 ```bash
 cd iron_and_ash
 python -m pip install -r requirements.txt   # rich + pydantic (see note below)
-python -m iron_and_ash
+python -m iron_and_ash                      # or: python run_game.py
 ```
 
 > **No dependencies? It still runs.** The game uses `rich` for colour and layout

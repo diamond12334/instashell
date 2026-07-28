@@ -1,0 +1,57 @@
+name: Build Iron & Ash executables
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "iron_and_ash/**"
+      - ".github/workflows/build-game.yml"
+
+jobs:
+  test:
+    name: Run test suite
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: python -m pip install rich pydantic pytest
+      - name: Run tests
+        working-directory: iron_and_ash
+        run: python -m pytest -q
+
+  build:
+    name: Build for ${{ matrix.os }}
+    needs: test
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            artifact: iron-and-ash-windows
+            binary: dist/iron-and-ash.exe
+          - os: macos-latest
+            artifact: iron-and-ash-macos
+            binary: dist/iron-and-ash
+          - os: ubuntu-latest
+            artifact: iron-and-ash-linux
+            binary: dist/iron-and-ash
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: python -m pip install rich pydantic pyinstaller
+      - name: Build executable
+        working-directory: iron_and_ash
+        run: python packaging/build_exe.py
+      - name: Upload executable
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: iron_and_ash/${{ matrix.binary }}
+          if-no-files-found: error

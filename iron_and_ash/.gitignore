@@ -7,3 +7,7 @@ __pycache__/
 *.db.bak
 *.db-wal
 *.db-shm
+build/
+dist/
+*.spec
+.venv/

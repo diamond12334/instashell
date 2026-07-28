@@ -1,6 +1,8 @@
 """Main menu and application orchestration."""
 from __future__ import annotations
 
+import sys
+
 from .character.creation import create_character
 from .character import data as cdata
 from .engine.codex import open_codex
@@ -141,6 +143,13 @@ class App:
 
 
 def main() -> None:
+    # Older Windows consoles default to legacy code pages; never let an
+    # unprintable character crash the game.
+    for stream in (sys.stdout, sys.stderr):
+        try:
+            stream.reconfigure(errors="replace")
+        except (AttributeError, ValueError):
+            pass
     try:
         App().run()
     except (KeyboardInterrupt, EOFError):
