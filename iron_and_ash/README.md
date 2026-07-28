@@ -62,36 +62,33 @@ python -m pytest
 > alone — `rich` and `pydantic` are optional (each has an automatic fallback).
 > That's what lets it also run on a phone and in a browser.
 
-## Playing on iPhone / iPad
+## Play in the browser (desktop or iPhone — no install)
 
-Two ways, easiest first.
+The quickest way to play, on any device, is the **self-contained web version** in
+[`web/index.html`](web/index.html). It's a single HTML file — pure JavaScript, no
+dependencies, no server, no download — that runs the game right in the browser and
+saves your progress to the browser's storage.
 
-### 1. In the browser (no install)
+- **Just open it.** Double-click `web/index.html`, or visit the GitHub Pages URL
+  once it's deployed (below). On **iPhone/iPad**, open that URL in Safari and use
+  **Share → Add to Home Screen** for a full-screen app icon.
+- Works offline after first load; each browser keeps its own saved tales.
+- Touch-friendly: everything is tappable buttons — no typing except names.
 
-The game ships as a small web app that runs entirely in the browser via Pyodide
-(CPython compiled to WebAssembly) — the real game, not a rewrite. Once it's
-deployed to GitHub Pages (see below), just:
+This browser edition is a streamlined port of the game: deep character creation,
+the memory-driven journal, save/load with named slots, a lore codex, a realm map
+with your position, and NPCs who remember how you treat them. The *complete*
+engine — the 27-province strategic map, the army/war simulation, and every seat's
+local scenes — lives in the Python version (see **Playing on PC**), and is also
+available in the browser as an **experimental Pyodide build** at `pyodide.html`
+that runs the actual Python code (~10 MB one-time download).
 
-1. Open the Pages URL in **Safari** on your iPhone
-   (e.g. `https://<your-github-username>.github.io/<repo>/`).
-2. Wait for the one-time engine download (~10 MB), then play by **tapping the
-   on-screen number pad** and **Enter**. Type names with the keyboard.
-3. Optional: **Share → Add to Home Screen** to get a full-screen app icon.
+**Deploying to GitHub Pages (one-time, by the repo owner):** the included
+`.github/workflows/pages.yml` publishes `web/` automatically. Enable it at
+**Settings → Pages → Source: GitHub Actions**; the next push publishes it, and the
+workflow summary shows the live URL (e.g. `https://<user>.github.io/<repo>/`).
 
-Your saved games persist in the browser's storage (IndexedDB), so you can close
-Safari and pick your tale back up later.
-
-**Enabling it (one-time, by the repo owner):** the included
-`.github/workflows/pages.yml` builds and deploys the web app automatically. Turn
-it on at **Settings → Pages → Build and deployment → Source: GitHub Actions**.
-The next push (or a manual run of the "Deploy Iron & Ash web app to Pages"
-workflow) publishes it, and the workflow's summary shows the live URL.
-
-*(Under the hood the page uses a service worker to enable `SharedArrayBuffer`,
-which lets the game's normal blocking input work in a background worker; saves
-use Pyodide's IndexedDB-backed filesystem.)*
-
-### 2. As a terminal app (a-Shell — free, nicer text)
+## Playing on iPhone with the full Python engine (a-Shell — free)
 
 Prefer a proper terminal? Install a free Python app from the App Store and run
 the game directly (it needs no compiled packages):
