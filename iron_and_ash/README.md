@@ -58,6 +58,61 @@ Run the tests:
 python -m pytest
 ```
 
+> **No dependencies required.** The game runs on the Python standard library
+> alone — `rich` and `pydantic` are optional (each has an automatic fallback).
+> That's what lets it also run on a phone and in a browser.
+
+## Playing on iPhone / iPad
+
+Two ways, easiest first.
+
+### 1. In the browser (no install)
+
+The game ships as a small web app that runs entirely in the browser via Pyodide
+(CPython compiled to WebAssembly) — the real game, not a rewrite. Once it's
+deployed to GitHub Pages (see below), just:
+
+1. Open the Pages URL in **Safari** on your iPhone
+   (e.g. `https://<your-github-username>.github.io/<repo>/`).
+2. Wait for the one-time engine download (~10 MB), then play by **tapping the
+   on-screen number pad** and **Enter**. Type names with the keyboard.
+3. Optional: **Share → Add to Home Screen** to get a full-screen app icon.
+
+Your saved games persist in the browser's storage (IndexedDB), so you can close
+Safari and pick your tale back up later.
+
+**Enabling it (one-time, by the repo owner):** the included
+`.github/workflows/pages.yml` builds and deploys the web app automatically. Turn
+it on at **Settings → Pages → Build and deployment → Source: GitHub Actions**.
+The next push (or a manual run of the "Deploy Iron & Ash web app to Pages"
+workflow) publishes it, and the workflow's summary shows the live URL.
+
+*(Under the hood the page uses a service worker to enable `SharedArrayBuffer`,
+which lets the game's normal blocking input work in a background worker; saves
+use Pyodide's IndexedDB-backed filesystem.)*
+
+### 2. As a terminal app (a-Shell — free, nicer text)
+
+Prefer a proper terminal? Install a free Python app from the App Store and run
+the game directly (it needs no compiled packages):
+
+1. Install **a-Shell** (free) from the App Store.
+2. In a-Shell, download and enter the game:
+   ```
+   curl -L https://github.com/<owner>/<repo>/archive/refs/heads/<branch>.zip -o iaa.zip
+   unzip iaa.zip
+   cd <repo>-<branch>/iron_and_ash      # tab-completion helps here
+   ```
+3. Play:
+   ```
+   python -m iron_and_ash
+   ```
+   (Optionally `pip install rich` first for colour — it's pure-Python and
+   installs fine in a-Shell. The game works without it.)
+
+Pyto and Pythonista work the same way. Tapping numbers on the keyboard drives
+the menus.
+
 ## The three pillars
 
 ### 1. Deep character customization

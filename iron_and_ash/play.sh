@@ -28,10 +28,13 @@ PY="$(find_python)" || {
 }
 
 if [ ! -x ".venv/bin/python" ]; then
-    echo "First run: preparing the game (this takes a minute)..."
+    echo "First run: preparing the game..."
     "$PY" -m venv .venv
-    ./.venv/bin/python -m pip install --quiet --upgrade pip
-    ./.venv/bin/python -m pip install --quiet rich pydantic
+    # These are optional niceties; the game runs on the standard library alone,
+    # so never let a failed install (e.g. offline) stop you from playing.
+    ./.venv/bin/python -m pip install --quiet --upgrade pip >/dev/null 2>&1 || true
+    ./.venv/bin/python -m pip install --quiet rich pydantic >/dev/null 2>&1 || \
+        echo "(optional extras not installed - playing in plain-text mode)"
 fi
 
 exec ./.venv/bin/python -m iron_and_ash

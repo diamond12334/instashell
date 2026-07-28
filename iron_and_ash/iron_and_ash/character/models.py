@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import Dict, List, Optional
 
-from pydantic import BaseModel, Field
+from ..compat import BaseModel, Field
 
 
 ATTRIBUTES = ["might", "agility", "cunning", "presence", "will", "lore"]

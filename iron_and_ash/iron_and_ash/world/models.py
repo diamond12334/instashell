@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from typing import Dict, List, NamedTuple, Optional
 
-from pydantic import BaseModel, Field
+from ..compat import BaseModel, Field
 
 from .holdings import Holding
 from .military import Army

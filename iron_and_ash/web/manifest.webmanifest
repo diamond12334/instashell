@@ -1,0 +1,14 @@
+{
+  "name": "Iron & Ash",
+  "short_name": "Iron & Ash",
+  "description": "A persistent text RPG set in the world of A Song of Ice and Fire.",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#1a1712",
+  "theme_color": "#1a1712",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

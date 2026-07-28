@@ -11,3 +11,6 @@ build/
 dist/
 *.spec
 .venv/
+
+# web build artifact (built in CI)
+web/iron_and_ash.zip

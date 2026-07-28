@@ -20,7 +20,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Dict, List, Optional
 
-from pydantic import BaseModel, Field
+from ..compat import BaseModel, Field
 
 LORE_DIR = Path(__file__).resolve().parents[1] / "data" / "lore"
 

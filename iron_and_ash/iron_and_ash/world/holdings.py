@@ -15,7 +15,7 @@ from __future__ import annotations
 import random
 from typing import Dict, List, Optional
 
-from pydantic import BaseModel, Field
+from ..compat import BaseModel, Field
 
 # kind -> (population range, base defense, income range, garrison range, levy %)
 KIND_PROFILE: Dict[str, dict] = {

@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="theme-color" content="#1a1712" />
+<title>Iron &amp; Ash</title>
+<link rel="manifest" href="manifest.webmanifest" />
+<link rel="apple-touch-icon" href="icon.svg" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='26'%3E%E2%9A%94%EF%B8%8F%3C/text%3E%3C/svg%3E" />
+<!-- gain cross-origin isolation so SharedArrayBuffer (blocking input) works on static hosts -->
+<script src="coi-serviceworker.js"></script>
+<style>
+  :root { --bg:#1a1712; --panel:#211d16; --ink:#e8dfc8; --dim:#9c907a;
+          --accent:#c9a24b; --btn:#2e2820; --btn2:#3a3226; }
+  * { box-sizing: border-box; }
+  html, body { margin:0; height:100%; background:var(--bg); color:var(--ink);
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+  body { display:flex; flex-direction:column;
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left); }
+  header { padding:10px 14px; border-bottom:1px solid #332c20; display:flex;
+    align-items:center; gap:8px; }
+  header b { color:var(--accent); letter-spacing:.5px; }
+  header span { color:var(--dim); font-size:12px; margin-left:auto; }
+  #out { flex:1; overflow-y:auto; white-space:pre-wrap; word-break:break-word;
+    padding:12px 14px; font-size:15px; line-height:1.45; -webkit-overflow-scrolling:touch; }
+  #bar { display:flex; gap:8px; padding:8px; border-top:1px solid #332c20; background:var(--panel); }
+  #line { flex:1; min-width:0; background:#14110c; color:var(--ink); border:1px solid #3a3226;
+    border-radius:10px; padding:12px; font:inherit; font-size:16px; }
+  button { background:var(--btn); color:var(--ink); border:1px solid #463d2c;
+    border-radius:10px; font:inherit; font-size:16px; padding:12px 14px; cursor:pointer; }
+  button:active { background:var(--btn2); }
+  #send { background:var(--accent); color:#1a1712; font-weight:700; border-color:var(--accent); }
+  #pad { display:grid; grid-template-columns:repeat(6,1fr); gap:6px; padding:0 8px 10px; background:var(--panel); }
+  #pad button { padding:12px 0; }
+  .wide { grid-column: span 2; }
+  #hint { color:var(--dim); font-size:12px; padding:0 14px 8px; background:var(--panel); }
+  .err { color:#e08a6a; }
+  .acc { color:var(--accent); }
+</style>
+</head>
+<body>
+  <header><b>⚔️ Iron &amp; Ash</b> <span>ASOIAF text RPG</span></header>
+  <div id="out">Preparing the realm…
+</div>
+  <div id="hint">Tap a number then Enter to choose. Type names with the keyboard.</div>
+  <div id="pad"></div>
+  <div id="bar">
+    <input id="line" autocomplete="off" autocapitalize="off" autocorrect="off"
+           spellcheck="false" enterkeyhint="send" placeholder="your choice…" />
+    <button id="send">Enter</button>
+  </div>
+
+<script>
+const outEl = document.getElementById("out");
+const lineEl = document.getElementById("line");
+const sendEl = document.getElementById("send");
+const padEl = document.getElementById("pad");
+let control = null, dataView = null, dataCap = 0, worker = null, awaiting = false;
+const encoder = new TextEncoder();
+
+function print(text, cls) {
+  const atBottom = outEl.scrollHeight - outEl.scrollTop - outEl.clientHeight < 40;
+  if (cls) { const s = document.createElement("span"); s.className = cls; s.textContent = text; outEl.appendChild(s); }
+  else { outEl.appendChild(document.createTextNode(text)); }
+  if (atBottom) outEl.scrollTop = outEl.scrollHeight;
+}
+
+function send() {
+  if (!awaiting || !control) return;
+  const line = lineEl.value;
+  const bytes = encoder.encode(line + "\n");
+  if (bytes.length > dataCap) return;
+  dataView.set(bytes, 0);
+  Atomics.store(control, 1, bytes.length);
+  Atomics.store(control, 0, 1);
+  Atomics.notify(control, 0);
+  print((line || "") + "\n", "acc");
+  lineEl.value = "";
+  awaiting = false;
+}
+
+sendEl.addEventListener("click", send);
+lineEl.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); send(); } });
+
+// touch keypad: digits append, ⌫ backspaces, y/n are shortcuts
+const keys = ["1","2","3","4","5","6","7","8","9","y","n","0","⌫"];
+for (const k of keys) {
+  const b = document.createElement("button");
+  b.textContent = k;
+  if (k === "⌫") b.classList.add("wide");
+  b.addEventListener("click", () => {
+    if (k === "⌫") lineEl.value = lineEl.value.slice(0, -1);
+    else lineEl.value += k;
+    lineEl.focus();
+  });
+  padEl.appendChild(b);
+}
+
+function startWorker() {
+  if (typeof SharedArrayBuffer === "undefined" || !self.crossOriginIsolated) {
+    print("\nThis browser could not enable the shared-memory mode this game needs.\n" +
+          "Try reloading once; if it persists, use a modern Safari/Chrome.\n", "err");
+    return;
+  }
+  outEl.textContent = "";
+  const sab = new SharedArrayBuffer(8 + 8192);
+  control = new Int32Array(sab, 0, 2);
+  dataView = new Uint8Array(sab, 8);
+  dataCap = sab.byteLength - 8;
+
+  worker = new Worker("pyodide-worker.js");
+  worker.onmessage = (ev) => {
+    const m = ev.data;
+    if (m.type === "out") print(m.text);
+    else if (m.type === "awaiting") { awaiting = true; }
+    else if (m.type === "ready") print("");
+    else if (m.type === "exit") { print("\n— the game has ended. Reload to play again. —\n", "err"); awaiting = false; }
+  };
+  worker.postMessage({ type: "boot", buffer: sab });
+}
+
+// the service worker reloads the page once to grant isolation; then we boot.
+if (self.crossOriginIsolated) startWorker();
+else setTimeout(() => { if (self.crossOriginIsolated) startWorker();
+  else print("Enabling secure mode… if nothing happens, reload the page.\n"); }, 1200);
+</script>
+</body>
+</html>

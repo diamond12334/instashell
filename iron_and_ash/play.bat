@@ -35,12 +35,14 @@ if errorlevel 1 (
     exit /b 1
 )
 
-rem -- first run: create a private venv and install dependencies -------------
+rem -- first run: create a private venv; optional extras are best-effort -----
 if not exist ".venv\Scripts\python.exe" (
-    echo First run: preparing the game ^(this takes a minute^)...
+    echo First run: preparing the game...
     %PYCMD% -m venv .venv || goto :venvfail
-    ".venv\Scripts\python.exe" -m pip install --quiet --upgrade pip
-    ".venv\Scripts\python.exe" -m pip install --quiet rich pydantic || goto :venvfail
+    rem rich and pydantic are optional niceties - the game runs on the standard
+    rem library alone, so a failed install must never stop you from playing.
+    ".venv\Scripts\python.exe" -m pip install --quiet --upgrade pip >nul 2>&1
+    ".venv\Scripts\python.exe" -m pip install --quiet rich pydantic >nul 2>&1
 )
 
 rem -- play -------------------------------------------------------------------

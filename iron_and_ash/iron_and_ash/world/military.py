@@ -24,7 +24,7 @@ from __future__ import annotations
 import random
 from typing import Any, Dict, List, Optional, Tuple
 
-from pydantic import BaseModel, Field
+from ..compat import BaseModel, Field
 
 from . import geography, mapdata
 
