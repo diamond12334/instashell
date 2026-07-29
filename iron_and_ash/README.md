@@ -75,13 +75,32 @@ saves your progress to the browser's storage.
 - Works offline after first load; each browser keeps its own saved tales.
 - Touch-friendly: everything is tappable buttons — no typing except names.
 
-This browser edition is a streamlined port of the game: deep character creation,
-the memory-driven journal, save/load with named slots, a lore codex, a realm map
-with your position, and NPCs who remember how you treat them. The *complete*
-engine — the 27-province strategic map, the army/war simulation, and every seat's
-local scenes — lives in the Python version (see **Playing on PC**), and is also
-available in the browser as an **experimental Pyodide build** at `pyodide.html`
-that runs the actual Python code (~10 MB one-time download).
+The browser edition is a self-contained port with real depth:
+
+- **Deep character creation** — great house or common origin, region, faith,
+  background, point-buy attributes, perks & flaws.
+- **A living, remembered world** — a persistent JSON world-state tracks time and
+  the **long ASOIAF seasons** (a fading summer that turns to autumn and a
+  dangerous winter), with danger and events scaling by season.
+- **Lore-driven random events** gated by season and region — outlaw ambushes,
+  reaver raids, fevered travellers, ill omens — many with real choices and combat.
+- **A rumor mill** — news is born in a region and *travels* over days to
+  neighbouring regions; you learn distant tidings late and garbled, and NPCs tell
+  you only what has reached where you both stand.
+- **Multi-faction politics** — reputation with a dozen powers (the great houses,
+  the Watch, the free folk, the Faith, the Iron Throne), plus **favors** owed that
+  you can call in.
+- **NPC memory, grudges & secrets** — characters recall your deeds, hold grudges
+  after a slight (and can be won back), and keep secrets you can uncover with
+  Cunning and wield as leverage.
+- **Combat with lasting wounds and permadeath** — a bad fight can leave a
+  permanent scar (a limp, a crippled hand, a lost eye), and death is final: the
+  tale ends with an epitaph and the save is marked fallen.
+
+The *complete* engine — the 27-province strategic map, the army/war simulation,
+and every seat's local scenes — lives in the Python version (see **Playing on
+PC**), and is also available in the browser as an **experimental Pyodide build**
+at `pyodide.html` that runs the actual Python code (~10 MB one-time download).
 
 **Deploying to GitHub Pages (one-time, by the repo owner):** the included
 `.github/workflows/pages.yml` publishes `web/` automatically. Enable it at

@@ -202,7 +202,15 @@ const NPCS={
   ygga:{name:"Ygga Snowhair",title:"Free Folk Raider",faction:"free_folk",base:-10,
     desc:"A wildling woman with white-blond hair and a spear taller than she is, south of the Wall for reasons of her own."},
 };
-const FACTIONS={north_lords:"The Northern Lords",nights_watch:"The Night's Watch",free_folk:"The Free Folk"};
+const FACTIONS={north_lords:"House Stark & the North",iron_throne:"The Iron Throne",
+  lannister:"House Lannister",tully:"House Tully (Riverlands)",arryn:"House Arryn (Vale)",
+  tyrell:"House Tyrell (Reach)",baratheon:"House Baratheon (Stormlands)",martell:"House Martell (Dorne)",
+  greyjoy:"House Greyjoy (Iron Islands)",nights_watch:"The Night's Watch",free_folk:"The Free Folk",
+  faith:"The Faith of the Seven"};
+// which faction holds sway in each region (for rumor/event colouring)
+const REGION_FACTION={north:"north_lords",riverlands:"tully",vale:"arryn",westerlands:"lannister",
+  reach:"tyrell",stormlands:"baratheon",dorne:"martell",iron_islands:"greyjoy",
+  crownlands:"iron_throne",essos:null};
 // dialogue trees: options with effects; check options resolve a skill test
 const DIALOGUE={
   ormund:[
@@ -305,8 +313,16 @@ const LORE=[
 //============================== STATE =================================
 const SAVE_INDEX="ironash:v1:index", SAVE_PREFIX="ironash:v1:save:";
 let S=null, slot=null, back=null;
-function newState(){return{v:1,c:null,day:0,loc:"yard",region:"north",flags:{},rep:{},
-  npc:{},log:[],studied:[],warIntensity:0,rumorSeen:0};}
+function newState(){return{v:2,c:null,day:0,loc:"yard",region:"north",flags:{},rep:{},
+  npc:{},log:[],studied:[],warIntensity:0,
+  year:298,season:"Summer",seasonYears:8,seasonEnds:60,
+  rumors:[],favor:{}};}
+function migrate(s){ // fill fields absent from older saves
+  s.year=s.year??298; s.season=s.season||"Summer"; s.seasonYears=s.seasonYears??8;
+  s.seasonEnds=s.seasonEnds??(s.day+60); s.rumors=s.rumors||[]; s.favor=s.favor||{};
+  if(s.c){s.c.wounds=s.c.wounds||[]; s.c.dead=s.c.dead||false; s.c.secrets=s.c.secrets||[];}
+  for(const id in (s.npc||{})){s.npc[id].grudge=s.npc[id].grudge||false;}
+  return s;}
 function mod(a){return (S.c.attr[a]||4)-4;}
 function skill(k){return S.c.skills[k]||0;}
 function checkBonus(attr,sk){let b=mod(attr)+(sk?skill(sk):0);
@@ -331,18 +347,19 @@ function notable(){const imp=S.log.filter(e=>e.imp>=3);const e=imp.length?imp[im
   return e?e.text:"A new tale begins.";}
 function saveGame(){if(!S||!slot)return;localStorage.setItem(SAVE_PREFIX+slot,JSON.stringify(S));
   let ix=slotIndex().filter(x=>x.slot!==slot);
-  ix.unshift({slot,name:S.c.name,house:S.c.house,day:S.day,updated:Date.now(),notable:notable()});
+  ix.unshift({slot,name:S.c.name,house:S.c.house,day:S.day,updated:Date.now(),
+    notable:notable(),dead:!!S.c.dead});
   writeIndex(ix);}
 function loadGame(sl){try{const raw=localStorage.getItem(SAVE_PREFIX+sl);if(!raw)return false;
-  S=JSON.parse(raw);slot=sl;return true;}catch(e){return false;}}
+  S=migrate(JSON.parse(raw));slot=sl;return true;}catch(e){return false;}}
 function deleteGame(sl){localStorage.removeItem(SAVE_PREFIX+sl);writeIndex(slotIndex().filter(x=>x.slot!==sl));}
 
 function updateMeta(){if(S&&S.c){menuEl.style.display="flex";
-  metaEl.innerHTML="Day "+S.day+" · "+esc(LOCS[S.loc]?.name||REGIONS[S.region]?.name||"")+"<br>"
+  metaEl.innerHTML=esc(S.season)+" · Day "+S.day+" · "+esc(LOCS[S.loc]?.name||REGIONS[S.region]?.name||"")+"<br>"
     +"Lv "+S.c.level+" · HP "+S.c.hp+"/"+S.c.maxhp+" · "+S.c.gold+" silver";
   menuEl.innerHTML="";
-  for(const [lbl,fn] of [["Character",screenStatus],["Journal",screenJournal],["Codex",screenCodex],
-    ["Map",screenMap],["Save",screenSaveMenu],["Title",titleScreen]]){
+  for(const [lbl,fn] of [["Character",screenStatus],["Journal",screenJournal],["Rumors",screenRumors],
+    ["Codex",screenCodex],["Map",screenMap],["Save",screenSaveMenu],["Title",titleScreen]]){
     const b=document.createElement("button");b.textContent=lbl;b.onclick=fn;menuEl.appendChild(b);}
 }else{menuEl.style.display="none";metaEl.textContent="";}}
 
@@ -353,7 +370,8 @@ function titleScreen(){S=null;slot=null;clearLog();updateMeta();
   add("The cold is coming, and the realm holds its breath. Winter, and worse, wait beyond the Wall — and the game of thrones is only beginning. What life will you carve from the ice and ash?");
   const ix=slotIndex();
   const list=[{label:"⚔️ New Game",cls:"primary",act:startCreation}];
-  if(ix.length){list.push({label:"▸ Continue — "+esc(ix[0].name),act:()=>{if(loadGame(ix[0].slot))enterGame();}});
+  if(ix.length){list.push({label:"▸ Continue — "+(ix[0].dead?"† ":"")+esc(ix[0].name),
+      act:()=>{if(loadGame(ix[0].slot))resumeOrEpitaph();}});
     list.push({label:"📜 Load a saved tale",act:screenLoadMenu});}
   list.push({label:"📖 Lore Codex",act:()=>{back=titleScreen;screenCodex();}});
   choices(list);}
@@ -441,7 +459,8 @@ function finishCreation(){
   S=newState();
   S.c={name:draft.name,house:draft.house_name,words:draft.words||"",origin:draft.origin,
     region:draft.region,religion:draft.religion,bg:draft.bg,attr:draft.attr,skills,traits:draft.traits.slice(),
-    level:1,xp:0,hp:maxhp,maxhp,gold:origin.gold,inventory:inv,titles:[]};
+    level:1,xp:0,hp:maxhp,maxhp,gold:origin.gold,inventory:inv,titles:[],
+    wounds:[],dead:false,secrets:[]};
   S.region=draft.region;
   // pick a save slot
   slot="save-"+Date.now().toString(36);
@@ -456,7 +475,7 @@ function finishCreation(){
   choices([{label:"Enter the world ▸",cls:"primary",act:enterGame}]);}
 
 //----- main game loop
-function enterGame(){updateMeta();clearLog();
+function enterGame(){if(S.c.dead)return epitaph();updateMeta();clearLog();
   add("<span class='dim'>The year turns cold as "+esc(S.c.name)+" of "+esc(S.c.house)+
     " comes to Winterfell, seat of the Starks and heart of the North. The grey walls have stood ten thousand years, and will judge you by your deeds alone.</span>");
   describeLoc();}
@@ -475,31 +494,47 @@ function actionMenu(){const L=LOCS[S.loc];const list=[];
   list.push({label:"🏕 Rest a while",act:rest});
   choices(list);}
 function travel(dest,lbl){const L=LOCS[dest];const days=L.days||0;
+  const arrive=()=>{if(S.c.dead)return;S.loc=dest;S.region=L.region;
+    event("travel","You travelled to "+L.name+".",1);saveGame();updateMeta();describeLoc();};
   if(days>0){add("<span class='dim'>You travel to "+esc(L.name)+" ("+days+" day(s) on the road)…</span>");
-    advance(days);}S.loc=dest;S.region=L.region;event("travel","You travelled to "+L.name+".",1);
-  saveGame();updateMeta();describeLoc();}
-function rest(){advance(1);const heal=Math.min(S.c.maxhp,S.c.hp+5)-S.c.hp;S.c.hp+=heal;
-  add("You rest, and the day passes. You recover "+heal+" vigour.");saveGame();updateMeta();actionMenu();}
-function advance(days){S.day+=days;
-  if(Math.random()<Math.min(.6,.15*days)){const r=RUMORS[Math.floor(Math.random()*RUMORS.length)];
-    event("world",r,1);add("<span class='good'>✦ "+esc(r)+"</span>");}
-  // a slow drift toward war rumor
-  if(S.day>0&&S.day%30===0&&Math.random()<.5){S.warIntensity++;
-    add("<span class='bad'>✦ Word spreads of lords calling their banners in the south…</span>");
-    event("world","Lords are calling their banners in the south.",2);}}
+    advance(days,arrive);} else arrive();}
+function rest(){const heal=Math.min(S.c.maxhp,S.c.hp+5)-S.c.hp;S.c.hp+=heal;
+  add("You rest, and the day passes. You recover "+heal+" vigour.");
+  advance(1,()=>{saveGame();updateMeta();if(!S.c.dead)actionMenu();});}
+// advance the world by `days`, then run `cont` (after any interactive event resolves)
+function advance(days,cont){cont=cont||function(){};
+  if(days<=0)return cont();
+  S.day+=days; advanceSeason(days); rollDistant(days); spreadRumors(days); overhear(days);
+  if(S.c.dead)return;
+  const ev=rollLocal(days);
+  if(ev)runEvent(ev,cont); else cont();}
 
 //----- dialogue
-function talk(id){const npc=NPCS[id];clearLog();heading(npc.name+", "+npc.title);add(esc(npc.desc));
+function talk(id){const npc=NPCS[id];const st=S.npc[id]=S.npc[id]||{disp:0,notes:[],grudge:false};
+  clearLog();heading(npc.name+", "+npc.title);add(esc(npc.desc));
   const d=disp(id);
-  add(d>=25?"They greet you warmly, as a friend."
+  if(st.grudge)add("<span class='bad'>They regard you with cold, remembered anger — there is a grudge between you.</span>");
+  else add(d>=25?"They greet you warmly, as a friend."
     :d<=-25?"They regard you with open hostility."
     :d<=-10?"They eye you with cool suspicion.":"They give you a measured, neutral look.");
   const note=lastNoteWith(id);
   if(note)add("<span class='dim'>\"I've not forgotten,\" they say. \""+esc(note.text)+"\"</span>");
   dialogueMenu(id);}
-function dialogueMenu(id){const opts=DIALOGUE[id]||[];const list=[];
-  opts.forEach((o,i)=>{ if(o.once&&S.flags[o.once])return;
-    list.push({label:"• "+o.label,act:()=>doOption(id,o)});});
+function dialogueMenu(id){const st=S.npc[id]=S.npc[id]||{disp:0,notes:[],grudge:false};const list=[];
+  if(st.grudge){
+    list.push({label:"• Make amends (gift 25 silver)",act:()=>{
+      if(S.c.gold<25){add("<span class='bad'>You lack the coin to soothe them.</span>");return;}
+      S.c.gold-=25;st.grudge=false;st.disp=(st.disp||0)+15;
+      add("They take the coin, and some of the ice leaves their eyes.");
+      event("favor","You made amends with "+NPCS[id].name+".",1,id);updateMeta();saveGame();talk(id);}});
+    list.push({label:"◂ Take your leave",act:()=>{saveGame();describeLoc();}});
+    return choices(list);}
+  const opts=DIALOGUE[id]||[];
+  opts.forEach(o=>{if(o.once&&S.flags[o.once])return;list.push({label:"• "+o.label,act:()=>doOption(id,o)});});
+  list.push({label:"• Ask what news travels",act:()=>askNews(id)});
+  const sec=SECRETS[id];const known=S.c.secrets.some(s=>s.npc===id);
+  if(sec&&!known)list.push({label:"• Probe for what they're hiding (Cunning)",act:()=>probeSecret(id)});
+  if(sec&&known&&!S.flags["sec_used_"+id])list.push({label:"• Use what you know against them",act:()=>useSecret(id)});
   list.push({label:"◂ Take your leave",act:()=>{npcNote(id,"you spoke with "+NPCS[id].name);saveGame();describeLoc();}});
   choices(list);}
 function doOption(id,o){
@@ -522,8 +557,11 @@ function applyResult(id,r){if(!r)return;
   if(r.skill){S.c.skills[r.skill[0]]=(S.c.skills[r.skill[0]]||0)+r.skill[1];
     add("<span class='dim'>You learned something. ("+SKILLS[r.skill[0]]+" +"+r.skill[1]+")</span>");}
   if(r.lore){grantLore();}
+  if(r.favor){favorGain(r.favor[0],r.favor[1]||1);}
   if(r.warg&&S.c.traits.includes("warg_touched"))add("<span class='dim'>For a heartbeat you see the godswood through a raven's eyes. The old blood stirs.</span>");
-  if(r.xp){for(const m of xp(r.xp))add("<span class='good'>"+esc(m)+"</span>");}}
+  if(r.xp){for(const m of xp(r.xp))add("<span class='good'>"+esc(m)+"</span>");}
+  // a serious slight breeds a lasting grudge
+  if(typeof r.disp==="number"&&r.disp<0&&disp(id)<=-20&&S.npc[id])S.npc[id].grudge=true;}
 function grantLore(){const un=LORE.filter(l=>!S.studied.includes(l.name));if(!un.length)return;
   const e=un[Math.floor(Math.random()*un.length)];S.studied.push(e.name);
   add("<span class='good'>You learned the lore of '"+esc(e.name)+"' — now recorded in your codex.</span>");}
@@ -532,17 +570,35 @@ function grantLore(){const un=LORE.filter(l=>!S.studied.includes(l.name));if(!un
 function subBack(){ (back||describeLoc)(); }
 function screenStatus(){back=describeLoc;clearLog();const c=S.c;
   card("<b>"+esc(c.name)+"</b> of "+esc(c.house)+"<br>"+esc(REGIONS[c.region].name)+", faith of "+esc(RELIGIONS[c.religion])+
+    "<br>The "+esc(S.season)+" of the year "+S.year+" · Day "+S.day+
     "<br>Level "+c.level+" (XP "+c.xp+"/"+(c.level*100)+") · Health "+c.hp+"/"+c.maxhp+" · Gold "+c.gold+
     "<br><br>"+ATTRS.map(a=>ATTR_LABEL[a]+" "+c.attr[a]).join("  ")+
     "<br>Skills: "+(Object.entries(c.skills).map(([k,v])=>SKILLS[k]+" +"+v).join(", ")||"none")+
     "<br>Traits: "+(c.traits.map(t=>TRAITS[t].name).join(", ")||"none")+
     "<br>Titles: "+(c.titles.join(", ")||"none")+
     "<br>Motto: "+(esc(c.words)||"(none)"));
-  heading("Standing with the Factions");
-  for(const [f,nm] of Object.entries(FACTIONS)){const v=S.rep[f]||0;
+  if(c.wounds&&c.wounds.length){heading("Wounds & Scars");
+    for(const w of c.wounds)add("<span class='bad'>⚕ "+esc(w.name)+"</span> — <span class='dim'>"+esc(w.desc)+"</span>");}
+  if(c.secrets&&c.secrets.length){heading("Secrets You Hold");
+    for(const s of c.secrets)add("<span class='dim'>· </span>"+esc(s.text));}
+  heading("Standing with the Great Powers");
+  for(const [f,nm] of Object.entries(FACTIONS)){const v=S.rep[f]||0;const fv=S.favor[f]||0;
     const w=v>=40?"Honoured":v>=15?"Friendly":v<=-40?"Hated":v<=-15?"Distrusted":"Neutral";
-    add(esc(nm)+": <b>"+w+"</b> <span class='dim'>("+v+")</span>");}
-  choices([{label:"◂ Back",act:subBack}]);}
+    add(esc(nm)+": <b>"+w+"</b> <span class='dim'>("+v+")</span>"+(fv>0?" <span class='good'>· owes you "+fv+" favour"+(fv>1?"s":"")+"</span>":""));}
+  const owed=Object.keys(S.favor).filter(f=>S.favor[f]>0);
+  const list=[];
+  if(owed.length)list.push({label:"✦ Call in a favour",cls:"primary",act:callFavor});
+  list.push({label:"◂ Back",act:subBack});choices(list);}
+function callFavor(){clearLog();heading("Call in a Favour");
+  const owed=Object.keys(S.favor).filter(f=>S.favor[f]>0);
+  if(!owed.length){add("No one owes you anything just now.");return choices([{label:"◂ Back",act:screenStatus}]);}
+  add("<span class='dim'>A favour called in is a favour spent. Choose whose debt to collect.</span>");
+  const list=owed.map(f=>({label:esc(FACTIONS[f]||f)+" ("+S.favor[f]+")",act:()=>{
+    S.favor[f]--;const boon=rnd(30,80);S.c.gold+=boon;rep(f,3);
+    add("<span class='good'>"+esc(FACTIONS[f]||f)+" makes good on their debt — "+boon+" silver and a warmer welcome.</span>");
+    event("favor","You called in a favour from "+(FACTIONS[f]||f)+".",2);
+    updateMeta();saveGame();callFavor();}}));
+  list.push({label:"◂ Back",act:screenStatus});choices(list);}
 function screenJournal(){back=describeLoc;clearLog();heading("Journal — "+S.log.length+" things remembered");
   const landmarks=S.log.filter(e=>e.imp>=3);
   if(landmarks.length){add("<b>Deeds that still echo:</b>");
@@ -579,8 +635,9 @@ function screenSaveMenu(){back=describeLoc;clearLog();heading("Your Tale is Save
     {label:"◂ Back",act:subBack}]);}
 function screenLoadMenu(){clearLog();heading("Load a Tale");const ix=slotIndex();
   if(!ix.length){add("No saved games found.");return choices([{label:"◂ Back",act:titleScreen}]);}
-  const list=ix.map(x=>({label:"<b>"+esc(x.name)+"</b> of "+esc(x.house)+" — Day "+x.day+
-    "<br><span class='dim'>"+esc(x.notable)+"</span>",act:()=>{if(loadGame(x.slot))enterGame();}}));
+  const list=ix.map(x=>({label:"<b>"+(x.dead?"† ":"")+esc(x.name)+"</b> of "+esc(x.house)+" — Day "+x.day+
+    (x.dead?" <span class='bad'>(fallen)</span>":"")+
+    "<br><span class='dim'>"+esc(x.notable)+"</span>",act:()=>{if(loadGame(x.slot))resumeOrEpitaph();}}));
   list.push({label:"🗑 Delete a save",act:screenDeleteMenu});
   list.push({label:"◂ Back",act:titleScreen});choices(list);}
 function screenDeleteMenu(){clearLog();heading("Delete a Save");const ix=slotIndex();
@@ -588,7 +645,213 @@ function screenDeleteMenu(){clearLog();heading("Delete a Save");const ix=slotInd
     if(confirm("Permanently delete "+x.name+"? This cannot be undone."))deleteGame(x.slot);screenDeleteMenu();}}));
   list.push({label:"◂ Back",act:screenLoadMenu});choices(list);}
 
+//======================= WORLD SIMULATION ============================
+function rnd(a,b){return a+Math.floor(Math.random()*(b-a+1));}
+function d20(){return 1+Math.floor(Math.random()*20);}
+function showRoll(r){add("<span class='dim'>[d20 "+r.d+" + bonus = "+r.tot+" vs "+r.diff+"] "+
+  (r.success?"success":"failure")+(r.crit?" (critical!)":"")+"</span>");}
+
+// -- seasons: long, unpredictable ASOIAF seasons --
+const SEASON_ORDER=["Summer","Autumn","Winter","Spring"];
+const SEASON_DANGER={Summer:.8,Autumn:1,Winter:1.7,Spring:.9};
+function advanceSeason(days){
+  const y0=Math.floor((S.day-days)/120),y1=Math.floor(S.day/120);
+  if(y1>y0){S.year+=(y1-y0);S.seasonYears++;}
+  if(S.day>=S.seasonEnds){
+    const next=SEASON_ORDER[(SEASON_ORDER.indexOf(S.season)+1)%4];
+    S.season=next;S.seasonYears=0;S.seasonEnds=S.day+rnd(45,120);
+    const msg=next==="Winter"?"A white raven flies from the Citadel: winter has come to the Seven Kingdoms."
+      :next==="Spring"?"The snows relent at last; word spreads that spring has come to the realm."
+      :next==="Autumn"?"The days shorten and the leaves turn — autumn is upon the realm."
+      :"The maesters proclaim the long-awaited return of summer.";
+    add("<span class='"+(next==="Winter"?"bad":"good")+"'>❄ "+esc(msg)+"</span>");
+    event("world",msg,3);}
+  if(S.season==="Winter"&&Math.random()<0.25*days){const cost=rnd(1,4);S.c.gold=Math.max(0,S.c.gold-cost);
+    add("<span class='dim'>Winter bites; you spend "+cost+" silver to keep warm and fed.</span>");}
+}
+
+// -- the rumor mill: news is born in a region and travels over days --
+const REGION_ADJ={north:["riverlands","vale","iron_islands"],
+  riverlands:["north","vale","westerlands","crownlands","iron_islands"],
+  vale:["north","riverlands","crownlands"],westerlands:["riverlands","reach","iron_islands"],
+  crownlands:["riverlands","vale","stormlands","reach","essos"],
+  reach:["westerlands","crownlands","stormlands","dorne"],
+  stormlands:["crownlands","reach","dorne"],dorne:["reach","stormlands"],
+  iron_islands:["north","riverlands","westerlands"],essos:["crownlands"]};
+function regionDist(a,b){if(a===b)return 0;const A=MAP_POS[a],B=MAP_POS[b];if(!A||!B)return 5;
+  return Math.max(Math.abs(A[0]-B[0]),Math.abs(A[1]-B[1]));}
+let RUMOR_SEQ=0;
+function addRumor(text,origin,imp){S.rumors.push({id:"r"+S.day+"_"+(RUMOR_SEQ++),text,origin,
+  day:S.day,reach:{[origin]:true},imp:imp||1,heard:false});
+  if(S.rumors.length>60)S.rumors.shift();}
+function spreadRumors(days){for(const r of S.rumors)for(let d=0;d<days;d++){
+    if(Math.random()<0.4)for(const reg of Object.keys(r.reach))
+      for(const nb of (REGION_ADJ[reg]||[]))r.reach[nb]=true;}
+  S.rumors=S.rumors.filter(r=>S.day-r.day<150);}
+function overhear(){const here=S.rumors.filter(r=>!r.heard&&r.reach[S.region]);
+  if(!here.length)return;const r=here[here.length-1];r.heard=true;
+  const far=regionDist(r.origin,S.region)>=4;
+  add("<span class='good'>✦ "+esc(r.text)+(far?" <span class='dim'>(though muddled by the miles)</span>":"")+"</span>");
+  event("world",r.text,r.imp);}
+function RN(reg){return REGIONS[reg].name;}
+const DISTANT=[
+ {w:3,reg:["north","iron_islands","stormlands","dorne"],t:r=>"Reavers sacked a village on the "+RN(r)+" coast, they say."},
+ {w:2,reg:["crownlands","reach","westerlands","vale"],t:r=>"A lord of the "+RN(r)+" was poisoned at his own table."},
+ {w:2,reg:["riverlands","vale","stormlands","reach"],t:r=>"The lords of the "+RN(r)+" quarrel over a disputed succession."},
+ {w:3,winter:true,t:r=>"Bandits grow bold on the frozen roads of the "+RN(r)+"."},
+ {w:1,rare:true,reg:["essos","crownlands","dorne"],t:r=>"A drunk in a "+RN(r)+" winesink swears he saw a dragon against the moon."},
+ {w:2,winter:true,t:r=>"Grain runs short in the "+RN(r)+"; the smallfolk mutter of famine."},
+ {w:2,summer:true,reg:["reach","crownlands","vale"],t:r=>"A great tourney is proclaimed in the "+RN(r)+"."},
+ {w:1,rare:true,t:r=>"Ravens from the "+RN(r)+" speak of dead men walking in the night. Nonsense, surely."},
+];
+function weighted(pool){if(!pool.length)return null;let tot=pool.reduce((s,e)=>s+(e.w||1),0),x=Math.random()*tot;
+  for(const e of pool){x-=(e.w||1);if(x<=0)return e;}return pool[pool.length-1];}
+function rollDistant(days){const mult=SEASON_DANGER[S.season]||1;
+  if(Math.random()>=Math.min(.6,.18*days*mult))return;
+  const pool=DISTANT.filter(e=>(!e.winter||S.season==="Winter")&&(!e.summer||S.season==="Summer"));
+  const e=weighted(pool);if(!e)return;
+  const regs=e.reg||Object.keys(REGIONS);const origin=regs[rnd(0,regs.length-1)];
+  addRumor(e.t(origin),origin,e.rare?3:2);}
+
+// -- interactive local events (fire where the player stands) --
+const FOES={outlaws:{name:"the outlaw captain",might:5,hp:16},
+  raiders:{name:"the reaver",might:6,hp:20},bandit:{name:"the brigand",might:4,hp:12}};
+function eventChoices(list){choices(list.map(c=>({label:"• "+c.label,act:c.act})));}
+const LOCAL=[
+ {id:"ambush",w:3,run(cont){heading("Outlaws on the Road");
+   add("Ragged men with spears step from the trees, barring your way. Their captain grins. \"Coin or blood, friend — your choice.\"");
+   eventChoices([
+     {label:"Fight them",act:()=>fight(FOES.outlaws,cont,{loot:rnd(10,28)})},
+     {label:"Pay them off (15 silver)",act:()=>{if(S.c.gold<15){add("<span class='bad'>You haven't the coin — steel it must be.</span>");return fight(FOES.outlaws,cont);}
+       S.c.gold-=15;add("They melt back into the trees, for now.");event("world","You bought off outlaws on the road.",2);updateMeta();cont();}},
+     {label:"Try to slip away (Agility)",act:()=>{const r=roll("agility","stealth",13);showRoll(r);
+       if(r.success){add("You lose them in the hollows and the dark.");cont();}
+       else{add("They cut you off — no choice but to fight.");fight(FOES.outlaws,cont);}}},
+   ]);}},
+ {id:"raid",w:2,reg:["north","iron_islands","stormlands"],run(cont){heading("Raiders!");
+   add("Smoke rises from a nearby holdfast; reavers are putting the countryside to the torch. A woman clutches your stirrup, begging aid.");
+   eventChoices([
+     {label:"Ride to the defense",act:()=>fight(FOES.raiders,cont,{loot:rnd(5,15),rep:["north_lords",8],favor:["north_lords",1],xp:25,event:["favor","You drove off reavers and saved smallfolk.",3]})},
+     {label:"Keep your distance",act:()=>{add("You watch the smoke a while, then ride on. It is not your fight.");event("slight","You turned away from smallfolk who begged your aid.",2);rep("north_lords",-4);cont();}},
+   ]);}},
+ {id:"sick",w:2,run(cont){heading("A Fevered Traveller");
+   add("A traveller collapses in the road, hot with fever and raving. Others give him wide berth, fearing the pox.");
+   eventChoices([
+     {label:"Tend to him (Healing)",act:()=>{const r=roll("lore","healing",12);showRoll(r);
+       if(r.success){const g=rnd(6,16);S.c.gold+=g;add("You break the fever by dawn. He presses "+g+" silver and his thanks into your hands.");
+         for(const m of xp(15))add("<span class='good'>"+m+"</span>");event("favor","You saved a fevered traveller.",2);}
+       else add("He worsens through the night and is gone by morning. You did what you could.");
+       updateMeta();cont();}},
+     {label:"Leave him be",act:()=>{add("You ride on. The road is no place for soft hearts.");cont();}},
+   ]);}},
+ {id:"omen",w:2,run(cont){heading("An Ill Omen");
+   add("A weirwood's carved face seems to weep fresh red sap as you pass, and for a moment the wind carries a voice you almost know.");
+   if(S.c.traits.includes("warg_touched"))add("<span class='dim'>The old blood stirs; ancient eyes seem to turn upon you.</span>");
+   event("discovery","You witnessed an ill omen upon the road.",2);
+   eventChoices([{label:"Press on",act:cont}]);}},
+];
+function rollLocal(days){const mult=SEASON_DANGER[S.season]||1;
+  if(Math.random()>=Math.min(.55,.14*days*mult))return null;
+  const pool=LOCAL.filter(e=>!e.reg||e.reg.includes(S.region));
+  return weighted(pool);}
+function runEvent(ev,cont){rule();ev.run(cont);}
+
+// -- combat, wounds, permadeath --
+function combatResolve(foe){let hp=S.c.hp,fhp=foe.hp,log=[],rounds=0;
+  let atk=mod("might")+skill("swordsmanship");if(S.c.traits.includes("craven"))atk-=1;
+  const def=10+mod("agility");
+  while(hp>0&&fhp>0&&rounds<24){rounds++;
+    if(d20()+atk>=10+(foe.might>>1)){const dmg=rnd(3,7)+Math.max(0,mod("might"));fhp-=dmg;log.push("You strike "+foe.name+" ("+dmg+" damage).");}
+    else log.push(foe.name+" turns your blow aside.");
+    if(fhp<=0)break;
+    if(d20()+foe.might>=def){const dmg=rnd(2,6)+((foe.might/3)|0);hp-=dmg;log.push(foe.name+" wounds you ("+dmg+" damage).");}
+    else log.push("You dodge "+foe.name+"'s attack.");}
+  S.c.hp=Math.max(0,hp);return{victory:fhp<=0&&hp>0,log};}
+function fight(foeDef,cont,reward){reward=reward||{};const foe=Object.assign({},foeDef);
+  const res=combatResolve(foe);
+  for(const line of res.log)add("<span class='dim'>"+esc(line)+"</span>");
+  updateMeta();
+  if(S.c.hp<=0)return die("cut down by "+foe.name);
+  if(res.victory){add("<span class='good'>You stand victorious over "+esc(foe.name)+".</span>");
+    if(reward.loot){S.c.gold+=reward.loot;add("<span class='good'>You take "+reward.loot+" silver from the fallen.</span>");}
+    if(reward.rep)rep(reward.rep[0],reward.rep[1]);
+    if(reward.favor)favorGain(reward.favor[0],reward.favor[1]);
+    if(reward.event)event(reward.event[0],reward.event[1],reward.event[2]);
+    for(const m of xp(reward.xp||25))add("<span class='good'>"+m+"</span>");
+  } else add("<span class='bad'>The fight goes against you; bloodied, you break away with your life.</span>");
+  maybeWound();updateMeta();saveGame();
+  if(!S.c.dead)eventChoices([{label:"Continue",act:cont}]);}
+const WOUNDS=[
+ {name:"a lasting limp",kind:"attr",key:"agility",amt:1,desc:"A deep leg wound never healed clean; you are lamed for good."},
+ {name:"a crippled hand",kind:"skill",key:"swordsmanship",amt:1,desc:"You lost fingers; your sword-work will never be what it was."},
+ {name:"a cracked skull",kind:"attr",key:"cunning",amt:1,desc:"An old head wound leaves your wits swimming at the worst times."},
+ {name:"a ruined eye",kind:"attr",key:"presence",amt:1,desc:"You wear the raw scar of a lost eye; men flinch to meet your gaze."},
+ {name:"a wasting wound",kind:"maxhp",amt:4,desc:"A wound that festered has sapped your vigour for good."},
+];
+function maybeWound(){if(S.c.hp>0&&S.c.hp<S.c.maxhp*0.3&&Math.random()<0.5)applyWound();}
+function applyWound(){const had=new Set((S.c.wounds||[]).map(w=>w.name));
+  const pool=WOUNDS.filter(w=>!had.has(w.name));if(!pool.length)return;
+  const w=pool[rnd(0,pool.length-1)];
+  if(w.kind==="attr")S.c.attr[w.key]=Math.max(1,(S.c.attr[w.key]||4)-w.amt);
+  else if(w.kind==="skill")S.c.skills[w.key]=Math.max(0,(S.c.skills[w.key]||0)-w.amt);
+  else{S.c.maxhp=Math.max(5,S.c.maxhp-w.amt);S.c.hp=Math.min(S.c.hp,S.c.maxhp);}
+  S.c.wounds.push({name:w.name,desc:w.desc});
+  add("<span class='bad'>⚕ You take a lasting wound: "+esc(w.name)+". "+esc(w.desc)+"</span>");
+  event("combat","You took a lasting wound — "+w.name+".",3);}
+function die(cause){if(S.c.dead)return;S.c.dead=true;S.deathCause=cause;
+  event("death",S.c.name+" met their end — "+cause+".",5);saveGame();epitaph();}
+function epitaph(){updateMeta();clearLog();heading("Here Ends the Tale");
+  card("<b>"+esc(S.c.name)+"</b> of "+esc(S.c.house)+"<br>"+esc(S.deathCause||"is dead")+
+    "<br><br>Fallen on day "+S.day+", in the "+esc(REGIONS[S.region].name)+", in the "+esc(S.season)+" of the year "+S.year+".");
+  const deeds=S.log.filter(e=>e.imp>=3).slice(-6);
+  if(deeds.length){add("<b>They will be remembered for:</b>");for(const e of deeds)add("<span class='dim'>· </span>"+esc(e.text));}
+  add("<span class='dim'>Death is permanent in the game of thrones. This tale is ended — but the realm remembers, and another may take it up.</span>");
+  choices([{label:"⚔️ Begin a new tale",cls:"primary",act:startCreation},{label:"◂ To the title",act:titleScreen}]);}
+function resumeOrEpitaph(){if(S&&S.c&&S.c.dead)epitaph();else enterGame();}
+
+// -- favors, secrets --
+function favorGain(f,n){S.favor[f]=(S.favor[f]||0)+(n||1);
+  add("<span class='good'>✦ "+esc(FACTIONS[f]||f)+" now owes you a favour.</span>");}
+const SECRETS={
+  maester:{text:"Maester Wyllis copies certain ravens before he burns them, and keeps a private ledger of the realm's secrets.",faction:"north_lords"},
+  qorin:{text:"Qorin once deserted his ranging and buried a man to hide it — the Watch would take his head for it.",faction:"nights_watch"},
+  ygga:{text:"Ygga knows a hidden way south past the Watch's eyes — knowledge the Night's Watch would kill to possess.",faction:"free_folk"},
+  tobbot:{text:"Tobbot waters his ale and shorts his weights; half of Winter Town would gladly see him whipped.",faction:"north_lords"},
+};
+function probeSecret(id){const r=roll("cunning","intrigue",15);showRoll(r);const sec=SECRETS[id];
+  if(r.success){S.c.secrets.push({npc:id,text:sec.text});
+    add("<span class='good'>You piece it together: "+esc(sec.text)+"</span>");
+    S.npc[id].disp=(S.npc[id].disp||0)-3;event("discovery","You uncovered a secret of "+NPCS[id].name+".",2,id);}
+  else add("They give nothing away, and your prying earns a hard, wary look.");
+  updateMeta();saveGame();dialogueMenu(id);}
+function useSecret(id){const sec=SECRETS[id];S.flags["sec_used_"+id]=true;
+  add("You let slip that you know their secret. "+esc(NPCS[id].name)+" pales.");
+  if(sec.faction)favorGain(sec.faction,1);
+  S.npc[id].disp=(S.npc[id].disp||0)-8;S.npc[id].grudge=true;
+  add("<span class='dim'>They will do as you ask, for now — but they will never forgive it.</span>");
+  event("world","You used a secret against "+NPCS[id].name+".",3,id);
+  updateMeta();saveGame();dialogueMenu(id);}
+function askNews(id){const reg=S.region;const pool=S.rumors.filter(r=>r.reach[reg]).slice(-3).reverse();
+  if(!pool.length){add("<span class='dim'>"+esc(NPCS[id].name)+" shrugs. \"Little enough reaches us here of late.\"</span>");return dialogueMenu(id);}
+  add("<span class='dim'>"+esc(NPCS[id].name)+" tells you what word has reached these parts:</span>");
+  for(const r of pool){const far=regionDist(r.origin,reg)>=4;r.heard=true;
+    add("• "+esc(r.text)+(far?" <span class='dim'>(garbled by distance)</span>":""));}
+  saveGame();dialogueMenu(id);}
+function screenRumors(){back=describeLoc;clearLog();heading("What the Ravens Carry — "+S.season+", Day "+S.day);
+  const known=S.rumors.filter(r=>r.reach[S.region]);
+  if(!known.length)add("<span class='dim'>Little news has reached you where you stand. Travel, and rest, and the world's tidings will find you.</span>");
+  else{add("<span class='dim'>Word that has travelled as far as the "+esc(REGIONS[S.region].name)+":</span>");
+    for(const r of known.slice(-14).reverse()){const far=regionDist(r.origin,S.region)>=4;
+      add("<span class='dim'>(day "+r.day+", out of the "+esc(REGIONS[r.origin].name)+")</span> "+esc(r.text)+
+        (far?" <span class='dim'>(garbled by distance)</span>":""));}}
+  const unheard=S.rumors.filter(r=>!r.reach[S.region]).length;
+  if(unheard)add("<span class='dim'>Beyond your knowing, "+unheard+" other tale"+(unheard>1?"s are":" is")+" still travelling toward you.</span>");
+  choices([{label:"◂ Back",act:subBack}]);}
+
 //============================== BOOT =================================
+// test seam: inert in the browser (window.IAA_TEST is never set there)
+if(typeof window!=="undefined"&&window.IAA_TEST){
+  window.__iaa={get S(){return S;},die,fight,applyWound,favorGain,FOES,advance,addRumor,spreadRumors};}
 window.addEventListener("error",e=>{try{add("<span class='bad'>An error occurred: "+esc(e.message)+"</span>");}catch(_){}});
 titleScreen();
 </script>
