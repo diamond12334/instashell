@@ -92,8 +92,18 @@ function grid(list){choicesEl.innerHTML="";const g=document.createElement("div")
     b.onclick=c.act;g.appendChild(b);}choicesEl.appendChild(g);}
 
 //============================== DATA ==================================
-const ATTRS=["might","agility","cunning","presence","will","lore"];
-const ATTR_LABEL={might:"Might",agility:"Agility",cunning:"Cunning",presence:"Presence",will:"Will",lore:"Lore"};
+const ATTRS=["might","agility","cunning","presence","will","lore","appearance"];
+const ATTR_LABEL={might:"Might",agility:"Agility",cunning:"Cunning",presence:"Presence",will:"Will",lore:"Lore",appearance:"Appearance"};
+// how each land's culture treats a woman of station — Westeros is patriarchal,
+// but not uniformly so; Dorne and the Free Cities feel noticeably freer
+const CULTURE={north:"northern",riverlands:"andal",vale:"andal",westerlands:"andal",reach:"andal",
+  stormlands:"andal",crownlands:"andal",dorne:"dornish",iron_islands:"ironborn",essos:"braavosi"};
+const CULTURE_NOTE={
+  andal:"Strict Andal custom rules here: sons inherit before daughters, highborn girls are wed for alliance and prized for beauty, and a woman under arms invites open scorn — though widows and regents wield real power, and soft power sharpest of all.",
+  northern:"The North is hard but plainer-spoken: daughters still stand behind sons, yet Bear Island women bear axes, and none who saw them fight dared laugh twice.",
+  dornish:"Dornish law knows no difference: the eldest child inherits, daughter or son, and no one blinks at a woman with a spear, a council seat, or a paramour.",
+  ironborn:"The Old Way is a man's creed — yet a woman who can captain a ship and pay the iron price may take respect the isles would never freely give.",
+  braavosi:"In the Free Cities coin outranks custom; a clever woman may trade, duel, or rule as far as her purse and daring carry her."};
 const RELIGIONS={old_gods:"The Old Gods of the Forest",faith:"The Faith of the Seven",
   drowned_god:"The Drowned God",rhllor:"R'hllor, the Lord of Light",many_faced:"The Many-Faced God"};
 const REGIONS={
@@ -244,6 +254,8 @@ const DIALOGUE={
   tobbot:[
     {label:"Buy warm furs (10 silver)",cost:10,item:"warm furs",text:"You buy a bundle of thick northern furs."},
     {label:"Buy a good steel dagger (25 silver)",cost:25,item:"steel dagger",text:"You buy a well-made dagger."},
+    {label:"Buy a fine cloak (30 silver)",cost:30,item:"fine cloak",text:"You buy a fine, well-cut cloak. Good clothes turn heads and open doors. (+1 Appearance while worn)"},
+    {label:"Buy a silver brooch (40 silver)",cost:40,item:"silver brooch",text:"You buy a handsome silver brooch. Fine adornment lends a person presence. (+1 Appearance while worn)"},
     {label:"Haggle over prices",check:{attr:"presence",skill:"intrigue",diff:12},
      success:{text:"Tobbot laughs and presses coin back into your palm. \"A shrewd one!\"",gold:6,event:["favor","You won Tobbot's respect with sharp bargaining.",1]},
      fail:{text:"\"Prices are prices, friend.\" He is unmoved."}},
@@ -309,6 +321,10 @@ const LORE=[
   body:"A city of half a million thrown up across three hills, announcing itself downwind before it clears the horizon. The Red Keep holds the Iron Throne — a mountain of a thousand melted swords, ugly and cruel, that has cut more than one careless king. Beneath it all teems Flea Bottom, where the smallfolk live on bowls o' brown."},
  {cat:"Places",name:"Braavos",sum:"The secret city of escaped slaves.",
   body:"Founded by slaves who rose and sailed beyond every chart, Braavos is the mightiest of the Free Cities and no daughter of Valyria but its denial — no soul within it may ever be a slave. Its Iron Bank is the most feared institution of money in the world: kings borrow from it, and repay it, or find it funding their enemies."},
+ {cat:"Custom",name:"Women in Westeros",sum:"Bound by custom, and how it varies by land.",
+  body:"The Seven Kingdoms are ruled by men, by law and by the sword — but not everywhere the same. Under Andal custom (the Reach, Westerlands, Vale, Crownlands, Stormlands, Riverlands) sons inherit before daughters, highborn girls are wed to seal alliances and prized for their beauty, and knighthood and command are closed to women; yet a widow or a regent may wield a lord's full power, and the sharpest players work through soft power — information, marriage, and coin. The North is plainer and a little harder: daughters still stand behind sons, but the women of Bear Island bear axes and none who saw them fight laughed twice. Dorne is different in kind — the eldest child inherits, son or daughter alike, and a woman with a spear, a council seat, or a paramour raises no eyebrows. The ironborn keep a reaver's creed, but a woman who captains a ship and pays the iron price can take a respect the isles would never give freely. And in the Free Cities, coin outranks custom. A woman may rule, scheme, fight, and kill anywhere in this world — but outside Dorne and the Free Cities, the world will remind her at every turn that she does it against the rules."},
+ {cat:"Custom",name:"Beauty as Power",sum:"Why a fair face is a political weapon.",
+  body:"In a world where highborn women are wed to bind houses and armies, a beautiful daughter is an asset a lord counts alongside his gold and his swords, and an ill-favoured one has fewer doors open to her. Beauty sways first impressions, loosens tongues and purses, and buys invitations to the rooms where power is traded. It cuts both ways: comeliness draws unwanted attention as readily as alliance, and a plain face — underestimated — can be a mummer's mask over a sharp mind. Scars, wounds, illness, and age steal a face's worth; fine cloth and jewels lend it back. In the game of thrones, a mirror can be as useful as a blade."},
 ];
 //============================== STATE =================================
 const SAVE_INDEX="ironash:v1:index", SAVE_PREFIX="ironash:v1:save:";
@@ -320,14 +336,34 @@ function newState(){return{v:2,c:null,day:0,loc:"yard",region:"north",flags:{},r
 function migrate(s){ // fill fields absent from older saves
   s.year=s.year??298; s.season=s.season||"Summer"; s.seasonYears=s.seasonYears??8;
   s.seasonEnds=s.seasonEnds??(s.day+60); s.rumors=s.rumors||[]; s.favor=s.favor||{};
-  if(s.c){s.c.wounds=s.c.wounds||[]; s.c.dead=s.c.dead||false; s.c.secrets=s.c.secrets||[];}
+  if(s.c){s.c.wounds=s.c.wounds||[]; s.c.dead=s.c.dead||false; s.c.secrets=s.c.secrets||[];
+    s.c.gender=s.c.gender||"male"; if(s.c.attr&&s.c.attr.appearance==null)s.c.attr.appearance=4;}
   for(const id in (s.npc||{})){s.npc[id].grudge=s.npc[id].grudge||false;}
   return s;}
 function mod(a){return (S.c.attr[a]||4)-4;}
 function skill(k){return S.c.skills[k]||0;}
 function checkBonus(attr,sk){let b=mod(attr)+(sk?skill(sk):0);
   if(S.c.traits.includes("silver_tongue")&&attr==="presence")b+=2;
-  if(S.c.traits.includes("craven")&&(attr==="might"||attr==="will"))b-=2;return b;}
+  if(S.c.traits.includes("craven")&&(attr==="might"||attr==="will"))b-=2;
+  if(attr==="presence")b+=Math.floor(appMod()/2); // beauty is soft power in the court
+  if(S.flags&&S.flags.underestimated&&(sk==="intrigue"||sk==="stealth"))b+=1; // they never see you coming
+  return b;}
+// -- gender & appearance --
+const FINERY=new Set(["fine cloak","silver brooch","courtly gown","jewelled circlet","cosmetics"]);
+function fineryBonus(){return (S.c.inventory||[]).some(i=>FINERY.has(i))?1:0;}
+function appScore(){return (S.c.attr.appearance||4)+fineryBonus();}
+function appMod(){return appScore()-4;}
+function appWord(){const a=appScore();return a>=9?"famed for beauty":a>=7?"comely":a>=5?"fair enough":a>=3?"plain of face":"hard-favoured";}
+function isFemale(){return S.c&&S.c.gender==="female";}
+const FREEDOM={dornish:"free",braavosi:"free",ironborn:"middling",northern:"middling",andal:"restricted"};
+function freedomLevel(){if(!isFemale())return "free";return FREEDOM[CULTURE[S.region]||"andal"]||"restricted";}
+function honorific(){return isFemale()?"my lady":"my lord";}
+// a woman defying martial/authority custom in a strict land draws scorn (and a small cost)
+function normBreak(text,repCost){if(!isFemale())return;const f=freedomLevel();
+  if(f==="restricted"){add("<span class='bad'>"+esc(text)+"</span>");
+    const fac=REGION_FACTION[S.region];if(fac&&repCost)rep(fac,-repCost);
+    event("slight","You defied a woman's place before witnesses — tongues will wag.",2);}
+  else if(f==="middling")add("<span class='dim'>"+esc(text)+"</span>");}
 function roll(attr,sk,diff){const d=1+Math.floor(Math.random()*20);const tot=d+checkBonus(attr,sk);
   const crit=d===20,fumble=d===1;const success=crit||(!fumble&&tot>=diff);
   return{d,tot,diff,success,crit,fumble};}
@@ -379,18 +415,28 @@ function titleScreen(){S=null;slot=null;clearLog();updateMeta();
 //----- character creation
 let draft=null;
 function startCreation(){draft={origin:null,house:null,region:null,religion:null,bg:null,
-  attr:{might:4,agility:4,cunning:4,presence:4,will:4,lore:4},traits:[],name:"",gender:"",house_name:"",words:""};
+  attr:{might:4,agility:4,cunning:4,presence:4,will:4,lore:4,appearance:4},
+  traits:[],name:"",gender:"",house_name:"",words:""};
   clearLog();heading("Forging a Life in Westeros");
-  add("Every soul in the Seven Kingdoms is born to a place and a name. Choose yours.");
+  add("Every soul in the Seven Kingdoms is born to a place, a sex, and a name. In this world all three shape what doors stand open to you — and which you must break down.");
   choices([
     {label:"⚡ Quick start — a Northern sworn sword",cls:"primary",act:quickStart},
-    {label:"Custom character — choose everything",act:ccOrigin},
+    {label:"Custom character — choose everything",act:ccGender},
     {label:"◂ Back",act:titleScreen},
   ]);}
 function quickStart(){draft.origin="bastard";draft.house_name="Snow (bastard of the North)";
-  draft.region="north";draft.religion="old_gods";draft.bg="knight";
-  draft.attr={might:6,agility:5,cunning:4,presence:4,will:5,lore:3};draft.name="Alaric Snow";
+  draft.region="north";draft.religion="old_gods";draft.bg="knight";draft.gender="male";
+  draft.attr={might:6,agility:5,cunning:4,presence:4,will:5,lore:3,appearance:4};draft.name="Alaric Snow";
   finishCreation();}
+function ccGender(){clearLog();heading("Man or Woman?");
+  add("Westeros is a man's world by law and custom — but far from uniformly so. Your sex opens some paths and bars others, and the difference is sharpest for a highborn woman in the Andal south, gentler in the North, and all but gone in Dorne and the Free Cities. You may always defy your world's rules — but it will make you pay for it, out loud.");
+  choices([
+    {label:"<b>A man</b> — the realm's paths lie mostly open to you",
+      act:()=>{draft.gender="male";ccOrigin();}},
+    {label:"<b>A woman</b> — you will rule, scheme, and fight against the current",
+      act:()=>{draft.gender="female";add("<span class='dim'>Highborn or low, you will be reminded often that you move outside the rules. Where you are born will decide how loud that reminder is.</span>");ccOrigin();}},
+    {label:"◂ Back",act:startCreation},
+  ]);}
 function ccOrigin(){clearLog();heading("Your Origin");
   choices([
     {label:"Born to a Great House",act:ccHouse},
@@ -409,17 +455,28 @@ function ccCommon(){clearLog();heading("Choose your station");
   list.push({label:"◂ Back",act:ccOrigin});choices(list);}
 function ccRegion(){clearLog();heading("Region of Birth");
   add("<span class='dim'>Suggested by your origin: "+esc(REGIONS[draft.region].name)+"</span>");
-  const list=Object.entries(REGIONS).map(([id,r])=>({label:esc(r.name),
-    act:()=>{draft.region=id;ccReligion();}}));choices(list);}
+  if(draft.gender==="female")add("<span class='dim'>For a woman, the land you are born to matters as much as your blood: freest in Dorne and across the narrow sea, hardest under strict Andal custom in the Reach, Westerlands, Vale, and Crownlands.</span>");
+  const free={dorne:"free",essos:"free",iron_islands:"middling",north:"middling"};
+  const list=Object.entries(REGIONS).map(([id,r])=>{
+    let tag="";
+    if(draft.gender==="female"){const f=free[id]||"restricted";
+      tag=" <span class='"+(f==="free"?"good":f==="middling"?"dim":"bad")+"'>("+(f==="free"?"freer for women":f==="middling"?"middling":"strict custom")+")</span>";}
+    return{label:esc(r.name)+tag,act:()=>{draft.region=id;ccReligion();}};});
+  choices(list);}
 function ccReligion(){clearLog();heading("Faith");
   const list=Object.entries(RELIGIONS).map(([id,n])=>({label:esc(n),act:()=>{draft.religion=id;ccBackground();}}));
   choices(list);}
 function ccBackground(){clearLog();heading("Background");
+  const restricted=draft.gender==="female"&&(CULTURE[draft.region]==="andal");
+  const martial={knight:1,hunter:1,smuggler:1};
+  if(restricted)add("<span class='dim'>Under Andal custom a woman who takes up a blade or a bow works against her world. You may — but expect scorn, and worse.</span>");
   const list=Object.entries(BACKGROUNDS).map(([id,b])=>{
     const sk=Object.entries(b.skills).map(([k,v])=>SKILLS[k]+" +"+v).join(", ");
-    return{label:"<b>"+esc(b.name)+"</b> — "+esc(b.blurb)+" <span class='dim'>["+sk+"]</span>",
+    const tag=(restricted&&martial[id])?" <span class='bad'>(against custom)</span>":"";
+    return{label:"<b>"+esc(b.name)+"</b> — "+esc(b.blurb)+" <span class='dim'>["+sk+"]</span>"+tag,
       act:()=>{draft.bg=id;ccAttrs();}};});choices(list);}
 function ccAttrs(){clearLog();heading("Distribute your Attributes");
+  add("<span class='dim'>Appearance is no vanity in Westeros — beauty is soft power: it sways first impressions, persuasion, matches, and court. It matters more, and cuts both ways, for a woman"+(draft.gender==="female"?" like yours":"")+". Scars, wounds, and age can steal it; fine clothes and jewels can lend it.</span>");
   const POOL=12;
   function spent(){return ATTRS.reduce((s,a)=>s+(draft.attr[a]-4),0);}
   function draw(){logEl.querySelectorAll(".alloc,.pts").forEach(e=>e.remove());
@@ -458,6 +515,7 @@ function finishCreation(){
   let maxhp=20; if(draft.traits.includes("iron_const"))maxhp+=4;
   S=newState();
   S.c={name:draft.name,house:draft.house_name,words:draft.words||"",origin:draft.origin,
+    gender:draft.gender||"male",
     region:draft.region,religion:draft.religion,bg:draft.bg,attr:draft.attr,skills,traits:draft.traits.slice(),
     level:1,xp:0,hp:maxhp,maxhp,gold:origin.gold,inventory:inv,titles:[],
     wounds:[],dead:false,secrets:[]};
@@ -519,6 +577,11 @@ function talk(id){const npc=NPCS[id];const st=S.npc[id]=S.npc[id]||{disp:0,notes
     :d<=-10?"They eye you with cool suspicion.":"They give you a measured, neutral look.");
   const note=lastNoteWith(id);
   if(note)add("<span class='dim'>\"I've not forgotten,\" they say. \""+esc(note.text)+"\"</span>");
+  const imp=appScore();
+  if(imp>=8)add("<span class='dim'>Your beauty is not lost on them; their manner softens despite themselves.</span>");
+  else if(imp<=2)add("<span class='dim'>Their gaze slides over your plain face and half-dismisses you — which has its uses.</span>");
+  if(isFemale()&&freedomLevel()==="restricted"&&(NPCS[id].faction))
+    add("<span class='dim'>They address you as they would any lady — with courtesy that expects you to keep your place.</span>");
   dialogueMenu(id);}
 function dialogueMenu(id){const st=S.npc[id]=S.npc[id]||{disp:0,notes:[],grudge:false};const list=[];
   if(st.grudge){
@@ -569,7 +632,11 @@ function grantLore(){const un=LORE.filter(l=>!S.studied.includes(l.name));if(!un
 //----- sub-screens
 function subBack(){ (back||describeLoc)(); }
 function screenStatus(){back=describeLoc;clearLog();const c=S.c;
-  card("<b>"+esc(c.name)+"</b> of "+esc(c.house)+"<br>"+esc(REGIONS[c.region].name)+", faith of "+esc(RELIGIONS[c.religion])+
+  const gword=isFemale()?"Lady/woman":"Lord/man";
+  card("<b>"+esc(c.name)+"</b> of "+esc(c.house)+" · "+esc(gword)+
+    "<br>"+esc(REGIONS[c.region].name)+", faith of "+esc(RELIGIONS[c.religion])+
+    "<br>Appearance: <b>"+esc(appWord())+"</b>"+(fineryBonus()?" <span class='good'>(+"+fineryBonus()+" from finery)</span>":"")+
+    (isFemale()?"<br>As a woman here, you are "+({free:"<b>as free as any man</b> — Dornish/Free City custom knows no difference",middling:"<b>only lightly bound</b> — hardier custom leaves you some room",restricted:"<b>tightly bound by Andal custom</b> — power comes through soft means, marriage, or defiance"})[freedomLevel()]:"")+
     "<br>The "+esc(S.season)+" of the year "+S.year+" · Day "+S.day+
     "<br>Level "+c.level+" (XP "+c.xp+"/"+(c.level*100)+") · Health "+c.hp+"/"+c.maxhp+" · Gold "+c.gold+
     "<br><br>"+ATTRS.map(a=>ATTR_LABEL[a]+" "+c.attr[a]).join("  ")+
@@ -749,10 +816,63 @@ const LOCAL=[
    if(S.c.traits.includes("warg_touched"))add("<span class='dim'>The old blood stirs; ancient eyes seem to turn upon you.</span>");
    event("discovery","You witnessed an ill omen upon the road.",2);
    eventChoices([{label:"Press on",act:cont}]);}},
+ // -- appearance & gender events --
+ {id:"attention",w:3,elig:()=>appScore()>=6||isFemale(),run(cont){heading("Unwelcome Attention");
+   const who=isFemale()?"A drunken lordling and his friends":"A hard-eyed knight, deep in his cups,";
+   add(who+" bars your way, leering. "+(isFemale()?"\"Now here's a prize. Give us a smile, sweetling — and more besides.\"":"\"You've a pretty face. Pretty faces owe me a toll.\""));
+   eventChoices([
+     {label:"Rebuff them coldly (Will)",act:()=>{const r=roll("will",null,13);showRoll(r);
+       if(r.success){add("You meet their eyes without a flicker of fear until the laughter dies and they look away.");
+         event("discovery","You faced down unwanted attention with cold nerve.",2);}
+       else{add("They crowd closer, emboldened, before a passing septon shames them off. Your cheeks burn.");}
+       cont();}},
+     {label:"Warn them off with steel",act:()=>{
+       normBreak("A woman baring steel! They jeer even as they retreat — the tale will follow you.",2);
+       add("You set a hand to your hilt and let them read your eyes. They decide you are not worth the blood.");
+       event("discovery","You warned off harassers with a blade.",2);cont();}},
+     {label:"Endure it and slip away",act:()=>{add("You swallow it and go, their laughter at your back. It is not the first time, and will not be the last.");
+       event("slight","You endured unwanted attention rather than make a scene.",1);cont();}},
+   ]);}},
+ {id:"mockery",w:2,elig:()=>appScore()<=3,run(cont){heading("Cruel Tongues");
+   add("A knot of courtiers snicker as you pass. \""+(isFemale()?"Gods, what a plain thing":"There's a face to curdle milk")+",\" one says, not troubling to lower his voice.");
+   eventChoices([
+     {label:"Turn it back with a sharp word (Cunning)",act:()=>{const r=roll("cunning","intrigue",12);showRoll(r);
+       if(r.success){add("Your reply lands like a slap, and it is the mocker who goes red while the others laugh at him.");for(const m of xp(10))add("<span class='good'>"+m+"</span>");event("favor","You turned mockery into your own small victory.",2);}
+       else add("Your retort falls flat, and they laugh the harder. You walk on, ears burning.");cont();}},
+     {label:"Let them think you a fool",act:()=>{S.flags.underestimated=true;
+       add("<span class='dim'>You duck your head and move on. Let them underestimate you — it is a blade that cuts when they least expect it.</span>");
+       event("discovery","You let others underestimate you — a hidden advantage.",1);cont();}},
+   ]);}},
+ {id:"match",w:2,elig:()=>(HOUSES[S.c.origin]||appScore()>=7)&&!S.flags.betrothed,run(cont){heading("A Match is Offered");
+   const fac=["lannister","tyrell","tully","arryn","baratheon"][rnd(0,4)];
+   add("An envoy in fine livery seeks you out. A "+(isFemale()?"lord":"lady")+" of "+FACTIONS[fac].replace(/ \(.*\)/,"")+" proposes a marriage — an alliance sealed in blood.");
+   if(isFemale()&&freedomLevel()==="restricted")add("<span class='dim'>You know what this is: a highborn woman is a piece to be moved. Accept, and you gain a seat and powerful kin — and a leash. Refuse, and they will call you wilful.</span>");
+   eventChoices([
+     {label:"Accept the match",act:()=>{S.flags.betrothed=fac;rep(fac,15);favorGain(fac,1);
+       S.c.titles.push(isFemale()?"betrothed of "+FACTIONS[fac].replace(/ \(.*\)/,""):"good-son of "+FACTIONS[fac].replace(/ \(.*\)/,""));
+       add("The betrothal is struck. "+FACTIONS[fac].replace(/ \(.*\)/,"")+" is your ally now, for good and ill.");
+       event("marriage","You were betrothed into "+FACTIONS[fac].replace(/ \(.*\)/,"")+".",4);cont();}},
+     {label:"Decline, courteously",act:()=>{
+       if(isFemale()&&freedomLevel()==="restricted"){const f=REGION_FACTION[S.region];if(f)rep(f,-5);
+         add("<span class='bad'>You refuse — and a woman who spurns a good match earns a wilful, dangerous name.</span>");
+         event("slight","You refused a marriage alliance, scandalising polite society.",2);}
+       else{add("You decline with grace. There will be other offers, other alliances.");}
+       cont();}},
+   ]);}},
+ {id:"court",w:2,elig:()=>appScore()>=7||checkBonus("presence")>=3,run(cont){heading("An Invitation to Court");
+   add("Your looks and bearing have been noticed. A steward presses a perfumed invitation into your hand — a feast, where the realm's players will be watching, and watched.");
+   eventChoices([
+     {label:"Work the room (Presence)",act:()=>{const r=roll("presence","intrigue",13);showRoll(r);
+       if(r.success){const fac=REGION_FACTION[S.region]||"iron_throne";rep(fac,8);favorGain(fac,1);
+         add("You move through the feast like water, and by dawn you have a great house's ear and its goodwill.");
+         for(const m of xp(20))add("<span class='good'>"+m+"</span>");event("favor","You won soft power at a great feast.",3);}
+       else add("You attend, but the currents of the court are swift, and you leave with little but a wine-headache.");cont();}},
+     {label:"Send your regrets",act:()=>{add("You stay away. Courts are nests of vipers, and you have troubles enough.");cont();}},
+   ]);}},
 ];
 function rollLocal(days){const mult=SEASON_DANGER[S.season]||1;
   if(Math.random()>=Math.min(.55,.14*days*mult))return null;
-  const pool=LOCAL.filter(e=>!e.reg||e.reg.includes(S.region));
+  const pool=LOCAL.filter(e=>(!e.reg||e.reg.includes(S.region))&&(!e.elig||e.elig()));
   return weighted(pool);}
 function runEvent(ev,cont){rule();ev.run(cont);}
 
@@ -773,6 +893,7 @@ function fight(foeDef,cont,reward){reward=reward||{};const foe=Object.assign({},
   updateMeta();
   if(S.c.hp<=0)return die("cut down by "+foe.name);
   if(res.victory){add("<span class='good'>You stand victorious over "+esc(foe.name)+".</span>");
+    normBreak("A woman with a bloodied blade — witnesses cross themselves and whisper. Deeds like this cling to a lady's name.",1);
     if(reward.loot){S.c.gold+=reward.loot;add("<span class='good'>You take "+reward.loot+" silver from the fallen.</span>");}
     if(reward.rep)rep(reward.rep[0],reward.rep[1]);
     if(reward.favor)favorGain(reward.favor[0],reward.favor[1]);
@@ -785,7 +906,8 @@ const WOUNDS=[
  {name:"a lasting limp",kind:"attr",key:"agility",amt:1,desc:"A deep leg wound never healed clean; you are lamed for good."},
  {name:"a crippled hand",kind:"skill",key:"swordsmanship",amt:1,desc:"You lost fingers; your sword-work will never be what it was."},
  {name:"a cracked skull",kind:"attr",key:"cunning",amt:1,desc:"An old head wound leaves your wits swimming at the worst times."},
- {name:"a ruined eye",kind:"attr",key:"presence",amt:1,desc:"You wear the raw scar of a lost eye; men flinch to meet your gaze."},
+ {name:"a ruined eye",kind:"attr",key:"appearance",amt:2,desc:"You wear the raw scar of a lost eye; it steals the comeliness from your face."},
+ {name:"a cruel scar",kind:"attr",key:"appearance",amt:1,desc:"A blade opened your cheek to the bone; the scar will never fade."},
  {name:"a wasting wound",kind:"maxhp",amt:4,desc:"A wound that festered has sapped your vigour for good."},
 ];
 function maybeWound(){if(S.c.hp>0&&S.c.hp<S.c.maxhp*0.3&&Math.random()<0.5)applyWound();}
@@ -851,7 +973,8 @@ function screenRumors(){back=describeLoc;clearLog();heading("What the Ravens Car
 //============================== BOOT =================================
 // test seam: inert in the browser (window.IAA_TEST is never set there)
 if(typeof window!=="undefined"&&window.IAA_TEST){
-  window.__iaa={get S(){return S;},die,fight,applyWound,favorGain,FOES,advance,addRumor,spreadRumors};}
+  window.__iaa={get S(){return S;},die,fight,applyWound,favorGain,FOES,advance,addRumor,spreadRumors,
+    appScore,appMod,isFemale,freedomLevel,checkBonus,roll};}
 window.addEventListener("error",e=>{try{add("<span class='bad'>An error occurred: "+esc(e.message)+"</span>");}catch(_){}});
 titleScreen();
 </script>
