@@ -1,0 +1,15 @@
+# Iron & Ash has NO required third-party dependencies - it runs on the Python
+# standard library alone (this is what lets it run on iOS Python apps and in the
+# browser via Pyodide). The packages below are OPTIONAL and only improve things:
+#
+#   rich      - colour, panels, and tables in the terminal (plain-text fallback
+#               is used automatically when it is absent)
+#   pydantic  - a faster, stricter model layer (a pure-stdlib fallback is used
+#               automatically when it is absent)
+#
+# Install them for the best desktop experience:
+rich>=13.0
+pydantic>=2.0
+
+# For running the test suite:
+pytest>=7.0

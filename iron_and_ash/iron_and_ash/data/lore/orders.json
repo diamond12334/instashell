@@ -1,0 +1,86 @@
+[
+  {
+    "id": "order_nights_watch",
+    "name": "The Night's Watch",
+    "summary": "The sworn brotherhood that has held the Wall for eight thousand years.",
+    "facts": {"Seat": "Castle Black", "Strength": "Fewer than a thousand, and falling", "Colors": "Black, and only black"},
+    "tags": ["wall", "north", "order"],
+    "body": [
+      "Founded after the Long Night to hold the Wall against the dark, the Night's Watch is the oldest order in Westeros. Its brothers swear a vow for life: to take no wife, hold no lands, father no children, wear no crowns and win no glory - to live and die at their post, the sword in the darkness, the watcher on the walls, the shield that guards the realms of men. Rangers scout the haunted forest, builders keep the ice and the castles, stewards keep the rest alive; over all stands a Lord Commander chosen by the brothers' own vote, be he lordling or poacher.",
+      "Once the Watch was ten thousand strong and the honor of kings' sons; seventeen of the Wall's nineteen castles now stand empty, and the black brothers number fewer than a thousand - the sweepings of the realm's dungeons, sent north by lords glad to empty their cells, with a leavening of highborn men in disgrace or in earnest. For desertion the penalty is death, and the vow has no ending but death.",
+      "The Watch takes no part: in the realm's wars it is neutral forever, and a man's crimes are wiped clean when he says the words. The south now regards it as a penal colony with a fine history. The Watch's own records suggest its founders did not build seven hundred feet of ice against wildling raiders - and the free folk moving south in numbers say the old enemy is not done with the Wall, whatever the south regards."
+    ]
+  },
+  {
+    "id": "order_kingsguard",
+    "name": "The Kingsguard",
+    "summary": "Seven white knights sworn for life to die for the king.",
+    "facts": {"Strength": "Seven, never more", "Colors": "White cloaks, white shields", "Founded": "By Aegon the Conqueror"},
+    "tags": ["crown", "knighthood", "order"],
+    "body": [
+      "The Kingsguard are seven knights, the finest of the realm, sworn for life to guard the king and his family. They hold no lands, take no wives, father no sons; their reward is honor itself. Their deeds fill the White Book at the Round Room of the White Sword Tower, where every knight to wear the cloak has his page, kept by the Lord Commander.",
+      "The white cloak has been worn by the greatest knights the realm has known - Ser Ryam Redwyne, Prince Aemon the Dragonknight, Ser Duncan the Tall - and its history was, for near three hundred years, a clean one: no Kingsguard had ever failed his king. Then Ser Jaime Lannister, youngest man ever raised to the white, opened King Aerys's throat in the throne room, and sat down on the Iron Throne to wait for the rebels. The realm named him Kingslayer.",
+      "Robert pardoned him and kept him in the white, which knights of the old school account a stain on all seven cloaks. The deeper question - what a Kingsguard owes his vow when his king burns men alive - is one the White Book does not answer, and men do not ask aloud."
+    ]
+  },
+  {
+    "id": "order_maesters",
+    "name": "The Order of Maesters",
+    "summary": "The chained scholars of the Citadel - healers, tutors, and counselors to every castle.",
+    "facts": {"Seat": "The Citadel, Oldtown", "Badge": "A chain of many metals, worn at the throat"},
+    "tags": ["citadel", "learning", "order"],
+    "body": [
+      "The maesters style themselves the knights of the mind. A boy comes to the Citadel, studies under the archmaesters, and forges his chain link by link - black iron for ravencraft, silver for healing, gold for sums and measures, Valyrian steel, rarely, for the higher mysteries - each metal an art mastered. When he takes his vows he puts aside his house name and inheritance, and is sent to serve a castle: healer, tutor, raven-keeper, and counselor to whatever lord holds it, serving the castle itself, not the man - a maester stays through siege, conquest, and change of banner.",
+      "The chain is worn at the throat, the maesters say, to remind them that they serve. Through their ravens flies every letter in the Seven Kingdoms; through their hands pass every lord's accounts, every heir's education, and every deathbed. The Conclave of archmaesters judges the seasons themselves, loosing white ravens to declare winter's coming - and quietly advises on much else.",
+      "That quiet is the ground of an old whisper: that the grey rats serve the realm as they see fit rather than as they are bid; that the Citadel has smothered what it could not measure; that magic did not so much die as get filed away. A maester will answer that the world is better lit by candles than by dragonfire. The whisper answers back: the maesters would say that."
+    ]
+  },
+  {
+    "id": "order_silent_sisters",
+    "name": "The Faith's Servants: Septons, Septas, and Silent Sisters",
+    "summary": "The clergy of the Seven, from the High Septon to the handmaidens of death.",
+    "facts": {"Head": "The High Septon", "Houses": "Septs, septries, and motherhouses"},
+    "tags": ["faith", "seven", "order"],
+    "body": [
+      "The Faith of the Seven is served by a great clergy. Septons minister in the septs and walk the roads as begging brothers; septas, holy sisters, teach and govern in motherhouses and serve noble households as governesses to highborn girls. Brown brothers till septry fields, and the pious of every rank light candles to the aspect their need names - the Mother for mercy, the Warrior for courage, the Crone for wisdom.",
+      "Apart from all of them walk the silent sisters, the handmaidens of the Stranger. Sworn to silence, veiled in grey with only their eyes showing, they tend the dead of the realm - washing and dressing the fallen, boiling the flesh from the bones of lords who die far from home so that their bones may travel back. Men fear them, as men fear the Stranger, and are glad of them, as men are glad of anyone who will do what they cannot bear to.",
+      "Over all sits the High Septon in the Great Sept of Baelor, the Father's voice on earth, who gives up his name on elevation because the office swallows the man. The Faith crowns kings, blesses their wars, and buries them; since Maegor broke its swords it has had no army but its voice - which, roused, has unmade kings without one."
+    ]
+  },
+  {
+    "id": "order_alchemists",
+    "name": "The Alchemists' Guild",
+    "summary": "The pyromancers of King's Landing, keepers of the substance.",
+    "facts": {"Seat": "The Guildhall beneath Rhaenys's Hill", "Art": "Wildfire, which they call the substance"},
+    "tags": ["kings landing", "fire", "order"],
+    "body": [
+      "The Guild of Alchemists is old - older in the city than the maesters, its wisdoms claim - and was once a power, when its pyromancers promised to transmute metals and call fire from the air. The maesters ate their standing century by century, and the guild survives now for a single reason: wildfire. The substance, its adepts call it; the jade demon, sailors call it - a green liquid fire that ignites of itself, burns on water, and cannot be quenched by anything but sand and prayer.",
+      "Wildfire made the guild rich in every war and richer under Aerys the Second, who loved the substance as other kings loved tourneys, burned traitors alive in it as his court watched, and raised his pyromancers high. What else the Mad King asked of them in his last year, with Robert's host marching on the city, is a thing the guild has never said and the new reign has never asked. Fruit jars of the substance from those years, the wisdoms admit, were stored in cellars about the city. Some, they say, were recovered. The word 'some' is carefully chosen.",
+      "The guild endures beneath Rhaenys's Hill in a warren of stone cells and vaults, training acolytes, tending its dwindling stocks, and waiting - as it has waited before - for a king to need fire again."
+    ]
+  },
+  {
+    "id": "order_faceless_men",
+    "name": "The Faceless Men",
+    "summary": "The assassin-priests of the Many-Faced God, costliest killers in the world.",
+    "facts": {"Seat": "The House of Black and White, Braavos", "Price": "Ruinous, and not always paid in gold"},
+    "tags": ["braavos", "death", "order"],
+    "body": [
+      "The Faceless Men are priests first and killers second - servants of the Many-Faced God who hold that death is his gift, and that they are only its bearers. Born, the tales say, among the slaves of Valyria's mines, where the first of them learned that all the slaves' many gods of death were one god and gave the gift to masters as well as the miserable, the cult removed in time to Braavos, city of escaped slaves, and its temple of the House of Black and White.",
+      "Their fees are famous: princes have been beggared hiring them, and the guild - if a priesthood can be called one - is said to scale the price to the target and to the payer alike, sometimes asking not gold but a thing the buyer will feel. This is doctrine, not greed: death is holy, and must cost. A Faceless Man does not murder, as he reckons it; he delivers what all men must one day receive, to the one named, and no other - they take no side, serve no throne, and never touch one the god has not been paid for.",
+      "Of their arts, men repeat what men cannot verify: that they wear the faces of the dead as another man wears a cloak; that one served among the crew of every ship, or none; that valonqar, the doom of dynasties, was theirs. What is verified is the temple's own teaching, mildest and most frightening of all: that a servant of the Many-Faced God is no one - a man who has put off his name, his face, and his heart, and kept only the god."
+    ]
+  },
+  {
+    "id": "order_golden_company",
+    "name": "The Golden Company",
+    "summary": "Ten thousand exiles beneath gilded skulls - the free company that never broke a contract.",
+    "facts": {"Strength": "Ten thousand men, with elephants", "Motto": "Beneath the gold, the bitter steel", "Founded": "By Bittersteel, 212 AC"},
+    "tags": ["essos", "blackfyre", "war", "order"],
+    "body": [
+      "When the First Blackfyre Rebellion drowned at the Redgrass Field, Aegor Rivers - Bittersteel, bastard of a king, rival of Bloodraven, keeper of the sword Blackfyre - led the beaten exiles across the narrow sea and forged them into the Golden Company: a free company built not for plunder but for return. Its founding purpose was a Blackfyre on the Iron Throne, and its motto has not softened in a hundred years: beneath the gold, the bitter steel.",
+      "It is the greatest and best of the free companies - ten thousand horse and foot with elephants and its own paychests, so famously reliable that 'the Golden Company has never broken a contract' settles arguments in every counting house from Braavos to Volantis. Its officers are the sons and grandsons of exiled Westerosi houses, keeping the names and arms of homes they have never seen; its dead commanders march with it still, their skulls dipped in gold and borne on standards, Bittersteel's first among them.",
+      "The Blackfyre male line is accounted extinct, its last pretender dead a generation gone, and the company fights on for coin like any other - richer and prouder, waiting. Every year at their fires the exiles drink to home, and men who hire them do well to remember which home is meant."
+    ]
+  }
+]

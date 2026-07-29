@@ -1,0 +1,164 @@
+[
+  {
+    "id": "place_winterfell",
+    "name": "Winterfell",
+    "summary": "The ten-thousand-year seat of House Stark, warmed by the earth itself.",
+    "facts": {"Region": "The North", "Holder": "House Stark"},
+    "tags": ["north", "stark", "castle"],
+    "body": [
+      "Winterfell is less a castle than a small walled world: two massive granite walls with a moat between, enclosing acres of yards, keeps, a sept, a glass garden, and a godswood three acres deep where a heart tree has watched for ten thousand years. Legend says Brandon the Builder raised it over natural hot springs, and the scalding waters piped through its walls keep the castle warm through the cruelest winters - the castle was built around and above them, growing over millennia into a maze of towers from every age.",
+      "Beneath it run the crypts, older than the castle above, level under level, the deepest partly collapsed and never visited. There the Kings of Winter and the Lords of Winterfell sit in stone with iron swords across their laps, direwolves at their feet, to keep their spirits within. Northmen say there must always be a Stark in Winterfell, and mean it as more than habit.",
+      "Below the walls huddles the winter town, empty three years in four, filling with smallfolk when the snows come. In summer its market square hosts a modest trade; in winter it becomes the last warm hearth of the North."
+    ]
+  },
+  {
+    "id": "place_wall",
+    "name": "The Wall and Castle Black",
+    "summary": "Seven hundred feet of ice across the top of the world.",
+    "facts": {"Region": "The far North", "Holder": "The Night's Watch", "Length": "Three hundred miles"},
+    "tags": ["north", "nights watch", "wonder"],
+    "body": [
+      "The Wall runs three hundred miles from the Shadow Tower in the western mountains to Eastwatch-by-the-Sea, seven hundred feet high and wide enough at the top for a dozen mounted knights to ride abreast. It is ice - grey and sullen on a dark day, glittering blue-white when the sun catches it - and it is old beyond record, raised, the tales say, by Bran the Builder with the help of giants after the Long Night. Maesters doubt the giants. Standing beneath it, doubt comes harder.",
+      "There is old magic in it, woven deep. The free folk say a dead thing cannot pass the Wall while it stands, and the Watch's oldest records - where they can be read at all - suggest the Wall was raised not against men at all.",
+      "Nineteen castles guard it, of which only three are now manned: Eastwatch, the Shadow Tower, and Castle Black, the Watch's seat, a huddle of keeps and halls with no wall of its own on the south side - for the Watch swore to hold it against the north, and built accordingly. South of it lie the Gift, lands granted the Watch in ancient days for its support, emptier every year as wildling raids drive the smallfolk off."
+    ]
+  },
+  {
+    "id": "place_kings_landing",
+    "name": "King's Landing",
+    "summary": "The stinking, teeming capital of the Seven Kingdoms.",
+    "facts": {"Region": "The Crownlands", "Holder": "The Iron Throne", "Population": "Perhaps half a million"},
+    "tags": ["crownlands", "capital", "city"],
+    "body": [
+      "Where Aegon the Conqueror first came ashore, a city of half a million now sprawls across three hills - Aegon's High Hill, crowned by the Red Keep; Visenya's Hill, crowned by the marble Great Sept of Baelor; and Rhaenys's Hill, crowned by the burnt shell of the Dragonpit, whose great dome collapsed during the Dance and was never rebuilt. It is the largest city of Westeros and the youngest, thrown up in three centuries without plan or pause, and it announces itself downwind before it appears over the horizon.",
+      "The Red Keep holds the Iron Throne itself: a towering, twisted seat of a thousand melted swords, ugly and asymmetric and cruel, with barbs and jagged edges that have cut more than one king who sat it carelessly. The realm takes note when a king cuts himself - the smallfolk say the throne rejects those unfit to sit it. Beneath the castle, Maegor the Cruel honeycombed the hills with secret passages and killed every builder who knew them.",
+      "Between the hills teem the markets, the wharves, the manses of the great, and the vast slum called Flea Bottom, where the smallfolk are born, live on bowls o' brown from the pot-shops, and die without ever learning what the lords on the hills were fighting about. The gold cloaks of the City Watch, two thousand strong, keep such peace as the city has."
+    ]
+  },
+  {
+    "id": "place_casterly_rock",
+    "name": "Casterly Rock",
+    "summary": "The hollow golden mountain of the Lannisters.",
+    "facts": {"Region": "The Westerlands", "Holder": "House Lannister"},
+    "tags": ["westerlands", "lannister", "castle"],
+    "body": [
+      "Casterly Rock is not a castle on a mountain; it is the mountain. A colossal stone hill shaped like a crouching lion, honeycombed over thousands of years with halls, stables, galleries, vaults, and dungeons, it looms two leagues long beside the Sunset Sea and stands taller than the Wall. The gold mines in its roots made the Casterlys rich in the Dawn Age and have made the Lannisters the wealthiest house in the world since Lann the Clever tricked his way inside.",
+      "The Rock has never been taken. Not by storm, not by siege, not by the ironborn at their height. Its port shelters in caves beneath the mountain; its defenders drink from wells sunk to hidden springs; and any attacker must come at it up a single steep way under the eyes of the whole fortress. The city of Lannisport, itself among the largest of the realm, spreads golden-walled at the lion's feet."
+    ]
+  },
+  {
+    "id": "place_eyrie",
+    "name": "The Eyrie",
+    "summary": "The impregnable white castle above the clouds.",
+    "facts": {"Region": "The Vale", "Holder": "House Arryn"},
+    "tags": ["vale", "arryn", "castle"],
+    "body": [
+      "Small, white, and beautiful, the Eyrie clings to a shoulder of the Giant's Lance thousands of feet above the Vale, its seven slim towers visible from a day's ride away. It can be reached only by a narrow track that switchbacks up past three waycastles - Stone, Snow, and Sky - and from Sky the last six hundred feet are bare stone chimney, climbed by ladder and basket. An army cannot come at it at all; the mules of the Eyrie do more for its defense than any garrison.",
+      "Its dungeons are the sky cells: shelves of smooth stone open on one side to six hundred feet of empty blue, floors sloping gently toward the drop. The cold and the wind and the blue do the jailers' work, and prisoners beg to be moved before long. Executions go out the Moon Door, a narrow weirwood door in the floor of the High Hall that opens onto nothing at all.",
+      "For all its grace, the Eyrie is a summer castle: when winter closes the mountain it is abandoned to the snows, and the Arryns hold court at the Gates of the Moon in the valley below."
+    ]
+  },
+  {
+    "id": "place_harrenhal",
+    "name": "Harrenhal",
+    "summary": "The greatest castle ever built, and the most cursed.",
+    "facts": {"Region": "The Riverlands", "Holder": "Whomever the crown last cursed with it"},
+    "tags": ["riverlands", "ruin", "curse"],
+    "body": [
+      "Harren the Black spent forty years and the wealth of two kingdoms building the mightiest castle in Westeros beside the Gods Eye: five towers like deformed mountains, walls no engine could breach, halls that could seat an army. It was finished the very day Aegon Targaryen landed. Walls mean nothing to dragons; Balerion's fire burned so hot that stone cracked and towers melted like candles, and Harren and all his line died in the inferno. The towers still stand twisted and fire-gnarled, and men give them names like the Wailing Tower and Kingspyre.",
+      "Since that day every house granted Harrenhal has withered - Qoherys, Harroway, Towers, Strong, Lothston, all extinct, some in madness and horror. The smallfolk say Harren and his sons still walk the halls, and that the castle's stones remember burning. Lords now regard the grant of Harrenhal as a poisoned honor.",
+      "Even half-ruined, it is too big to garrison and too strong to ignore: a curse with a moat. It was here, at the great tourney in the false spring of 281, that Rhaegar Targaryen rode past his wife and crowned Lyanna Stark with winter roses - and the realm's own ruin began under Harren's."
+    ]
+  },
+  {
+    "id": "place_oldtown",
+    "name": "Oldtown and the Citadel",
+    "summary": "The oldest city in Westeros, seat of learning and light.",
+    "facts": {"Region": "The Reach", "Holder": "House Hightower", "Landmark": "The Hightower and the Citadel"},
+    "tags": ["reach", "maesters", "city"],
+    "body": [
+      "Oldtown was old when King's Landing was a fishing village. Built in stone along the winding Honeywine, it is the fairest of the realm's cities, and above it rises the Hightower - a stepped tower of white stone on an island fortress of black, oily rock older than memory, its crown a beacon fire visible far out to sea. House Hightower has ruled here for thousands of years, wealthy beyond most kings and wise enough, usually, to stay out of wars.",
+      "Here stands the Citadel, where the maesters are made. Acolytes come from all the world to study healing, history, ravencraft, warcraft, the higher mysteries - each art earning a link for the chain a maester wears at his throat, and each maester is then sent forth to serve some lord's castle as healer, tutor, and counselor, renouncing house and inheritance. The Conclave of archmaesters names the Grand Maester who counsels the king, and it is the Citadel whose measurements declare the turn of the seasons, its white ravens flying to announce that winter has come.",
+      "The maesters call themselves the knights of the mind, lighting the realm against superstition. There are those who mutter the Citadel lights some things and smothers others - that the grey rats schooled the magic out of the world on purpose, and were glad to see the dragons die. The archmaester who keeps the Citadel's Valyrian steel mask and ring studies the higher mysteries still. His colleagues mostly regard the subject as a wardrobe of dead men's clothes."
+    ]
+  },
+  {
+    "id": "place_storms_end",
+    "name": "Storm's End",
+    "summary": "The drum tower that has defied the gods themselves.",
+    "facts": {"Region": "The Stormlands", "Holder": "House Baratheon"},
+    "tags": ["stormlands", "baratheon", "castle"],
+    "body": [
+      "Storm's End stands on a cliff above Shipbreaker Bay, where the storms off the narrow sea strike Westeros hardest. Legend says Durran Godsgrief wed Elenei, daughter of the sea god and the wind goddess, and her divine parents sent storms that smashed six of his castles; the seventh, raised - some tales say - with the counsel of a boy who would become Bran the Builder, has stood against wind and wave for a thousand generations.",
+      "It is a single colossal drum tower behind a single curtain wall, but such a wall: a hundred feet high, forty feet thick on its seaward face, its stones fitted so cunningly the wind finds no purchase. The old tales insist there are spells woven into it that no sorcery can pass. It has never fallen. In Robert's Rebellion the young Stannis Baratheon held it through a year's siege, garrison gnawing rats and boot leather, until a smuggler ran the blockade with a hold full of onions - for which Stannis knighted the man and took two joints of his fingers, and never understood why anyone found the two rewards hard to reconcile."
+    ]
+  },
+  {
+    "id": "place_sunspear",
+    "name": "Sunspear and the Water Gardens",
+    "summary": "The sandstone seat of the Martells, and the gentlest place in Westeros.",
+    "facts": {"Region": "Dorne", "Holder": "House Nymeros Martell"},
+    "tags": ["dorne", "martell", "castle"],
+    "body": [
+      "Sunspear rises from the sands where Dorne meets the sea: a sandstone castle in the Rhoynish style, crowned by the slim Spear Tower and the great dome of the Tower of the Sun, where the princes of Dorne sit twin thrones. About its walls has grown the shadow city, a warren of mud-brick shops and winding alleys that is the closest thing Dorne has to a true city.",
+      "Three leagues down the coast lie the Water Gardens, the princes' pleasure palace of pale pink marble, pools, and fountains beside the sea, sweetened by citrus groves. By a custom begun by a beloved queen, the children of the great and the humble alike are brought there to play together in the pools - so every Dornish prince grows up knowing highborn and low by name. It is a thing no other kingdom does, and it explains much about Dorne."
+    ]
+  },
+  {
+    "id": "place_pyke",
+    "name": "Pyke",
+    "summary": "The Greyjoy stronghold, crumbling into the sea that made it.",
+    "facts": {"Region": "The Iron Islands", "Holder": "House Greyjoy"},
+    "tags": ["iron islands", "greyjoy", "castle"],
+    "body": [
+      "Pyke was once a fortress on a headland; the sea has eaten the headland from under it, leaving its keeps and towers stranded on bare rock stacks amid the boiling surf, joined by swaying rope bridges and one arched stone span. The Great Keep, the Bloody Keep - named for the murder of guests within it, a very ironborn sort of name - the Kitchen Keep and the crooked Sea Tower each stand on their own pillar of stone, and crossing between them in a storm is a thing men remember.",
+      "It is a grim, wet, lightless seat, and the Greyjoys would have it no other way. In the Greyjoy Rebellion the walls on the landward side were breached by King Robert's rams and the castle stormed - the first time Pyke ever fell - and the repaired stone stands paler than the old, a scar the Greyjoys see every day."
+    ]
+  },
+  {
+    "id": "place_dragonstone",
+    "name": "Dragonstone",
+    "summary": "The smoking island fortress where the dragonlords endured the Doom.",
+    "facts": {"Region": "Blackwater Bay", "Holder": "House Baratheon (Stannis)"},
+    "tags": ["targaryen", "valyria", "castle"],
+    "body": [
+      "Dragonstone guards the mouth of Blackwater Bay: a bleak volcanic island beneath the smoking mountain called Dragonmont, where wild dragons once lared and the last hatcheries of the Targaryens stood. The Valyrians raised its citadel with their lost arts, shaping stone as if it were wax - every tower, gate, and merlon carved into dragon shapes, a thousand gargoyles and grotesques, so that the whole castle seems a nest of dragons frozen in the act of waking.",
+      "Here the Targaryens sat out the Doom of Valyria; from here Aegon launched his Conquest; and here, by tradition, the heir to the Iron Throne ruled as Prince of Dragonstone. It commands the sea approach to King's Landing, which makes it strategically priceless - and it is poor, grim, damp, and sulfur-scented, which makes it a lordship men are honored by and never enjoy. King Robert granted it to his brother Stannis, who noted precisely what it meant that the younger brother Renly got rich Storm's End - and has been noting it ever since."
+    ]
+  },
+  {
+    "id": "place_braavos",
+    "name": "Braavos",
+    "summary": "The secret city of escaped slaves, mightiest of the Free Cities.",
+    "facts": {"Region": "Essos, the northern narrow sea", "Founded": "By escaped slaves, in secret", "Landmark": "The Titan of Braavos"},
+    "tags": ["essos", "free cities", "city"],
+    "body": [
+      "Braavos was founded by slaves - the human cargo of a great Valyrian fleet who rose, took the ships, and sailed beyond the edge of every chart to a hidden lagoon wrapped in fog and mudflats. For a century they built their city in secret, and when Braavos at last unveiled itself to the world it was already rich and strong. Alone of the Free Cities it is no daughter of Valyria but its denial, and its first law is that no man, woman, or child in Braavos shall ever be a slave. The sea lords' warships enforce that law wherever they sail.",
+      "The city stands on a hundred islands laced by canals, a place of purple sails, bravos dueling by moonlight over the honor of courtesans, temples to every god ever prayed to - the Braavosi, descended from slaves of a hundred nations, turn none away - and the House of Black and White, where the Many-Faced God grants his gift. Ships entering the lagoon pass beneath the Titan, a fortress in the shape of a striding bronze colossus whose roar warns the city of every arrival.",
+      "The Iron Bank of Braavos is the wealthiest and most feared institution of money in the world. Princes and kings borrow from it, and repay it, because all men learn what the Braavosi mean when they say the Iron Bank will have its due: when a debtor defaults, the Bank has been known to fund his enemies, his rivals, and his replacement."
+    ]
+  },
+  {
+    "id": "place_volantis",
+    "name": "Volantis",
+    "summary": "The oldest and proudest daughter of Valyria, first city of the slave trade.",
+    "facts": {"Region": "Essos, mouth of the Rhoyne", "Rulers": "Three triarchs, elected by the freeborn of the Old Blood"},
+    "tags": ["essos", "free cities", "valyria", "city"],
+    "body": [
+      "Volantis is the eldest of the Free Cities, first colony of Valyria and, in its own eyes, heir to the Freehold entire. After the Doom it acted the part, conquering half its sister cities before a grand alliance - and the dragons of young Aegon Targaryen, in one of his few forays east - broke its ambitions. The Old Blood have nursed their pride ever since behind the Black Walls, a ring of fused dragonstone raised by Valyrian arts, within which none but those of pure Valyrian descent may dwell.",
+      "It is a city of slaves above all: five slaves for every free man, marked on the face with tattoos - tears for the pleasure houses, flies for the dung carts, flames for the red temple's servants, green stripes for the tiger cloaks who keep the peace. Its Temple of the Lord of Light is the greatest in the world, an enormous complex of domes and towers where the high priest Benerro reads the flames before tens of thousands.",
+      "Volantis is ruled by three triarchs, elected yearly by freeborn landholders in ten days of feverish campaigning - the last remnant of Valyria's freehold franchise, and the widest in the world, for all that the vast enslaved majority beneath it can only watch. The slaves of Volantis outnumber their masters five to one, and the red priests remind them of it, gently, every night."
+    ]
+  },
+  {
+    "id": "place_valyria_ruins",
+    "name": "The Ruins of Valyria",
+    "summary": "The shattered heart of the old empire, where no man sails and returns.",
+    "facts": {"Region": "The Smoking Sea, Essos", "Status": "Cursed, shunned, unclaimed"},
+    "tags": ["valyria", "ruin", "curse"],
+    "body": [
+      "Where the Freehold's heartland stood, there is now a shattered peninsula and a sea that steams. The Fourteen Flames burn on beneath the water; the sky glows red at night over the Smoking Sea; and of Valyria itself - the towers of fused stone, the sphinxes, the libraries of the dragonlords - there remain ruins that no living man has reliably seen and returned to describe. The Doom still rules Valyria, sailors say, and every fleet that has gone to loot it has gone to feed the saying.",
+      "What waits there is the subject of a hundred tales - demons, plagues, fire-wyrms, the restless dead of a hundred thousand slaves - and one certainty: somewhere in those ruins lie the treasures of the greatest civilization the world has known, including Valyrian steel blades beyond counting. Every generation, some bold or desperate captain decides the tales are only tales. The Smoking Sea keeps them all."
+    ]
+  }
+]

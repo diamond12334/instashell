@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#1a1712"/>
+  <g fill="none" stroke="#c9a24b" stroke-width="20" stroke-linecap="round" stroke-linejoin="round">
+    <!-- crossed swords -->
+    <path d="M150 150 L330 330"/>
+    <path d="M362 150 L182 330"/>
+    <path d="M330 330 l34 34 M182 330 l-34 34"/>
+    <path d="M140 140 l30 0 0 30 M372 140 l-30 0 0 30"/>
+    <!-- a suggestion of walls below -->
+    <path d="M120 400 h272 M150 400 v-24 M212 400 v-24 M274 400 v-24 M336 400 v-24" stroke-width="16"/>
+  </g>
+</svg>

@@ -1,0 +1,982 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="theme-color" content="#1a1712" />
+<title>Iron & Ash — an ASOIAF text RPG</title>
+<link rel="manifest" href="manifest.webmanifest" />
+<link rel="apple-touch-icon" href="icon.svg" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='26'%3E%E2%9A%94%EF%B8%8F%3C/text%3E%3C/svg%3E" />
+<style>
+  :root{--bg:#1a1712;--panel:#221d16;--panel2:#2a2419;--ink:#e9e0c9;--dim:#a2967d;
+    --accent:#c9a24b;--good:#7fae6a;--bad:#d1795f;--line:#39311f;}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);
+    font-family:ui-serif,Georgia,"Times New Roman",serif;font-size:17px;line-height:1.5}
+  body{display:flex;justify-content:center;min-height:100vh;
+    background:radial-gradient(130% 90% at 50% -10%, #251f15 0%, var(--bg) 55%) fixed;
+    padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+  button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+  #app{width:100%;max-width:720px;min-height:100vh;display:flex;flex-direction:column;
+    background:var(--bg);position:relative}
+  header{position:sticky;top:0;z-index:5;background:linear-gradient(#1a1712,#1a1712f0);
+    border-bottom:1px solid var(--line);padding:10px 14px;
+    display:flex;align-items:center;gap:10px;backdrop-filter:blur(4px)}
+  header .title{color:var(--accent);font-weight:700;letter-spacing:.5px}
+  header .meta{color:var(--dim);font-size:13px;margin-left:auto;text-align:right;line-height:1.25}
+  #menurow{display:flex;flex-wrap:wrap;gap:6px;padding:8px 12px;border-bottom:1px solid var(--line);
+    background:var(--panel)}
+  #menurow button{font-size:13px;padding:7px 10px}
+  #log{flex:1;padding:16px 16px 8px;overflow-y:auto}
+  #log h2{color:var(--accent);font-size:20px;margin:4px 0 10px;font-variant:small-caps;letter-spacing:.5px}
+  #log p{margin:0 0 12px}
+  #log .npc{color:var(--accent)}
+  #log .dim{color:var(--dim);font-size:15px}
+  #log .good{color:var(--good)} #log .bad{color:var(--bad)}
+  #log .rule{border:0;border-top:1px solid var(--line);margin:16px 0}
+  #log .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;
+    padding:12px 14px;margin:0 0 12px}
+  #log .card b{color:var(--accent)}
+  #log pre.map{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;line-height:1.35;
+    background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px;overflow-x:auto}
+  #choices{position:sticky;bottom:0;background:linear-gradient(#1a171200,#1a1712 22%);
+    padding:10px 12px calc(12px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:8px}
+  button{font-family:inherit;background:var(--panel2);color:var(--ink);border:1px solid #4a3f28;
+    border-radius:12px;padding:13px 14px;font-size:16px;text-align:left;cursor:pointer;transition:.06s}
+  button:active{transform:translateY(1px);background:#332b1c}
+  button.primary{background:var(--accent);color:#1a1712;border-color:var(--accent);font-weight:700}
+  button.row{text-align:center}
+  .grid{display:flex;gap:8px;flex-wrap:wrap}
+  .grid button{flex:1;min-width:70px;text-align:center}
+  .alloc{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);
+    border-radius:10px;padding:8px 12px;margin-bottom:8px}
+  .alloc .nm{flex:1} .alloc .v{width:34px;text-align:center;color:var(--accent);font-weight:700}
+  .alloc button{padding:8px 14px}
+  .pts{color:var(--dim);text-align:center;margin-bottom:8px}
+  input[type=text]{width:100%;background:#14110c;color:var(--ink);border:1px solid #4a3f28;
+    border-radius:10px;padding:12px;font:inherit;font-size:16px}
+  .foot{color:var(--dim);font-size:12px;text-align:center;padding:8px}
+  a{color:var(--accent)}
+</style>
+</head>
+<body><div id="app">
+  <header><span class="title">⚔️ Iron &amp; Ash</span><span class="meta" id="meta"></span></header>
+  <div id="menurow" style="display:none"></div>
+  <div id="log"></div>
+  <div id="choices"></div>
+  <div class="foot">A non-commercial fan work. All prose original. Winter is coming.</div>
+</div>
+<script>
+"use strict";
+//========================= tiny DOM helpers ============================
+const $=(id)=>document.getElementById(id);
+const logEl=$("log"), choicesEl=$("choices"), metaEl=$("meta"), menuEl=$("menurow");
+function clearLog(){logEl.innerHTML="";}
+function esc(s){return String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));}
+function add(html,cls){const p=document.createElement(cls==="pre"?"pre":"p");
+  if(cls&&cls!=="pre")p.className=cls; if(cls==="pre")p.className="map"; p.innerHTML=html; logEl.appendChild(p);
+  logEl.scrollTop=logEl.scrollHeight; return p;}
+function heading(t){const h=document.createElement("h2");h.textContent=t;logEl.appendChild(h);}
+function rule(){const h=document.createElement("hr");h.className="rule";logEl.appendChild(h);}
+function card(html){const d=document.createElement("div");d.className="card";d.innerHTML=html;logEl.appendChild(d);
+  logEl.scrollTop=logEl.scrollHeight;return d;}
+function choices(list){choicesEl.innerHTML="";for(const c of list){if(!c)continue;
+  const b=document.createElement("button");b.innerHTML=c.label;if(c.cls)b.className=c.cls;
+  b.onclick=()=>{if(c.act)c.act();};choicesEl.appendChild(b);}}
+function grid(list){choicesEl.innerHTML="";const g=document.createElement("div");g.className="grid";
+  for(const c of list){const b=document.createElement("button");b.innerHTML=c.label;b.className="row"+(c.cls?" "+c.cls:"");
+    b.onclick=c.act;g.appendChild(b);}choicesEl.appendChild(g);}
+
+//============================== DATA ==================================
+const ATTRS=["might","agility","cunning","presence","will","lore","appearance"];
+const ATTR_LABEL={might:"Might",agility:"Agility",cunning:"Cunning",presence:"Presence",will:"Will",lore:"Lore",appearance:"Appearance"};
+// how each land's culture treats a woman of station — Westeros is patriarchal,
+// but not uniformly so; Dorne and the Free Cities feel noticeably freer
+const CULTURE={north:"northern",riverlands:"andal",vale:"andal",westerlands:"andal",reach:"andal",
+  stormlands:"andal",crownlands:"andal",dorne:"dornish",iron_islands:"ironborn",essos:"braavosi"};
+const CULTURE_NOTE={
+  andal:"Strict Andal custom rules here: sons inherit before daughters, highborn girls are wed for alliance and prized for beauty, and a woman under arms invites open scorn — though widows and regents wield real power, and soft power sharpest of all.",
+  northern:"The North is hard but plainer-spoken: daughters still stand behind sons, yet Bear Island women bear axes, and none who saw them fight dared laugh twice.",
+  dornish:"Dornish law knows no difference: the eldest child inherits, daughter or son, and no one blinks at a woman with a spear, a council seat, or a paramour.",
+  ironborn:"The Old Way is a man's creed — yet a woman who can captain a ship and pay the iron price may take respect the isles would never freely give.",
+  braavosi:"In the Free Cities coin outranks custom; a clever woman may trade, duel, or rule as far as her purse and daring carry her."};
+const RELIGIONS={old_gods:"The Old Gods of the Forest",faith:"The Faith of the Seven",
+  drowned_god:"The Drowned God",rhllor:"R'hllor, the Lord of Light",many_faced:"The Many-Faced God"};
+const REGIONS={
+  north:{name:"The North",faith:"old_gods",blurb:"A vast, cold land of pine and snow that remembers the First Men."},
+  riverlands:{name:"The Riverlands",faith:"faith",blurb:"Fertile, war-torn country where the great rivers meet."},
+  vale:{name:"The Vale of Arryn",faith:"faith",blurb:"Mountain-walled and proud, guarded by the Bloody Gate."},
+  westerlands:{name:"The Westerlands",faith:"faith",blurb:"Golden hills honeycombed with mines; seat of Lannister power."},
+  reach:{name:"The Reach",faith:"faith",blurb:"The realm's breadbasket, land of knights and roses."},
+  stormlands:{name:"The Stormlands",faith:"faith",blurb:"Storm-lashed coasts under ancient Storm's End."},
+  dorne:{name:"Dorne",faith:"faith",blurb:"Sun, sand, and spears; a people who bow to none unwilling."},
+  iron_islands:{name:"The Iron Islands",faith:"drowned_god",blurb:"Bleak salt-rock isles whose folk pay the iron price."},
+  crownlands:{name:"The Crownlands",faith:"faith",blurb:"The lands about King's Landing, thick with schemers."},
+  essos:{name:"Essos (Free Cities)",faith:"many_faced",blurb:"Braavos and the Free Cities across the narrow sea."},
+};
+const HOUSES={
+  stark:{name:"House Stark",words:"Winter is Coming",region:"north",religion:"old_gods",gold:120,
+    blurb:"Lords of Winterfell and Wardens of the North, blood of the First Men."},
+  lannister:{name:"House Lannister",words:"Hear Me Roar",region:"westerlands",religion:"faith",gold:400,
+    blurb:"The richest house in the realm — gold, ambition, and long memory."},
+  targaryen:{name:"House Targaryen (loyalist)",words:"Fire and Blood",region:"crownlands",religion:"faith",gold:200,
+    blurb:"Dragonless exiles who still dream of the Iron Throne."},
+  baratheon:{name:"House Baratheon",words:"Ours is the Fury",region:"stormlands",religion:"faith",gold:220,
+    blurb:"Storm-born and strong, kin to the crowned stag of Storm's End."},
+  tyrell:{name:"House Tyrell",words:"Growing Strong",region:"reach",religion:"faith",gold:300,
+    blurb:"Wardens of the South, masters of the Reach's wealth and knights."},
+  martell:{name:"House Martell",words:"Unbowed, Unbent, Unbroken",region:"dorne",religion:"faith",gold:200,
+    blurb:"Princes of Dorne who never truly knelt to dragon or throne."},
+  greyjoy:{name:"House Greyjoy",words:"We Do Not Sow",region:"iron_islands",religion:"drowned_god",gold:90,
+    blurb:"Reavers of Pyke who take with sword and pay the iron price."},
+  tully:{name:"House Tully",words:"Family, Duty, Honor",region:"riverlands",religion:"faith",gold:150,
+    blurb:"Lords of Riverrun, guardians of the contested river country."},
+  arryn:{name:"House Arryn",words:"As High as Honor",region:"vale",religion:"faith",gold:180,
+    blurb:"Ancient and proud, enthroned in the impregnable Eyrie."},
+};
+const COMMON={
+  bastard:{name:"Highborn Bastard",region:"north",religion:"old_gods",gold:30,
+    blurb:"Noble blood, base-born name — trusted by neither high nor low."},
+  sellsword:{name:"Sellsword",region:"essos",religion:"many_faced",gold:40,
+    blurb:"A blade for hire who has fought under a dozen banners for coin."},
+  maester:{name:"Maester's Apprentice",region:"reach",religion:"faith",gold:25,
+    blurb:"Trained at the Citadel in letters, medicine, and quiet counsel."},
+  watch:{name:"Night's Watch Recruit",region:"north",religion:"old_gods",gold:10,
+    blurb:"Sworn (or soon to be) to the black, guarding the realms of men."},
+  smallfolk:{name:"Smallfolk",region:"riverlands",religion:"faith",gold:5,
+    blurb:"Born to the fields, owning little but your own two hands."},
+  exile:{name:"Free City Exile",region:"essos",religion:"many_faced",gold:60,
+    blurb:"A stranger far from home, carrying secrets across the narrow sea."},
+};
+const SKILLS={swordsmanship:"Swordsmanship",archery:"Archery",riding:"Riding",intrigue:"Intrigue",
+  stealth:"Stealth",healing:"Healing",lore_skill:"Lore & Letters",stewardship:"Stewardship"};
+const BACKGROUNDS={
+  knight:{name:"Knight",skills:{swordsmanship:3,riding:2},items:["longsword","suit of mail"],
+    blurb:"Anointed and armoured, raised to the code of chivalry."},
+  spy:{name:"Spy",skills:{intrigue:3,stealth:2},items:["hidden dagger","coded ledger"],
+    blurb:"You trade in whispers, and know the price of every secret."},
+  healer:{name:"Healer",skills:{healing:3,lore_skill:2},items:["healer's satchel"],
+    blurb:"Trained in wounds and fevers; welcome in any camp."},
+  smuggler:{name:"Smuggler",skills:{stealth:2,intrigue:2,riding:1},items:["fast skiff","foreign coin"],
+    blurb:"You move goods past those who would tax or hang you for it."},
+  scholar:{name:"Scholar",skills:{lore_skill:3,stewardship:1},items:["heavy tome","writing kit"],
+    blurb:"A rare literate soul, versed in histories and old tongues."},
+  hunter:{name:"Hunter",skills:{archery:3,stealth:1},items:["longbow","skinning knife"],
+    blurb:"The wild is your larder; few can track or shoot as you do."},
+};
+const TRAITS={
+  silver_tongue:{name:"Silver Tongue",kind:"perk",blurb:"Your words open doors; +2 to Presence checks."},
+  tourney_champion:{name:"Tourney Champion",kind:"perk",blurb:"Renowned in the lists; lords know your name."},
+  warg_touched:{name:"Warg-touched",kind:"perk",blurb:"The old blood runs strong; you touch the minds of beasts."},
+  iron_const:{name:"Iron Constitution",kind:"perk",blurb:"Poison and hardship trouble you less; +4 health."},
+  craven:{name:"Craven",kind:"flaw",blurb:"Fear grips you in a fight; −2 to Might and Will checks."},
+  kinslayer:{name:"Kinslayer's Guilt",kind:"flaw",blurb:"A blood-crime shadows you; men look on you askance."},
+  proud:{name:"Prideful",kind:"flaw",blurb:"You cannot let a slight pass, and make needless enemies."},
+};
+// starting scene (the North around Winterfell)
+const LOCS={
+  yard:{name:"The Yard of Winterfell",region:"north",
+    desc:"Grey granite walls rise about a broad training yard where the ring of steel never fades. Hot springs keep the stones warm even as snow drifts past the battlements.",
+    exits:{"the great hall":"hall","the godswood":"godswood","out to winter town":"town"},npcs:["ormund"]},
+  hall:{name:"The Great Hall",region:"north",
+    desc:"Long trestle tables run beneath banners of grey and white. A fire the size of a cart-pit roars in the hearth, and the high seat waits cold and empty.",
+    exits:{"back to the yard":"yard"},npcs:["maester"]},
+  godswood:{name:"The Godswood",region:"north",
+    desc:"Three acres of ancient wood, silent but for wind in the leaves. At its heart a weirwood watches with carved red eyes weeping sap the colour of old blood.",
+    exits:{"back to the yard":"yard"},npcs:["nan"]},
+  town:{name:"Winter Town",region:"north",
+    desc:"A huddle of shuttered houses below the castle walls. A market square holds a few stubborn stalls, and the winesink smokes at the corner.",
+    exits:{"back to the castle":"yard","the winesink":"inn","the kingsroad north":"road"},npcs:["tobbot"]},
+  inn:{name:"The Smoking Log",region:"north",
+    desc:"A low, smoky common room that smells of tallow, wet wool, and barley beer. Travellers trade rumours here more freely than coin.",
+    exits:{"back outside":"town"},npcs:["qorin"]},
+  road:{name:"The Wolfswood Road",region:"north",
+    desc:"The kingsroad narrows where the Wolfswood crowds close, dark with pine and old snow. Something watches from the treeline — or perhaps that is only the wind.",
+    exits:{"back toward winter town":"town"},npcs:["ygga"],days:2},
+};
+const NPCS={
+  ormund:{name:"Ser Ormund Cassel",title:"Master-at-Arms",faction:"north_lords",base:5,
+    desc:"A broad, greying knight with a broken nose and a soldier's patience. He runs the yard and judges every sword that enters it."},
+  maester:{name:"Maester Wyllis",title:"Maester of Winterfell",faction:"north_lords",base:0,
+    desc:"A stooped man in grey robes, his chain of many metals soft against his chest. He keeps the ravens, the records, and more secrets than either."},
+  nan:{name:"Old Nan of the Wood",title:"Woods Witch",faction:null,base:0,
+    desc:"A wrinkled crone who tends the godswood and speaks to the weirwood as to an old friend. Her eyes miss nothing."},
+  tobbot:{name:"Tobbot Flint",title:"Market Trader",faction:"north_lords",base:0,
+    desc:"A round, shrewd man with cold-chapped hands and a warm smile for anyone with silver."},
+  qorin:{name:"Qorin the Black",title:"Ranger of the Night's Watch",faction:"nights_watch",base:0,
+    desc:"A lean, hard-bitten ranger in weathered black, down from the Wall on some errand he keeps to himself."},
+  ygga:{name:"Ygga Snowhair",title:"Free Folk Raider",faction:"free_folk",base:-10,
+    desc:"A wildling woman with white-blond hair and a spear taller than she is, south of the Wall for reasons of her own."},
+};
+const FACTIONS={north_lords:"House Stark & the North",iron_throne:"The Iron Throne",
+  lannister:"House Lannister",tully:"House Tully (Riverlands)",arryn:"House Arryn (Vale)",
+  tyrell:"House Tyrell (Reach)",baratheon:"House Baratheon (Stormlands)",martell:"House Martell (Dorne)",
+  greyjoy:"House Greyjoy (Iron Islands)",nights_watch:"The Night's Watch",free_folk:"The Free Folk",
+  faith:"The Faith of the Seven"};
+// which faction holds sway in each region (for rumor/event colouring)
+const REGION_FACTION={north:"north_lords",riverlands:"tully",vale:"arryn",westerlands:"lannister",
+  reach:"tyrell",stormlands:"baratheon",dorne:"martell",iron_islands:"greyjoy",
+  crownlands:"iron_throne",essos:null};
+// dialogue trees: options with effects; check options resolve a skill test
+const DIALOGUE={
+  ormund:[
+    {label:"Ask to prove yourself in the yard",check:{attr:"might",skill:"swordsmanship",diff:12},
+     success:{text:"You give a good account of yourself; the old knight nods, grudging respect in his eyes.",
+       event:["favor","You impressed Ser Ormund with your skill at arms.",2],disp:6,xp:30},
+     fail:{text:"He knocks you flat twice before you find your feet. \"More work needed.\"",skill:["swordsmanship",1]}},
+    {label:"Swear your sword to Winterfell",text:"Ormund clasps your forearm. \"Then you are one of us. Don't make me regret it.\"",
+     event:["oath","You swore your sword to Winterfell before Ser Ormund.",4],disp:8,rep:["north_lords",15],title:"Sworn Sword of Winterfell",once:"oath_wf"},
+    {label:"Ask about the state of the North",text:"\"The North remembers, and the North endures. But the winds from the south smell of trouble, and those from the north of worse.\"",
+     event:["discovery","Ser Ormund warned you of troubles brewing north and south.",2]},
+  ],
+  maester:[
+    {label:"Ask him to teach you the histories",text:"\"Ah — sit. Few enough care for the old accounts.\" He speaks of Bran the Builder, the Long Night, and the coming of the Andals.",
+     event:["discovery","Maester Wyllis taught you old histories of the realm.",2],xp:20,lore:true},
+    {label:"Ask after news from the ravens",text:"\"A raven came at dawn — the seal was one I did not know. Curious times.\"",
+     event:["discovery","Maester Wyllis spoke of a raven bearing an unknown seal.",3]},
+    {label:"Test your wits against his",check:{attr:"lore",skill:"lore_skill",diff:12},
+     success:{text:"You follow his reasoning and best him on a point of history. He is pleased.",disp:5,xp:25,event:["favor","You showed sharp wits to Maester Wyllis.",2]},
+     fail:{text:"The lesson goes over your head, but the maester is patient."}},
+  ],
+  nan:[
+    {label:"Pray before the weirwood",text:"You kneel in the red-leaved quiet. Something old and patient seems to listen.",
+     event:["discovery","You prayed before the heart tree of Winterfell.",2],warg:true},
+    {label:"Ask her to read your fate",check:{attr:"will",skill:null,diff:15},
+     success:{text:"\"You'll be tested by cold and by kin,\" she rasps. \"Trust the wolf, not the lion.\"",event:["discovery","The woods witch read your fate.",2]},
+     fail:{text:"She peers at you, then shakes her head. \"The threads are tangled. Come again.\""}},
+    {label:"Ask about the free folk beyond the Wall",text:"\"They run from something, child. Something that doesn't tire and doesn't warm.\"",
+     event:["discovery","Old Nan spoke of what stirs beyond the Wall.",2]},
+  ],
+  tobbot:[
+    {label:"Buy warm furs (10 silver)",cost:10,item:"warm furs",text:"You buy a bundle of thick northern furs."},
+    {label:"Buy a good steel dagger (25 silver)",cost:25,item:"steel dagger",text:"You buy a well-made dagger."},
+    {label:"Buy a fine cloak (30 silver)",cost:30,item:"fine cloak",text:"You buy a fine, well-cut cloak. Good clothes turn heads and open doors. (+1 Appearance while worn)"},
+    {label:"Buy a silver brooch (40 silver)",cost:40,item:"silver brooch",text:"You buy a handsome silver brooch. Fine adornment lends a person presence. (+1 Appearance while worn)"},
+    {label:"Haggle over prices",check:{attr:"presence",skill:"intrigue",diff:12},
+     success:{text:"Tobbot laughs and presses coin back into your palm. \"A shrewd one!\"",gold:6,event:["favor","You won Tobbot's respect with sharp bargaining.",1]},
+     fail:{text:"\"Prices are prices, friend.\" He is unmoved."}},
+  ],
+  qorin:[
+    {label:"Buy him a drink and listen (2 silver)",cost:2,text:"He drinks, and talks of the Wall, the cold, and rangers who ride out and don't ride back.",
+     event:["favor","You shared a drink and an ear with Qorin the ranger.",2],disp:6},
+    {label:"Offer to carry word to the Wall",text:"\"Then the Watch is in your debt. See that it reaches Castle Black.\"",
+     event:["oath","You promised Qorin to carry word north to the Wall.",3],rep:["nights_watch",8],quest:"word_to_wall"},
+  ],
+  ygga:[
+    {label:"Speak to her plainly, kneeler to free folk",check:{attr:"presence",skill:"intrigue",diff:15},
+     success:{text:"\"Huh. You talk straight, for a kneeler.\" Some of the wariness leaves her eyes.",disp:8,rep:["free_folk",6],event:["favor","You earned a measure of trust from Ygga.",2]},
+     fail:{text:"She spits at your feet. \"Pretty words. Kneelers are all the same.\"",disp:-4,event:["slight","You gave offence to Ygga.",1]}},
+    {label:"Offer food and safe passage",text:"She takes the offering warily, then inclines her head. \"The free folk pay their debts.\"",
+     event:["alliance","You showed kindness to Ygga; the free folk remember a debt.",3],rep:["free_folk",12],disp:10},
+    {label:"Threaten her off the kingsroad",text:"She bares her teeth and levels her spear. \"Try it, kneeler.\"",
+     event:["slight","You threatened Ygga on the Wolfswood road.",3],rep:["free_folk",-12],disp:-15},
+  ],
+};
+const RUMORS=[
+ "Ravens carry word that the harvest was thin in the Riverlands this year.",
+ "Talk in the yard says the King hunts again while the realm's debts grow.",
+ "A cold wind out of the north sets the old folk muttering that summer is ending.",
+ "Merchants report bandits thick on the kingsroad south of the Neck.",
+ "Whispers from White Harbor tell of strange ships flying no known banner.",
+ "The maesters of the Citadel have sent a white raven, some say. Winter comes.",
+];
+// map: region -> [row,col]; a compact realm map
+const MAP_POS={north:[0,3],iron_islands:[2,1],vale:[2,5],riverlands:[3,3],westerlands:[4,2],
+  crownlands:[4,4],reach:[6,3],stormlands:[5,5],dorne:[7,4],essos:[3,7]};
+const MAP_ABBR={north:"North",iron_islands:"Iron",vale:"Vale",riverlands:"Rivers",westerlands:"West",
+  crownlands:"Crown",reach:"Reach",stormlands:"Storm",dorne:"Dorne",essos:"Essos"};
+// condensed lore codex
+const LORE=[
+ {cat:"Houses",name:"House Stark",sum:"Kings of Winter for eight thousand years.",
+  body:"The Starks trace their line to Brandon the Builder, who raised Winterfell and the Wall in the Age of Heroes. When Aegon came with dragons, Torrhen Stark knelt rather than see his people burn, and the Starks have ruled the North as Wardens since. They keep the old gods, and alone among the great houses still hold that the man who passes the sentence should swing the sword."},
+ {cat:"Houses",name:"House Lannister",sum:"The richest house in Westeros.",
+  body:"Descended from Lann the Clever, the Lannisters sit above the greatest gold mines in the world. When Lord Tywin drowned the rebel Reynes of Castamere, he made a song of it that every lord now fears — and it is said a Lannister always pays his debts, in gold or otherwise."},
+ {cat:"Houses",name:"House Targaryen",sum:"Blood of old Valyria, dragonlords.",
+  body:"The Targaryens were dragonlords of the Valyrian Freehold who fled to Dragonstone before the Doom, alone surviving it. A century later Aegon and his sister-wives conquered six kingdoms with three dragons. Greatness and madness ran twinned in the line, which ended with Aerys the Mad — leaving two children in exile across the narrow sea."},
+ {cat:"Houses",name:"House Martell of Dorne",sum:"The kingdom the dragons never took.",
+  body:"When Nymeria led ten thousand ships of Rhoynar refugees to Dorne, she wed Mors Martell and burned her ships. Dorne alone was never conquered by the dragons, joining the realm a century later by marriage, on its own terms — keeping its princely titles and laws under which the eldest child inherits, daughter or son alike."},
+ {cat:"History",name:"The Long Night",sum:"The generation-long winter, and the Others.",
+  body:"In the midst of the Age of Heroes fell a winter that lasted a generation, and a night with no end. Out of the farthest north came the Others — cold dead things that raised the slain to fight for them. Men and the children of the forest threw them back in the Battle for the Dawn; afterward Bran the Builder raised the Wall, and the Night's Watch was founded to hold it."},
+ {cat:"History",name:"The Doom of Valyria",sum:"The day the Freehold was destroyed.",
+  body:"On a single day every hill of the Fourteen Flames burst asunder, and the mightiest civilization the world had known — its dragons, its sorceries, its blood — perished in hours. One dragonlord family survived entire: the Targaryens, removed to Dragonstone twelve years before on the strength of a daughter's dream."},
+ {cat:"History",name:"Robert's Rebellion",sum:"The war that broke the dragon's throne.",
+  body:"It began with a crown of winter roses: Prince Rhaegar crowned Lyanna Stark queen of love and beauty, past his own wife. When Lyanna vanished and the Mad King burned Lord Rickard Stark alive, the realm rose. Robert's warhammer felled Rhaegar on the Trident; the Lannisters sacked King's Landing; and the realm has had fourteen years of summer peace since — with two Targaryen children grown in exile."},
+ {cat:"Faiths",name:"The Old Gods",sum:"The nameless gods of the First Men.",
+  body:"The old gods have no names, no books, and no priests — only the innumerable spirits of stream and stone and wood, watching through the carved red eyes of the weirwoods. Oaths sworn before a heart tree are held to bind absolutely, for the tree sees and remembers. North of the Neck, the old gods rule yet."},
+ {cat:"Faiths",name:"R'hllor, the Lord of Light",sum:"The red god of flame and shadow.",
+  body:"A war creed: on one side the Lord of Light, giver of heat and life; on the other the Great Other, god of ice and death. Red priests see visions in their fires, and speak of Azor Ahai — the hero born again amid salt and smoke to wake dragons from stone and stand against the rising dark."},
+ {cat:"Legends",name:"The Others",sum:"Cold dead things of the Long Night.",
+  body:"Tall, gaunt, and beautiful, with eyes like blue stars and blades of crystal ice, the Others come with the cold and raise the dead to serve them. The tales say wights burn, and the Others themselves are undone only by dragonglass — the frozen fire the children of the forest prized. South of the Wall they are a children's tale. The free folk have stopped telling it as a tale."},
+ {cat:"Legends",name:"Wargs and Greenseers",sum:"The old blood's gifts.",
+  body:"A skinchanger can slip his own skin and wear a beast's; those bonded to wolves are called wargs. Rarest are the greenseers, who see through the weirwoods' thousand eyes, backward and forward in time. South of the Neck it is all nursery talk. In the North they only say: the old blood runs thin, but it runs."},
+ {cat:"Legends",name:"Dragons",sum:"Fire made flesh — and all but gone.",
+  body:"Dragons made Valyria an empire and the Targaryens kings; against them, walls and armies were straw. They dwindled and died after the ruinous civil war called the Dance of the Dragons. The world agrees the last petrified eggs are only stone. The world agreed the Doom could never happen, too."},
+ {cat:"Places",name:"The Wall",sum:"Seven hundred feet of ice.",
+  body:"The Wall runs three hundred miles from the Shadow Tower to Eastwatch, raised — the tales say — by Bran the Builder with the help of giants. There is old magic in it, and the free folk say a dead thing cannot pass while it stands. Nineteen castles once guarded it; three are manned now."},
+ {cat:"Places",name:"King's Landing",sum:"The stinking, teeming capital.",
+  body:"A city of half a million thrown up across three hills, announcing itself downwind before it clears the horizon. The Red Keep holds the Iron Throne — a mountain of a thousand melted swords, ugly and cruel, that has cut more than one careless king. Beneath it all teems Flea Bottom, where the smallfolk live on bowls o' brown."},
+ {cat:"Places",name:"Braavos",sum:"The secret city of escaped slaves.",
+  body:"Founded by slaves who rose and sailed beyond every chart, Braavos is the mightiest of the Free Cities and no daughter of Valyria but its denial — no soul within it may ever be a slave. Its Iron Bank is the most feared institution of money in the world: kings borrow from it, and repay it, or find it funding their enemies."},
+ {cat:"Custom",name:"Women in Westeros",sum:"Bound by custom, and how it varies by land.",
+  body:"The Seven Kingdoms are ruled by men, by law and by the sword — but not everywhere the same. Under Andal custom (the Reach, Westerlands, Vale, Crownlands, Stormlands, Riverlands) sons inherit before daughters, highborn girls are wed to seal alliances and prized for their beauty, and knighthood and command are closed to women; yet a widow or a regent may wield a lord's full power, and the sharpest players work through soft power — information, marriage, and coin. The North is plainer and a little harder: daughters still stand behind sons, but the women of Bear Island bear axes and none who saw them fight laughed twice. Dorne is different in kind — the eldest child inherits, son or daughter alike, and a woman with a spear, a council seat, or a paramour raises no eyebrows. The ironborn keep a reaver's creed, but a woman who captains a ship and pays the iron price can take a respect the isles would never give freely. And in the Free Cities, coin outranks custom. A woman may rule, scheme, fight, and kill anywhere in this world — but outside Dorne and the Free Cities, the world will remind her at every turn that she does it against the rules."},
+ {cat:"Custom",name:"Beauty as Power",sum:"Why a fair face is a political weapon.",
+  body:"In a world where highborn women are wed to bind houses and armies, a beautiful daughter is an asset a lord counts alongside his gold and his swords, and an ill-favoured one has fewer doors open to her. Beauty sways first impressions, loosens tongues and purses, and buys invitations to the rooms where power is traded. It cuts both ways: comeliness draws unwanted attention as readily as alliance, and a plain face — underestimated — can be a mummer's mask over a sharp mind. Scars, wounds, illness, and age steal a face's worth; fine cloth and jewels lend it back. In the game of thrones, a mirror can be as useful as a blade."},
+];
+//============================== STATE =================================
+const SAVE_INDEX="ironash:v1:index", SAVE_PREFIX="ironash:v1:save:";
+let S=null, slot=null, back=null;
+function newState(){return{v:2,c:null,day:0,loc:"yard",region:"north",flags:{},rep:{},
+  npc:{},log:[],studied:[],warIntensity:0,
+  year:298,season:"Summer",seasonYears:8,seasonEnds:60,
+  rumors:[],favor:{}};}
+function migrate(s){ // fill fields absent from older saves
+  s.year=s.year??298; s.season=s.season||"Summer"; s.seasonYears=s.seasonYears??8;
+  s.seasonEnds=s.seasonEnds??(s.day+60); s.rumors=s.rumors||[]; s.favor=s.favor||{};
+  if(s.c){s.c.wounds=s.c.wounds||[]; s.c.dead=s.c.dead||false; s.c.secrets=s.c.secrets||[];
+    s.c.gender=s.c.gender||"male"; if(s.c.attr&&s.c.attr.appearance==null)s.c.attr.appearance=4;}
+  for(const id in (s.npc||{})){s.npc[id].grudge=s.npc[id].grudge||false;}
+  return s;}
+function mod(a){return (S.c.attr[a]||4)-4;}
+function skill(k){return S.c.skills[k]||0;}
+function checkBonus(attr,sk){let b=mod(attr)+(sk?skill(sk):0);
+  if(S.c.traits.includes("silver_tongue")&&attr==="presence")b+=2;
+  if(S.c.traits.includes("craven")&&(attr==="might"||attr==="will"))b-=2;
+  if(attr==="presence")b+=Math.floor(appMod()/2); // beauty is soft power in the court
+  if(S.flags&&S.flags.underestimated&&(sk==="intrigue"||sk==="stealth"))b+=1; // they never see you coming
+  return b;}
+// -- gender & appearance --
+const FINERY=new Set(["fine cloak","silver brooch","courtly gown","jewelled circlet","cosmetics"]);
+function fineryBonus(){return (S.c.inventory||[]).some(i=>FINERY.has(i))?1:0;}
+function appScore(){return (S.c.attr.appearance||4)+fineryBonus();}
+function appMod(){return appScore()-4;}
+function appWord(){const a=appScore();return a>=9?"famed for beauty":a>=7?"comely":a>=5?"fair enough":a>=3?"plain of face":"hard-favoured";}
+function isFemale(){return S.c&&S.c.gender==="female";}
+const FREEDOM={dornish:"free",braavosi:"free",ironborn:"middling",northern:"middling",andal:"restricted"};
+function freedomLevel(){if(!isFemale())return "free";return FREEDOM[CULTURE[S.region]||"andal"]||"restricted";}
+function honorific(){return isFemale()?"my lady":"my lord";}
+// a woman defying martial/authority custom in a strict land draws scorn (and a small cost)
+function normBreak(text,repCost){if(!isFemale())return;const f=freedomLevel();
+  if(f==="restricted"){add("<span class='bad'>"+esc(text)+"</span>");
+    const fac=REGION_FACTION[S.region];if(fac&&repCost)rep(fac,-repCost);
+    event("slight","You defied a woman's place before witnesses — tongues will wag.",2);}
+  else if(f==="middling")add("<span class='dim'>"+esc(text)+"</span>");}
+function roll(attr,sk,diff){const d=1+Math.floor(Math.random()*20);const tot=d+checkBonus(attr,sk);
+  const crit=d===20,fumble=d===1;const success=crit||(!fumble&&tot>=diff);
+  return{d,tot,diff,success,crit,fumble};}
+function xp(n){S.c.xp+=n;let msgs=[];while(S.c.xp>=S.c.level*100){S.c.xp-=S.c.level*100;S.c.level++;
+  S.c.maxhp+=4;S.c.hp=S.c.maxhp;msgs.push("You have grown stronger — you are now level "+S.c.level+".");}return msgs;}
+function rep(f,d){S.rep[f]=Math.max(-100,Math.min(100,(S.rep[f]||0)+d));}
+function disp(id){return (S.npc[id]?.disp||0)+(NPCS[id]?.base||0);}
+function event(type,text,imp,actor){S.log.push({day:S.day,type,text,imp:imp||1,actor:actor||null});}
+function npcNote(id,text){S.npc[id]=S.npc[id]||{disp:0,notes:[]};S.npc[id].notes.push({day:S.day,text});
+  if(S.npc[id].notes.length>12)S.npc[id].notes.shift();}
+function lastNoteWith(id){const n=S.npc[id]?.notes;return n&&n.length?n[n.length-1]:null;}
+
+//============================ SAVE / LOAD =============================
+function slotIndex(){try{return JSON.parse(localStorage.getItem(SAVE_INDEX)||"[]");}catch(e){return[];}}
+function writeIndex(ix){localStorage.setItem(SAVE_INDEX,JSON.stringify(ix));}
+function notable(){const imp=S.log.filter(e=>e.imp>=3);const e=imp.length?imp[imp.length-1]:S.log[S.log.length-1];
+  return e?e.text:"A new tale begins.";}
+function saveGame(){if(!S||!slot)return;localStorage.setItem(SAVE_PREFIX+slot,JSON.stringify(S));
+  let ix=slotIndex().filter(x=>x.slot!==slot);
+  ix.unshift({slot,name:S.c.name,house:S.c.house,day:S.day,updated:Date.now(),
+    notable:notable(),dead:!!S.c.dead});
+  writeIndex(ix);}
+function loadGame(sl){try{const raw=localStorage.getItem(SAVE_PREFIX+sl);if(!raw)return false;
+  S=migrate(JSON.parse(raw));slot=sl;return true;}catch(e){return false;}}
+function deleteGame(sl){localStorage.removeItem(SAVE_PREFIX+sl);writeIndex(slotIndex().filter(x=>x.slot!==sl));}
+
+function updateMeta(){if(S&&S.c){menuEl.style.display="flex";
+  metaEl.innerHTML=esc(S.season)+" · Day "+S.day+" · "+esc(LOCS[S.loc]?.name||REGIONS[S.region]?.name||"")+"<br>"
+    +"Lv "+S.c.level+" · HP "+S.c.hp+"/"+S.c.maxhp+" · "+S.c.gold+" silver";
+  menuEl.innerHTML="";
+  for(const [lbl,fn] of [["Character",screenStatus],["Journal",screenJournal],["Rumors",screenRumors],
+    ["Codex",screenCodex],["Map",screenMap],["Save",screenSaveMenu],["Title",titleScreen]]){
+    const b=document.createElement("button");b.textContent=lbl;b.onclick=fn;menuEl.appendChild(b);}
+}else{menuEl.style.display="none";metaEl.textContent="";}}
+
+//============================== SCREENS ===============================
+function titleScreen(){S=null;slot=null;clearLog();updateMeta();
+  add("<span class='dim'>A persistent text RPG in the world of A Song of Ice and Fire.</span>");
+  heading("Iron & Ash");
+  add("The cold is coming, and the realm holds its breath. Winter, and worse, wait beyond the Wall — and the game of thrones is only beginning. What life will you carve from the ice and ash?");
+  const ix=slotIndex();
+  const list=[{label:"⚔️ New Game",cls:"primary",act:startCreation}];
+  if(ix.length){list.push({label:"▸ Continue — "+(ix[0].dead?"† ":"")+esc(ix[0].name),
+      act:()=>{if(loadGame(ix[0].slot))resumeOrEpitaph();}});
+    list.push({label:"📜 Load a saved tale",act:screenLoadMenu});}
+  list.push({label:"📖 Lore Codex",act:()=>{back=titleScreen;screenCodex();}});
+  choices(list);}
+
+//----- character creation
+let draft=null;
+function startCreation(){draft={origin:null,house:null,region:null,religion:null,bg:null,
+  attr:{might:4,agility:4,cunning:4,presence:4,will:4,lore:4,appearance:4},
+  traits:[],name:"",gender:"",house_name:"",words:""};
+  clearLog();heading("Forging a Life in Westeros");
+  add("Every soul in the Seven Kingdoms is born to a place, a sex, and a name. In this world all three shape what doors stand open to you — and which you must break down.");
+  choices([
+    {label:"⚡ Quick start — a Northern sworn sword",cls:"primary",act:quickStart},
+    {label:"Custom character — choose everything",act:ccGender},
+    {label:"◂ Back",act:titleScreen},
+  ]);}
+function quickStart(){draft.origin="bastard";draft.house_name="Snow (bastard of the North)";
+  draft.region="north";draft.religion="old_gods";draft.bg="knight";draft.gender="male";
+  draft.attr={might:6,agility:5,cunning:4,presence:4,will:5,lore:3,appearance:4};draft.name="Alaric Snow";
+  finishCreation();}
+function ccGender(){clearLog();heading("Man or Woman?");
+  add("Westeros is a man's world by law and custom — but far from uniformly so. Your sex opens some paths and bars others, and the difference is sharpest for a highborn woman in the Andal south, gentler in the North, and all but gone in Dorne and the Free Cities. You may always defy your world's rules — but it will make you pay for it, out loud.");
+  choices([
+    {label:"<b>A man</b> — the realm's paths lie mostly open to you",
+      act:()=>{draft.gender="male";ccOrigin();}},
+    {label:"<b>A woman</b> — you will rule, scheme, and fight against the current",
+      act:()=>{draft.gender="female";add("<span class='dim'>Highborn or low, you will be reminded often that you move outside the rules. Where you are born will decide how loud that reminder is.</span>");ccOrigin();}},
+    {label:"◂ Back",act:startCreation},
+  ]);}
+function ccOrigin(){clearLog();heading("Your Origin");
+  choices([
+    {label:"Born to a Great House",act:ccHouse},
+    {label:"A humbler beginning",act:ccCommon},
+    {label:"◂ Back",act:startCreation},
+  ]);}
+function ccHouse(){clearLog();heading("Choose your Great House");
+  const list=Object.entries(HOUSES).map(([id,h])=>({label:"<b>"+esc(h.name)+"</b> — <i>"+esc(h.words)+"</i>",
+    act:()=>{draft.origin=id;draft.house_name=h.name;draft.words=h.words;draft.region=h.region;draft.religion=h.religion;
+      add("<span class='dim'>"+esc(h.blurb)+"</span>");ccRegion();}}));
+  list.push({label:"◂ Back",act:ccOrigin});choices(list);}
+function ccCommon(){clearLog();heading("Choose your station");
+  const list=Object.entries(COMMON).map(([id,h])=>({label:"<b>"+esc(h.name)+"</b>",
+    act:()=>{draft.origin=id;draft.house_name=h.name;draft.region=h.region;draft.religion=h.religion;
+      add("<span class='dim'>"+esc(h.blurb)+"</span>");ccRegion();}}));
+  list.push({label:"◂ Back",act:ccOrigin});choices(list);}
+function ccRegion(){clearLog();heading("Region of Birth");
+  add("<span class='dim'>Suggested by your origin: "+esc(REGIONS[draft.region].name)+"</span>");
+  if(draft.gender==="female")add("<span class='dim'>For a woman, the land you are born to matters as much as your blood: freest in Dorne and across the narrow sea, hardest under strict Andal custom in the Reach, Westerlands, Vale, and Crownlands.</span>");
+  const free={dorne:"free",essos:"free",iron_islands:"middling",north:"middling"};
+  const list=Object.entries(REGIONS).map(([id,r])=>{
+    let tag="";
+    if(draft.gender==="female"){const f=free[id]||"restricted";
+      tag=" <span class='"+(f==="free"?"good":f==="middling"?"dim":"bad")+"'>("+(f==="free"?"freer for women":f==="middling"?"middling":"strict custom")+")</span>";}
+    return{label:esc(r.name)+tag,act:()=>{draft.region=id;ccReligion();}};});
+  choices(list);}
+function ccReligion(){clearLog();heading("Faith");
+  const list=Object.entries(RELIGIONS).map(([id,n])=>({label:esc(n),act:()=>{draft.religion=id;ccBackground();}}));
+  choices(list);}
+function ccBackground(){clearLog();heading("Background");
+  const restricted=draft.gender==="female"&&(CULTURE[draft.region]==="andal");
+  const martial={knight:1,hunter:1,smuggler:1};
+  if(restricted)add("<span class='dim'>Under Andal custom a woman who takes up a blade or a bow works against her world. You may — but expect scorn, and worse.</span>");
+  const list=Object.entries(BACKGROUNDS).map(([id,b])=>{
+    const sk=Object.entries(b.skills).map(([k,v])=>SKILLS[k]+" +"+v).join(", ");
+    const tag=(restricted&&martial[id])?" <span class='bad'>(against custom)</span>":"";
+    return{label:"<b>"+esc(b.name)+"</b> — "+esc(b.blurb)+" <span class='dim'>["+sk+"]</span>"+tag,
+      act:()=>{draft.bg=id;ccAttrs();}};});choices(list);}
+function ccAttrs(){clearLog();heading("Distribute your Attributes");
+  add("<span class='dim'>Appearance is no vanity in Westeros — beauty is soft power: it sways first impressions, persuasion, matches, and court. It matters more, and cuts both ways, for a woman"+(draft.gender==="female"?" like yours":"")+". Scars, wounds, and age can steal it; fine clothes and jewels can lend it.</span>");
+  const POOL=12;
+  function spent(){return ATTRS.reduce((s,a)=>s+(draft.attr[a]-4),0);}
+  function draw(){logEl.querySelectorAll(".alloc,.pts").forEach(e=>e.remove());
+    const p=document.createElement("p");p.className="pts";p.textContent="Points to spend: "+(POOL-spent());logEl.appendChild(p);
+    for(const a of ATTRS){const row=document.createElement("div");row.className="alloc";
+      row.innerHTML="<span class='nm'>"+ATTR_LABEL[a]+"</span>";
+      const minus=document.createElement("button");minus.textContent="−";
+      const val=document.createElement("span");val.className="v";val.textContent=draft.attr[a];
+      const plus=document.createElement("button");plus.textContent="+";
+      minus.onclick=()=>{if(draft.attr[a]>4){draft.attr[a]--;draw();}};
+      plus.onclick=()=>{if(draft.attr[a]<10&&spent()<POOL){draft.attr[a]++;draw();}};
+      row.appendChild(minus);row.appendChild(val);row.appendChild(plus);logEl.appendChild(row);}
+    logEl.scrollTop=logEl.scrollHeight;}
+  draw();
+  choices([{label:"Continue ▸",cls:"primary",act:ccTraits}]);}
+function ccTraits(){clearLog();heading("Traits — choose up to 3");
+  function draw(){const list=Object.entries(TRAITS).map(([id,t])=>{
+      const on=draft.traits.includes(id);const tag=t.kind==="perk"?"PERK":"FLAW";
+      return{label:(on?"✓ ":"")+"<b>["+tag+"] "+esc(t.name)+"</b> — "+esc(t.blurb),
+        act:()=>{if(on)draft.traits=draft.traits.filter(x=>x!==id);
+          else if(draft.traits.length<3)draft.traits.push(id);draw();}};});
+    list.push({label:"Continue ▸",cls:"primary",act:ccIdentity});choices(list);}
+  draw();}
+function ccIdentity(){clearLog();heading("Name & Identity");
+  add("Enter your name, then choose how you wish to be described.");
+  const inp=document.createElement("input");inp.type="text";inp.placeholder="Your name";
+  inp.value=draft.name||"";logEl.appendChild(inp);inp.focus();
+  choices([{label:"Begin your tale ▸",cls:"primary",act:()=>{
+    const nm=inp.value.trim();if(!nm){inp.focus();return;}draft.name=nm;finishCreation();}},
+    {label:"◂ Back",act:ccTraits}]);}
+function finishCreation(){
+  const bg=BACKGROUNDS[draft.bg];const skills={};const inv=[];
+  for(const [k,v] of Object.entries(bg.skills))skills[k]=(skills[k]||0)+v;
+  for(const it of bg.items)inv.push(it);
+  const origin=HOUSES[draft.origin]||COMMON[draft.origin];
+  let maxhp=20; if(draft.traits.includes("iron_const"))maxhp+=4;
+  S=newState();
+  S.c={name:draft.name,house:draft.house_name,words:draft.words||"",origin:draft.origin,
+    gender:draft.gender||"male",
+    region:draft.region,religion:draft.religion,bg:draft.bg,attr:draft.attr,skills,traits:draft.traits.slice(),
+    level:1,xp:0,hp:maxhp,maxhp,gold:origin.gold,inventory:inv,titles:[],
+    wounds:[],dead:false,secrets:[]};
+  S.region=draft.region;
+  // pick a save slot
+  slot="save-"+Date.now().toString(36);
+  event("milestone",S.c.name+" of "+S.c.house+" began their tale at Winterfell.",4);
+  saveGame();
+  clearLog();
+  card("<b>"+esc(S.c.name)+"</b> of "+esc(S.c.house)+"<br>"+
+    esc(REGIONS[S.c.region].name)+", faithful to "+esc(RELIGIONS[S.c.religion])+"<br>"+
+    "Background: "+esc(BACKGROUNDS[S.c.bg].name)+"<br><br>"+
+    ATTRS.map(a=>ATTR_LABEL[a]+" "+S.c.attr[a]).join("  ")+"<br>"+
+    "Traits: "+(S.c.traits.map(t=>TRAITS[t].name).join(", ")||"none")+"<br>Gold: "+S.c.gold);
+  choices([{label:"Enter the world ▸",cls:"primary",act:enterGame}]);}
+
+//----- main game loop
+function enterGame(){if(S.c.dead)return epitaph();updateMeta();clearLog();
+  add("<span class='dim'>The year turns cold as "+esc(S.c.name)+" of "+esc(S.c.house)+
+    " comes to Winterfell, seat of the Starks and heart of the North. The grey walls have stood ten thousand years, and will judge you by your deeds alone.</span>");
+  describeLoc();}
+function describeLoc(){const L=LOCS[S.loc];rule();heading(L.name+" — Day "+S.day);add(esc(L.desc));
+  const present=Object.keys(NPCS).filter(id=>L.npcs.includes(id));
+  if(present.length){add("<span class='npc'>Here you see:</span> "+present.map(id=>esc(NPCS[id].name)).join(", "));
+    for(const id of present)colocation(id);}
+  actionMenu();}
+function colocation(id){const d=disp(id);const note=lastNoteWith(id);
+  if(d>=25)add("<span class='dim'>"+esc(NPCS[id].name)+" brightens at the sight of you.</span>");
+  else if(d<=-25)add("<span class='dim'>"+esc(NPCS[id].name)+" stiffens and will not meet your eye.</span>");
+  else if(note)add("<span class='dim'>"+esc(NPCS[id].name)+" gives you a look — they remember that "+esc(note.text.toLowerCase())+"</span>");}
+function actionMenu(){const L=LOCS[S.loc];const list=[];
+  for(const id of L.npcs)list.push({label:"🗣 Speak with "+esc(NPCS[id].name),act:()=>talk(id)});
+  for(const [lbl,dest] of Object.entries(L.exits))list.push({label:"→ "+esc(lbl),act:()=>travel(dest,lbl)});
+  list.push({label:"🏕 Rest a while",act:rest});
+  choices(list);}
+function travel(dest,lbl){const L=LOCS[dest];const days=L.days||0;
+  const arrive=()=>{if(S.c.dead)return;S.loc=dest;S.region=L.region;
+    event("travel","You travelled to "+L.name+".",1);saveGame();updateMeta();describeLoc();};
+  if(days>0){add("<span class='dim'>You travel to "+esc(L.name)+" ("+days+" day(s) on the road)…</span>");
+    advance(days,arrive);} else arrive();}
+function rest(){const heal=Math.min(S.c.maxhp,S.c.hp+5)-S.c.hp;S.c.hp+=heal;
+  add("You rest, and the day passes. You recover "+heal+" vigour.");
+  advance(1,()=>{saveGame();updateMeta();if(!S.c.dead)actionMenu();});}
+// advance the world by `days`, then run `cont` (after any interactive event resolves)
+function advance(days,cont){cont=cont||function(){};
+  if(days<=0)return cont();
+  S.day+=days; advanceSeason(days); rollDistant(days); spreadRumors(days); overhear(days);
+  if(S.c.dead)return;
+  const ev=rollLocal(days);
+  if(ev)runEvent(ev,cont); else cont();}
+
+//----- dialogue
+function talk(id){const npc=NPCS[id];const st=S.npc[id]=S.npc[id]||{disp:0,notes:[],grudge:false};
+  clearLog();heading(npc.name+", "+npc.title);add(esc(npc.desc));
+  const d=disp(id);
+  if(st.grudge)add("<span class='bad'>They regard you with cold, remembered anger — there is a grudge between you.</span>");
+  else add(d>=25?"They greet you warmly, as a friend."
+    :d<=-25?"They regard you with open hostility."
+    :d<=-10?"They eye you with cool suspicion.":"They give you a measured, neutral look.");
+  const note=lastNoteWith(id);
+  if(note)add("<span class='dim'>\"I've not forgotten,\" they say. \""+esc(note.text)+"\"</span>");
+  const imp=appScore();
+  if(imp>=8)add("<span class='dim'>Your beauty is not lost on them; their manner softens despite themselves.</span>");
+  else if(imp<=2)add("<span class='dim'>Their gaze slides over your plain face and half-dismisses you — which has its uses.</span>");
+  if(isFemale()&&freedomLevel()==="restricted"&&(NPCS[id].faction))
+    add("<span class='dim'>They address you as they would any lady — with courtesy that expects you to keep your place.</span>");
+  dialogueMenu(id);}
+function dialogueMenu(id){const st=S.npc[id]=S.npc[id]||{disp:0,notes:[],grudge:false};const list=[];
+  if(st.grudge){
+    list.push({label:"• Make amends (gift 25 silver)",act:()=>{
+      if(S.c.gold<25){add("<span class='bad'>You lack the coin to soothe them.</span>");return;}
+      S.c.gold-=25;st.grudge=false;st.disp=(st.disp||0)+15;
+      add("They take the coin, and some of the ice leaves their eyes.");
+      event("favor","You made amends with "+NPCS[id].name+".",1,id);updateMeta();saveGame();talk(id);}});
+    list.push({label:"◂ Take your leave",act:()=>{saveGame();describeLoc();}});
+    return choices(list);}
+  const opts=DIALOGUE[id]||[];
+  opts.forEach(o=>{if(o.once&&S.flags[o.once])return;list.push({label:"• "+o.label,act:()=>doOption(id,o)});});
+  list.push({label:"• Ask what news travels",act:()=>askNews(id)});
+  const sec=SECRETS[id];const known=S.c.secrets.some(s=>s.npc===id);
+  if(sec&&!known)list.push({label:"• Probe for what they're hiding (Cunning)",act:()=>probeSecret(id)});
+  if(sec&&known&&!S.flags["sec_used_"+id])list.push({label:"• Use what you know against them",act:()=>useSecret(id)});
+  list.push({label:"◂ Take your leave",act:()=>{npcNote(id,"you spoke with "+NPCS[id].name);saveGame();describeLoc();}});
+  choices(list);}
+function doOption(id,o){
+  if(o.cost){if(S.c.gold<o.cost){add("<span class='bad'>You cannot afford that.</span>");return dialogueMenu(id);}S.c.gold-=o.cost;}
+  if(o.check){const r=roll(o.check.attr,o.check.skill,o.check.diff);
+    add("<span class='dim'>[d20 "+r.d+" + bonus = "+r.tot+" vs "+r.diff+"] "+(r.success?"success":"failure")+(r.crit?" (critical!)":"")+"</span>");
+    applyResult(id,r.success?o.success:o.fail);
+  } else applyResult(id,o);
+  updateMeta();saveGame();dialogueMenu(id);}
+function applyResult(id,r){if(!r)return;
+  if(r.text)add(esc(r.text));
+  if(r.item){S.c.inventory.push(r.item);add("<span class='good'>You obtained: "+esc(r.item)+".</span>");}
+  if(r.gold){S.c.gold+=r.gold;add("<span class='good'>+"+r.gold+" silver.</span>");}
+  if(typeof r.disp==="number"){S.npc[id]=S.npc[id]||{disp:0,notes:[]};S.npc[id].disp+=r.disp;}
+  if(r.rep){rep(r.rep[0],r.rep[1]);}
+  if(r.event){event(r.event[0],r.event[1],r.event[2],id);npcNote(id,r.event[1]);}
+  if(r.title&&!S.c.titles.includes(r.title)){S.c.titles.push(r.title);add("<span class='good'>You gain the title: "+esc(r.title)+".</span>");}
+  if(r.once)S.flags[r.once]=true;
+  if(r.quest)S.flags["quest_"+r.quest]=true;
+  if(r.skill){S.c.skills[r.skill[0]]=(S.c.skills[r.skill[0]]||0)+r.skill[1];
+    add("<span class='dim'>You learned something. ("+SKILLS[r.skill[0]]+" +"+r.skill[1]+")</span>");}
+  if(r.lore){grantLore();}
+  if(r.favor){favorGain(r.favor[0],r.favor[1]||1);}
+  if(r.warg&&S.c.traits.includes("warg_touched"))add("<span class='dim'>For a heartbeat you see the godswood through a raven's eyes. The old blood stirs.</span>");
+  if(r.xp){for(const m of xp(r.xp))add("<span class='good'>"+esc(m)+"</span>");}
+  // a serious slight breeds a lasting grudge
+  if(typeof r.disp==="number"&&r.disp<0&&disp(id)<=-20&&S.npc[id])S.npc[id].grudge=true;}
+function grantLore(){const un=LORE.filter(l=>!S.studied.includes(l.name));if(!un.length)return;
+  const e=un[Math.floor(Math.random()*un.length)];S.studied.push(e.name);
+  add("<span class='good'>You learned the lore of '"+esc(e.name)+"' — now recorded in your codex.</span>");}
+
+//----- sub-screens
+function subBack(){ (back||describeLoc)(); }
+function screenStatus(){back=describeLoc;clearLog();const c=S.c;
+  const gword=isFemale()?"Lady/woman":"Lord/man";
+  card("<b>"+esc(c.name)+"</b> of "+esc(c.house)+" · "+esc(gword)+
+    "<br>"+esc(REGIONS[c.region].name)+", faith of "+esc(RELIGIONS[c.religion])+
+    "<br>Appearance: <b>"+esc(appWord())+"</b>"+(fineryBonus()?" <span class='good'>(+"+fineryBonus()+" from finery)</span>":"")+
+    (isFemale()?"<br>As a woman here, you are "+({free:"<b>as free as any man</b> — Dornish/Free City custom knows no difference",middling:"<b>only lightly bound</b> — hardier custom leaves you some room",restricted:"<b>tightly bound by Andal custom</b> — power comes through soft means, marriage, or defiance"})[freedomLevel()]:"")+
+    "<br>The "+esc(S.season)+" of the year "+S.year+" · Day "+S.day+
+    "<br>Level "+c.level+" (XP "+c.xp+"/"+(c.level*100)+") · Health "+c.hp+"/"+c.maxhp+" · Gold "+c.gold+
+    "<br><br>"+ATTRS.map(a=>ATTR_LABEL[a]+" "+c.attr[a]).join("  ")+
+    "<br>Skills: "+(Object.entries(c.skills).map(([k,v])=>SKILLS[k]+" +"+v).join(", ")||"none")+
+    "<br>Traits: "+(c.traits.map(t=>TRAITS[t].name).join(", ")||"none")+
+    "<br>Titles: "+(c.titles.join(", ")||"none")+
+    "<br>Motto: "+(esc(c.words)||"(none)"));
+  if(c.wounds&&c.wounds.length){heading("Wounds & Scars");
+    for(const w of c.wounds)add("<span class='bad'>⚕ "+esc(w.name)+"</span> — <span class='dim'>"+esc(w.desc)+"</span>");}
+  if(c.secrets&&c.secrets.length){heading("Secrets You Hold");
+    for(const s of c.secrets)add("<span class='dim'>· </span>"+esc(s.text));}
+  heading("Standing with the Great Powers");
+  for(const [f,nm] of Object.entries(FACTIONS)){const v=S.rep[f]||0;const fv=S.favor[f]||0;
+    const w=v>=40?"Honoured":v>=15?"Friendly":v<=-40?"Hated":v<=-15?"Distrusted":"Neutral";
+    add(esc(nm)+": <b>"+w+"</b> <span class='dim'>("+v+")</span>"+(fv>0?" <span class='good'>· owes you "+fv+" favour"+(fv>1?"s":"")+"</span>":""));}
+  const owed=Object.keys(S.favor).filter(f=>S.favor[f]>0);
+  const list=[];
+  if(owed.length)list.push({label:"✦ Call in a favour",cls:"primary",act:callFavor});
+  list.push({label:"◂ Back",act:subBack});choices(list);}
+function callFavor(){clearLog();heading("Call in a Favour");
+  const owed=Object.keys(S.favor).filter(f=>S.favor[f]>0);
+  if(!owed.length){add("No one owes you anything just now.");return choices([{label:"◂ Back",act:screenStatus}]);}
+  add("<span class='dim'>A favour called in is a favour spent. Choose whose debt to collect.</span>");
+  const list=owed.map(f=>({label:esc(FACTIONS[f]||f)+" ("+S.favor[f]+")",act:()=>{
+    S.favor[f]--;const boon=rnd(30,80);S.c.gold+=boon;rep(f,3);
+    add("<span class='good'>"+esc(FACTIONS[f]||f)+" makes good on their debt — "+boon+" silver and a warmer welcome.</span>");
+    event("favor","You called in a favour from "+(FACTIONS[f]||f)+".",2);
+    updateMeta();saveGame();callFavor();}}));
+  list.push({label:"◂ Back",act:screenStatus});choices(list);}
+function screenJournal(){back=describeLoc;clearLog();heading("Journal — "+S.log.length+" things remembered");
+  const landmarks=S.log.filter(e=>e.imp>=3);
+  if(landmarks.length){add("<b>Deeds that still echo:</b>");
+    for(const e of landmarks.slice(-8))add("<span class='dim'>(day "+e.day+")</span> "+esc(e.text));}
+  add("<b>Of late:</b>");
+  for(const e of S.log.slice(-12))add("<span class='dim'>(day "+e.day+")</span> "+esc(e.text));
+  choices([{label:"◂ Back",act:subBack}]);}
+function screenCodex(){clearLog();heading("The Maester's Codex");
+  const cats=[...new Set(LORE.map(l=>l.cat))];
+  const list=cats.map(cat=>({label:"📖 "+cat,act:()=>codexCat(cat)}));
+  list.push({label:"◂ Back",act:()=>{(back||titleScreen)();}});choices(list);}
+function codexCat(cat){clearLog();heading(cat);
+  const list=LORE.filter(l=>l.cat===cat).map(l=>{
+    const known=S&&S.studied&&S.studied.includes(l.name);
+    return{label:(known?"★ ":"")+"<b>"+esc(l.name)+"</b> — "+esc(l.sum),act:()=>codexEntry(l)};});
+  list.push({label:"◂ Back",act:screenCodex});choices(list);}
+function codexEntry(l){clearLog();card("<b>"+esc(l.name)+"</b><br><br>"+esc(l.body));
+  choices([{label:"◂ Back",act:()=>codexCat(l.cat)}]);}
+function screenMap(){back=describeLoc;clearLog();heading("The Known World — Day "+S.day);
+  const rows=8,cols=9;const grid=Array.from({length:rows},()=>Array(cols).fill("   "));
+  for(const [reg,[r,cc]] of Object.entries(MAP_POS)){
+    const mark=(reg===S.region)?"@":"#";grid[r][cc]=(mark+MAP_ABBR[reg]).slice(0,7).padEnd(7," ");}
+  let out=rows_join(grid);add(out,"pre");
+  add("<span class='dim'>@ you · # a great seat</span>");
+  add("Held about you: <b>"+esc(REGIONS[S.region].name)+"</b>. "+esc(REGIONS[S.region].blurb));
+  if(S.warIntensity>0)add("<span class='bad'>The realm grows restless — banners stir in the south. (war tension "+S.warIntensity+")</span>");
+  choices([{label:"◂ Back",act:subBack}]);}
+function rows_join(grid){return grid.map(r=>r.map(c=>c.padEnd(8," ")).join("")).join("\n");}
+function screenSaveMenu(){back=describeLoc;clearLog();heading("Your Tale is Saved");
+  saveGame();
+  add("<span class='dim'>Iron & Ash saves automatically after every action, in this browser's storage. It will be here when you return.</span>");
+  add("Slot: <b>"+esc(S.c.name)+" of "+esc(S.c.house)+"</b> — day "+S.day+".");
+  choices([{label:"Save now",cls:"primary",act:()=>{saveGame();add("<span class='good'>Saved.</span>");}},
+    {label:"◂ Back",act:subBack}]);}
+function screenLoadMenu(){clearLog();heading("Load a Tale");const ix=slotIndex();
+  if(!ix.length){add("No saved games found.");return choices([{label:"◂ Back",act:titleScreen}]);}
+  const list=ix.map(x=>({label:"<b>"+(x.dead?"† ":"")+esc(x.name)+"</b> of "+esc(x.house)+" — Day "+x.day+
+    (x.dead?" <span class='bad'>(fallen)</span>":"")+
+    "<br><span class='dim'>"+esc(x.notable)+"</span>",act:()=>{if(loadGame(x.slot))resumeOrEpitaph();}}));
+  list.push({label:"🗑 Delete a save",act:screenDeleteMenu});
+  list.push({label:"◂ Back",act:titleScreen});choices(list);}
+function screenDeleteMenu(){clearLog();heading("Delete a Save");const ix=slotIndex();
+  const list=ix.map(x=>({label:"🗑 "+esc(x.name)+" of "+esc(x.house),act:()=>{
+    if(confirm("Permanently delete "+x.name+"? This cannot be undone."))deleteGame(x.slot);screenDeleteMenu();}}));
+  list.push({label:"◂ Back",act:screenLoadMenu});choices(list);}
+
+//======================= WORLD SIMULATION ============================
+function rnd(a,b){return a+Math.floor(Math.random()*(b-a+1));}
+function d20(){return 1+Math.floor(Math.random()*20);}
+function showRoll(r){add("<span class='dim'>[d20 "+r.d+" + bonus = "+r.tot+" vs "+r.diff+"] "+
+  (r.success?"success":"failure")+(r.crit?" (critical!)":"")+"</span>");}
+
+// -- seasons: long, unpredictable ASOIAF seasons --
+const SEASON_ORDER=["Summer","Autumn","Winter","Spring"];
+const SEASON_DANGER={Summer:.8,Autumn:1,Winter:1.7,Spring:.9};
+function advanceSeason(days){
+  const y0=Math.floor((S.day-days)/120),y1=Math.floor(S.day/120);
+  if(y1>y0){S.year+=(y1-y0);S.seasonYears++;}
+  if(S.day>=S.seasonEnds){
+    const next=SEASON_ORDER[(SEASON_ORDER.indexOf(S.season)+1)%4];
+    S.season=next;S.seasonYears=0;S.seasonEnds=S.day+rnd(45,120);
+    const msg=next==="Winter"?"A white raven flies from the Citadel: winter has come to the Seven Kingdoms."
+      :next==="Spring"?"The snows relent at last; word spreads that spring has come to the realm."
+      :next==="Autumn"?"The days shorten and the leaves turn — autumn is upon the realm."
+      :"The maesters proclaim the long-awaited return of summer.";
+    add("<span class='"+(next==="Winter"?"bad":"good")+"'>❄ "+esc(msg)+"</span>");
+    event("world",msg,3);}
+  if(S.season==="Winter"&&Math.random()<0.25*days){const cost=rnd(1,4);S.c.gold=Math.max(0,S.c.gold-cost);
+    add("<span class='dim'>Winter bites; you spend "+cost+" silver to keep warm and fed.</span>");}
+}
+
+// -- the rumor mill: news is born in a region and travels over days --
+const REGION_ADJ={north:["riverlands","vale","iron_islands"],
+  riverlands:["north","vale","westerlands","crownlands","iron_islands"],
+  vale:["north","riverlands","crownlands"],westerlands:["riverlands","reach","iron_islands"],
+  crownlands:["riverlands","vale","stormlands","reach","essos"],
+  reach:["westerlands","crownlands","stormlands","dorne"],
+  stormlands:["crownlands","reach","dorne"],dorne:["reach","stormlands"],
+  iron_islands:["north","riverlands","westerlands"],essos:["crownlands"]};
+function regionDist(a,b){if(a===b)return 0;const A=MAP_POS[a],B=MAP_POS[b];if(!A||!B)return 5;
+  return Math.max(Math.abs(A[0]-B[0]),Math.abs(A[1]-B[1]));}
+let RUMOR_SEQ=0;
+function addRumor(text,origin,imp){S.rumors.push({id:"r"+S.day+"_"+(RUMOR_SEQ++),text,origin,
+  day:S.day,reach:{[origin]:true},imp:imp||1,heard:false});
+  if(S.rumors.length>60)S.rumors.shift();}
+function spreadRumors(days){for(const r of S.rumors)for(let d=0;d<days;d++){
+    if(Math.random()<0.4)for(const reg of Object.keys(r.reach))
+      for(const nb of (REGION_ADJ[reg]||[]))r.reach[nb]=true;}
+  S.rumors=S.rumors.filter(r=>S.day-r.day<150);}
+function overhear(){const here=S.rumors.filter(r=>!r.heard&&r.reach[S.region]);
+  if(!here.length)return;const r=here[here.length-1];r.heard=true;
+  const far=regionDist(r.origin,S.region)>=4;
+  add("<span class='good'>✦ "+esc(r.text)+(far?" <span class='dim'>(though muddled by the miles)</span>":"")+"</span>");
+  event("world",r.text,r.imp);}
+function RN(reg){return REGIONS[reg].name;}
+const DISTANT=[
+ {w:3,reg:["north","iron_islands","stormlands","dorne"],t:r=>"Reavers sacked a village on the "+RN(r)+" coast, they say."},
+ {w:2,reg:["crownlands","reach","westerlands","vale"],t:r=>"A lord of the "+RN(r)+" was poisoned at his own table."},
+ {w:2,reg:["riverlands","vale","stormlands","reach"],t:r=>"The lords of the "+RN(r)+" quarrel over a disputed succession."},
+ {w:3,winter:true,t:r=>"Bandits grow bold on the frozen roads of the "+RN(r)+"."},
+ {w:1,rare:true,reg:["essos","crownlands","dorne"],t:r=>"A drunk in a "+RN(r)+" winesink swears he saw a dragon against the moon."},
+ {w:2,winter:true,t:r=>"Grain runs short in the "+RN(r)+"; the smallfolk mutter of famine."},
+ {w:2,summer:true,reg:["reach","crownlands","vale"],t:r=>"A great tourney is proclaimed in the "+RN(r)+"."},
+ {w:1,rare:true,t:r=>"Ravens from the "+RN(r)+" speak of dead men walking in the night. Nonsense, surely."},
+];
+function weighted(pool){if(!pool.length)return null;let tot=pool.reduce((s,e)=>s+(e.w||1),0),x=Math.random()*tot;
+  for(const e of pool){x-=(e.w||1);if(x<=0)return e;}return pool[pool.length-1];}
+function rollDistant(days){const mult=SEASON_DANGER[S.season]||1;
+  if(Math.random()>=Math.min(.6,.18*days*mult))return;
+  const pool=DISTANT.filter(e=>(!e.winter||S.season==="Winter")&&(!e.summer||S.season==="Summer"));
+  const e=weighted(pool);if(!e)return;
+  const regs=e.reg||Object.keys(REGIONS);const origin=regs[rnd(0,regs.length-1)];
+  addRumor(e.t(origin),origin,e.rare?3:2);}
+
+// -- interactive local events (fire where the player stands) --
+const FOES={outlaws:{name:"the outlaw captain",might:5,hp:16},
+  raiders:{name:"the reaver",might:6,hp:20},bandit:{name:"the brigand",might:4,hp:12}};
+function eventChoices(list){choices(list.map(c=>({label:"• "+c.label,act:c.act})));}
+const LOCAL=[
+ {id:"ambush",w:3,run(cont){heading("Outlaws on the Road");
+   add("Ragged men with spears step from the trees, barring your way. Their captain grins. \"Coin or blood, friend — your choice.\"");
+   eventChoices([
+     {label:"Fight them",act:()=>fight(FOES.outlaws,cont,{loot:rnd(10,28)})},
+     {label:"Pay them off (15 silver)",act:()=>{if(S.c.gold<15){add("<span class='bad'>You haven't the coin — steel it must be.</span>");return fight(FOES.outlaws,cont);}
+       S.c.gold-=15;add("They melt back into the trees, for now.");event("world","You bought off outlaws on the road.",2);updateMeta();cont();}},
+     {label:"Try to slip away (Agility)",act:()=>{const r=roll("agility","stealth",13);showRoll(r);
+       if(r.success){add("You lose them in the hollows and the dark.");cont();}
+       else{add("They cut you off — no choice but to fight.");fight(FOES.outlaws,cont);}}},
+   ]);}},
+ {id:"raid",w:2,reg:["north","iron_islands","stormlands"],run(cont){heading("Raiders!");
+   add("Smoke rises from a nearby holdfast; reavers are putting the countryside to the torch. A woman clutches your stirrup, begging aid.");
+   eventChoices([
+     {label:"Ride to the defense",act:()=>fight(FOES.raiders,cont,{loot:rnd(5,15),rep:["north_lords",8],favor:["north_lords",1],xp:25,event:["favor","You drove off reavers and saved smallfolk.",3]})},
+     {label:"Keep your distance",act:()=>{add("You watch the smoke a while, then ride on. It is not your fight.");event("slight","You turned away from smallfolk who begged your aid.",2);rep("north_lords",-4);cont();}},
+   ]);}},
+ {id:"sick",w:2,run(cont){heading("A Fevered Traveller");
+   add("A traveller collapses in the road, hot with fever and raving. Others give him wide berth, fearing the pox.");
+   eventChoices([
+     {label:"Tend to him (Healing)",act:()=>{const r=roll("lore","healing",12);showRoll(r);
+       if(r.success){const g=rnd(6,16);S.c.gold+=g;add("You break the fever by dawn. He presses "+g+" silver and his thanks into your hands.");
+         for(const m of xp(15))add("<span class='good'>"+m+"</span>");event("favor","You saved a fevered traveller.",2);}
+       else add("He worsens through the night and is gone by morning. You did what you could.");
+       updateMeta();cont();}},
+     {label:"Leave him be",act:()=>{add("You ride on. The road is no place for soft hearts.");cont();}},
+   ]);}},
+ {id:"omen",w:2,run(cont){heading("An Ill Omen");
+   add("A weirwood's carved face seems to weep fresh red sap as you pass, and for a moment the wind carries a voice you almost know.");
+   if(S.c.traits.includes("warg_touched"))add("<span class='dim'>The old blood stirs; ancient eyes seem to turn upon you.</span>");
+   event("discovery","You witnessed an ill omen upon the road.",2);
+   eventChoices([{label:"Press on",act:cont}]);}},
+ // -- appearance & gender events --
+ {id:"attention",w:3,elig:()=>appScore()>=6||isFemale(),run(cont){heading("Unwelcome Attention");
+   const who=isFemale()?"A drunken lordling and his friends":"A hard-eyed knight, deep in his cups,";
+   add(who+" bars your way, leering. "+(isFemale()?"\"Now here's a prize. Give us a smile, sweetling — and more besides.\"":"\"You've a pretty face. Pretty faces owe me a toll.\""));
+   eventChoices([
+     {label:"Rebuff them coldly (Will)",act:()=>{const r=roll("will",null,13);showRoll(r);
+       if(r.success){add("You meet their eyes without a flicker of fear until the laughter dies and they look away.");
+         event("discovery","You faced down unwanted attention with cold nerve.",2);}
+       else{add("They crowd closer, emboldened, before a passing septon shames them off. Your cheeks burn.");}
+       cont();}},
+     {label:"Warn them off with steel",act:()=>{
+       normBreak("A woman baring steel! They jeer even as they retreat — the tale will follow you.",2);
+       add("You set a hand to your hilt and let them read your eyes. They decide you are not worth the blood.");
+       event("discovery","You warned off harassers with a blade.",2);cont();}},
+     {label:"Endure it and slip away",act:()=>{add("You swallow it and go, their laughter at your back. It is not the first time, and will not be the last.");
+       event("slight","You endured unwanted attention rather than make a scene.",1);cont();}},
+   ]);}},
+ {id:"mockery",w:2,elig:()=>appScore()<=3,run(cont){heading("Cruel Tongues");
+   add("A knot of courtiers snicker as you pass. \""+(isFemale()?"Gods, what a plain thing":"There's a face to curdle milk")+",\" one says, not troubling to lower his voice.");
+   eventChoices([
+     {label:"Turn it back with a sharp word (Cunning)",act:()=>{const r=roll("cunning","intrigue",12);showRoll(r);
+       if(r.success){add("Your reply lands like a slap, and it is the mocker who goes red while the others laugh at him.");for(const m of xp(10))add("<span class='good'>"+m+"</span>");event("favor","You turned mockery into your own small victory.",2);}
+       else add("Your retort falls flat, and they laugh the harder. You walk on, ears burning.");cont();}},
+     {label:"Let them think you a fool",act:()=>{S.flags.underestimated=true;
+       add("<span class='dim'>You duck your head and move on. Let them underestimate you — it is a blade that cuts when they least expect it.</span>");
+       event("discovery","You let others underestimate you — a hidden advantage.",1);cont();}},
+   ]);}},
+ {id:"match",w:2,elig:()=>(HOUSES[S.c.origin]||appScore()>=7)&&!S.flags.betrothed,run(cont){heading("A Match is Offered");
+   const fac=["lannister","tyrell","tully","arryn","baratheon"][rnd(0,4)];
+   add("An envoy in fine livery seeks you out. A "+(isFemale()?"lord":"lady")+" of "+FACTIONS[fac].replace(/ \(.*\)/,"")+" proposes a marriage — an alliance sealed in blood.");
+   if(isFemale()&&freedomLevel()==="restricted")add("<span class='dim'>You know what this is: a highborn woman is a piece to be moved. Accept, and you gain a seat and powerful kin — and a leash. Refuse, and they will call you wilful.</span>");
+   eventChoices([
+     {label:"Accept the match",act:()=>{S.flags.betrothed=fac;rep(fac,15);favorGain(fac,1);
+       S.c.titles.push(isFemale()?"betrothed of "+FACTIONS[fac].replace(/ \(.*\)/,""):"good-son of "+FACTIONS[fac].replace(/ \(.*\)/,""));
+       add("The betrothal is struck. "+FACTIONS[fac].replace(/ \(.*\)/,"")+" is your ally now, for good and ill.");
+       event("marriage","You were betrothed into "+FACTIONS[fac].replace(/ \(.*\)/,"")+".",4);cont();}},
+     {label:"Decline, courteously",act:()=>{
+       if(isFemale()&&freedomLevel()==="restricted"){const f=REGION_FACTION[S.region];if(f)rep(f,-5);
+         add("<span class='bad'>You refuse — and a woman who spurns a good match earns a wilful, dangerous name.</span>");
+         event("slight","You refused a marriage alliance, scandalising polite society.",2);}
+       else{add("You decline with grace. There will be other offers, other alliances.");}
+       cont();}},
+   ]);}},
+ {id:"court",w:2,elig:()=>appScore()>=7||checkBonus("presence")>=3,run(cont){heading("An Invitation to Court");
+   add("Your looks and bearing have been noticed. A steward presses a perfumed invitation into your hand — a feast, where the realm's players will be watching, and watched.");
+   eventChoices([
+     {label:"Work the room (Presence)",act:()=>{const r=roll("presence","intrigue",13);showRoll(r);
+       if(r.success){const fac=REGION_FACTION[S.region]||"iron_throne";rep(fac,8);favorGain(fac,1);
+         add("You move through the feast like water, and by dawn you have a great house's ear and its goodwill.");
+         for(const m of xp(20))add("<span class='good'>"+m+"</span>");event("favor","You won soft power at a great feast.",3);}
+       else add("You attend, but the currents of the court are swift, and you leave with little but a wine-headache.");cont();}},
+     {label:"Send your regrets",act:()=>{add("You stay away. Courts are nests of vipers, and you have troubles enough.");cont();}},
+   ]);}},
+];
+function rollLocal(days){const mult=SEASON_DANGER[S.season]||1;
+  if(Math.random()>=Math.min(.55,.14*days*mult))return null;
+  const pool=LOCAL.filter(e=>(!e.reg||e.reg.includes(S.region))&&(!e.elig||e.elig()));
+  return weighted(pool);}
+function runEvent(ev,cont){rule();ev.run(cont);}
+
+// -- combat, wounds, permadeath --
+function combatResolve(foe){let hp=S.c.hp,fhp=foe.hp,log=[],rounds=0;
+  let atk=mod("might")+skill("swordsmanship");if(S.c.traits.includes("craven"))atk-=1;
+  const def=10+mod("agility");
+  while(hp>0&&fhp>0&&rounds<24){rounds++;
+    if(d20()+atk>=10+(foe.might>>1)){const dmg=rnd(3,7)+Math.max(0,mod("might"));fhp-=dmg;log.push("You strike "+foe.name+" ("+dmg+" damage).");}
+    else log.push(foe.name+" turns your blow aside.");
+    if(fhp<=0)break;
+    if(d20()+foe.might>=def){const dmg=rnd(2,6)+((foe.might/3)|0);hp-=dmg;log.push(foe.name+" wounds you ("+dmg+" damage).");}
+    else log.push("You dodge "+foe.name+"'s attack.");}
+  S.c.hp=Math.max(0,hp);return{victory:fhp<=0&&hp>0,log};}
+function fight(foeDef,cont,reward){reward=reward||{};const foe=Object.assign({},foeDef);
+  const res=combatResolve(foe);
+  for(const line of res.log)add("<span class='dim'>"+esc(line)+"</span>");
+  updateMeta();
+  if(S.c.hp<=0)return die("cut down by "+foe.name);
+  if(res.victory){add("<span class='good'>You stand victorious over "+esc(foe.name)+".</span>");
+    normBreak("A woman with a bloodied blade — witnesses cross themselves and whisper. Deeds like this cling to a lady's name.",1);
+    if(reward.loot){S.c.gold+=reward.loot;add("<span class='good'>You take "+reward.loot+" silver from the fallen.</span>");}
+    if(reward.rep)rep(reward.rep[0],reward.rep[1]);
+    if(reward.favor)favorGain(reward.favor[0],reward.favor[1]);
+    if(reward.event)event(reward.event[0],reward.event[1],reward.event[2]);
+    for(const m of xp(reward.xp||25))add("<span class='good'>"+m+"</span>");
+  } else add("<span class='bad'>The fight goes against you; bloodied, you break away with your life.</span>");
+  maybeWound();updateMeta();saveGame();
+  if(!S.c.dead)eventChoices([{label:"Continue",act:cont}]);}
+const WOUNDS=[
+ {name:"a lasting limp",kind:"attr",key:"agility",amt:1,desc:"A deep leg wound never healed clean; you are lamed for good."},
+ {name:"a crippled hand",kind:"skill",key:"swordsmanship",amt:1,desc:"You lost fingers; your sword-work will never be what it was."},
+ {name:"a cracked skull",kind:"attr",key:"cunning",amt:1,desc:"An old head wound leaves your wits swimming at the worst times."},
+ {name:"a ruined eye",kind:"attr",key:"appearance",amt:2,desc:"You wear the raw scar of a lost eye; it steals the comeliness from your face."},
+ {name:"a cruel scar",kind:"attr",key:"appearance",amt:1,desc:"A blade opened your cheek to the bone; the scar will never fade."},
+ {name:"a wasting wound",kind:"maxhp",amt:4,desc:"A wound that festered has sapped your vigour for good."},
+];
+function maybeWound(){if(S.c.hp>0&&S.c.hp<S.c.maxhp*0.3&&Math.random()<0.5)applyWound();}
+function applyWound(){const had=new Set((S.c.wounds||[]).map(w=>w.name));
+  const pool=WOUNDS.filter(w=>!had.has(w.name));if(!pool.length)return;
+  const w=pool[rnd(0,pool.length-1)];
+  if(w.kind==="attr")S.c.attr[w.key]=Math.max(1,(S.c.attr[w.key]||4)-w.amt);
+  else if(w.kind==="skill")S.c.skills[w.key]=Math.max(0,(S.c.skills[w.key]||0)-w.amt);
+  else{S.c.maxhp=Math.max(5,S.c.maxhp-w.amt);S.c.hp=Math.min(S.c.hp,S.c.maxhp);}
+  S.c.wounds.push({name:w.name,desc:w.desc});
+  add("<span class='bad'>⚕ You take a lasting wound: "+esc(w.name)+". "+esc(w.desc)+"</span>");
+  event("combat","You took a lasting wound — "+w.name+".",3);}
+function die(cause){if(S.c.dead)return;S.c.dead=true;S.deathCause=cause;
+  event("death",S.c.name+" met their end — "+cause+".",5);saveGame();epitaph();}
+function epitaph(){updateMeta();clearLog();heading("Here Ends the Tale");
+  card("<b>"+esc(S.c.name)+"</b> of "+esc(S.c.house)+"<br>"+esc(S.deathCause||"is dead")+
+    "<br><br>Fallen on day "+S.day+", in the "+esc(REGIONS[S.region].name)+", in the "+esc(S.season)+" of the year "+S.year+".");
+  const deeds=S.log.filter(e=>e.imp>=3).slice(-6);
+  if(deeds.length){add("<b>They will be remembered for:</b>");for(const e of deeds)add("<span class='dim'>· </span>"+esc(e.text));}
+  add("<span class='dim'>Death is permanent in the game of thrones. This tale is ended — but the realm remembers, and another may take it up.</span>");
+  choices([{label:"⚔️ Begin a new tale",cls:"primary",act:startCreation},{label:"◂ To the title",act:titleScreen}]);}
+function resumeOrEpitaph(){if(S&&S.c&&S.c.dead)epitaph();else enterGame();}
+
+// -- favors, secrets --
+function favorGain(f,n){S.favor[f]=(S.favor[f]||0)+(n||1);
+  add("<span class='good'>✦ "+esc(FACTIONS[f]||f)+" now owes you a favour.</span>");}
+const SECRETS={
+  maester:{text:"Maester Wyllis copies certain ravens before he burns them, and keeps a private ledger of the realm's secrets.",faction:"north_lords"},
+  qorin:{text:"Qorin once deserted his ranging and buried a man to hide it — the Watch would take his head for it.",faction:"nights_watch"},
+  ygga:{text:"Ygga knows a hidden way south past the Watch's eyes — knowledge the Night's Watch would kill to possess.",faction:"free_folk"},
+  tobbot:{text:"Tobbot waters his ale and shorts his weights; half of Winter Town would gladly see him whipped.",faction:"north_lords"},
+};
+function probeSecret(id){const r=roll("cunning","intrigue",15);showRoll(r);const sec=SECRETS[id];
+  if(r.success){S.c.secrets.push({npc:id,text:sec.text});
+    add("<span class='good'>You piece it together: "+esc(sec.text)+"</span>");
+    S.npc[id].disp=(S.npc[id].disp||0)-3;event("discovery","You uncovered a secret of "+NPCS[id].name+".",2,id);}
+  else add("They give nothing away, and your prying earns a hard, wary look.");
+  updateMeta();saveGame();dialogueMenu(id);}
+function useSecret(id){const sec=SECRETS[id];S.flags["sec_used_"+id]=true;
+  add("You let slip that you know their secret. "+esc(NPCS[id].name)+" pales.");
+  if(sec.faction)favorGain(sec.faction,1);
+  S.npc[id].disp=(S.npc[id].disp||0)-8;S.npc[id].grudge=true;
+  add("<span class='dim'>They will do as you ask, for now — but they will never forgive it.</span>");
+  event("world","You used a secret against "+NPCS[id].name+".",3,id);
+  updateMeta();saveGame();dialogueMenu(id);}
+function askNews(id){const reg=S.region;const pool=S.rumors.filter(r=>r.reach[reg]).slice(-3).reverse();
+  if(!pool.length){add("<span class='dim'>"+esc(NPCS[id].name)+" shrugs. \"Little enough reaches us here of late.\"</span>");return dialogueMenu(id);}
+  add("<span class='dim'>"+esc(NPCS[id].name)+" tells you what word has reached these parts:</span>");
+  for(const r of pool){const far=regionDist(r.origin,reg)>=4;r.heard=true;
+    add("• "+esc(r.text)+(far?" <span class='dim'>(garbled by distance)</span>":""));}
+  saveGame();dialogueMenu(id);}
+function screenRumors(){back=describeLoc;clearLog();heading("What the Ravens Carry — "+S.season+", Day "+S.day);
+  const known=S.rumors.filter(r=>r.reach[S.region]);
+  if(!known.length)add("<span class='dim'>Little news has reached you where you stand. Travel, and rest, and the world's tidings will find you.</span>");
+  else{add("<span class='dim'>Word that has travelled as far as the "+esc(REGIONS[S.region].name)+":</span>");
+    for(const r of known.slice(-14).reverse()){const far=regionDist(r.origin,S.region)>=4;
+      add("<span class='dim'>(day "+r.day+", out of the "+esc(REGIONS[r.origin].name)+")</span> "+esc(r.text)+
+        (far?" <span class='dim'>(garbled by distance)</span>":""));}}
+  const unheard=S.rumors.filter(r=>!r.reach[S.region]).length;
+  if(unheard)add("<span class='dim'>Beyond your knowing, "+unheard+" other tale"+(unheard>1?"s are":" is")+" still travelling toward you.</span>");
+  choices([{label:"◂ Back",act:subBack}]);}
+
+//============================== BOOT =================================
+// test seam: inert in the browser (window.IAA_TEST is never set there)
+if(typeof window!=="undefined"&&window.IAA_TEST){
+  window.__iaa={get S(){return S;},die,fight,applyWound,favorGain,FOES,advance,addRumor,spreadRumors,
+    appScore,appMod,isFemale,freedomLevel,checkBonus,roll};}
+window.addEventListener("error",e=>{try{add("<span class='bad'>An error occurred: "+esc(e.message)+"</span>");}catch(_){}});
+titleScreen();
+</script>
+</body>
+</html>

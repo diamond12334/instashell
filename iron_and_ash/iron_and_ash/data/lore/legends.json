@@ -1,0 +1,118 @@
+[
+  {
+    "id": "legend_others",
+    "name": "The Others",
+    "summary": "The cold dead things of the Long Night - children's tale, or the oldest enemy.",
+    "tags": ["long night", "winter", "north"],
+    "body": [
+      "In the oldest tales they come with the cold: tall and gaunt and beautiful, with flesh pale as milk and eyes like blue stars, armored in something that shifts color like moonlight on water and carrying blades of crystal ice so cold and sharp they shatter castle-forged steel. Where they walk, the temperature falls; the snows come with them, and silence.",
+      "Worse than the Others themselves are those they leave behind. The dead do not stay dead where the cold ones pass - they rise with black hands and burning blue eyes and serve, feeling no pain and stopping for no wound. The old tales say the wights can be destroyed only by fire, and the Others themselves only by obsidian - the black glass the children of the forest called frozen fire, and the maesters call dragonglass.",
+      "South of the Wall, every maester will tell you the Others have been extinct eight thousand years, if they were ever more than a fable of the Long Night. The free folk beyond the Wall have stopped telling the tale as a tale. They are moving south, all of them, whole villages emptying toward the Wall - and the free folk do not run from stories."
+    ]
+  },
+  {
+    "id": "legend_children",
+    "name": "The Children of the Forest",
+    "summary": "The elder people of Westeros, who sang the songs of earth.",
+    "tags": ["dawn age", "old gods", "magic"],
+    "body": [
+      "They called themselves those who sing the songs of earth; the First Men, who were as giants beside them, called them children. Small, nut-brown, dappled like deer, with large eyes of gold and green and claws in place of nails, they lived in the deep woods, in crannogs and caves and hidden hollow hills, and neither farmed nor forged. Their singers wove magic in the True Tongue, their hunters fought with obsidian blades and weirwood bows, and their wise ones - the greenseers - saw through the eyes of the carved trees, backward and forward and far away.",
+      "They fought the First Men for two thousand years, made the Pact, and shared the world for four thousand more, standing with men against the Long Night. Then came the Andals with iron and fire and the seven-pointed star, and the children died or dwindled or withdrew, until even in the North they passed out of knowledge. The last certain sight of them is thousands of years gone.",
+      "Old Nan's tales say they did not die, but went deeper - into the far north, under the hollow hills, beyond the reach of iron. The wildlings say the same. The maesters smile at both."
+    ]
+  },
+  {
+    "id": "legend_dragons",
+    "name": "Dragons",
+    "summary": "Fire made flesh - and gone from the world, or nearly.",
+    "tags": ["valyria", "targaryen", "fire"],
+    "body": [
+      "Dragons are fire made flesh: great winged reptiles that breathe flame, grow for as long as they live, and live - if nothing kills them - for centuries. Balerion the Black Dread, greatest of the Targaryen beasts, was so vast whole towns could shelter in his shadow, and his flame burned black. Dragons made Valyria an empire and the Targaryens kings; against them, walls and armies were arguments made of straw.",
+      "They bonded with riders - one rider to a dragon while both lived - and only the blood of Valyria could master them, though whether that lay in blood or art or both died with the Freehold. Wild and stunted dragons persisted after the Doom, and the Targaryen dragons throve at Dragonstone and King's Landing until the Dance of the Dragons spent them against each other. The last of them died small, crooked, and eggless in the reign of Aegon the Third, and men have argued ever since about what killed them - war, maesters, poison, or the simple fading of magic from the world.",
+      "Petrified dragon eggs survive as treasures beyond price, and the Targaryen exiles across the narrow sea are said to have a few. The world agrees they are stone. The world agreed the Doom could never happen, too."
+    ]
+  },
+  {
+    "id": "legend_direwolves",
+    "name": "Direwolves",
+    "summary": "The great wolves of the far north, sigil of House Stark.",
+    "tags": ["north", "stark", "beast"],
+    "body": [
+      "A direwolf is to a wolf what a destrier is to a pony: the same shape grown to nightmare scale, with a grown male standing as tall as a small horse and able to tear a man's arm from his shoulder. They are creatures of the deep cold, and no direwolf has been seen south of the Wall in two hundred years - which makes them, to most of the realm, a heraldic beast like the griffin or the dragon: the grey banner of Winterfell and nothing more.",
+      "The northmen know better than to say 'nothing more.' The direwolf is the old blood's beast, bound up in tales of wargs and skinchangers who ran with wolves through the haunted forest, and the appearance of direwolves in the lands of men is accounted an omen - though of what, the tales disagree, and the Starks themselves would say only that the wolves come when winter comes."
+    ]
+  },
+  {
+    "id": "legend_giants",
+    "name": "Giants",
+    "summary": "The dwindling elder race beyond the Wall.",
+    "tags": ["beyond the wall", "elder races"],
+    "body": [
+      "The giants of the songs are castle-tall and wear whole trees for clubs; the truth beyond the Wall is both less and more. True giants stand perhaps twice the height of a man and half again as broad, shaggy as mammoths - which they ride - with sloped shoulders, long arms, and faces more sad than fierce. They speak the Old Tongue, use no metal and no fire-forged thing, and want mainly to be let alone.",
+      "They were old when the First Men came. Men took the giants' open lands as they took the children's woods, and ten thousand years of retreat have left the last giants in the farthest north, moving with the mammoth herds. The free folk count them as another of the free peoples. South of the Wall they are a children's tale, sung in the nursery rhyme of the sleepy giant - and, in the oldest stories, the labor that raised the Wall and Winterfell was partly theirs, a debt no song remembers to pay."
+    ]
+  },
+  {
+    "id": "legend_wargs",
+    "name": "Wargs and Greenseers",
+    "summary": "The old blood's gifts: to wear a beast's skin, and to see through the trees.",
+    "tags": ["old gods", "magic", "north"],
+    "body": [
+      "A skinchanger can slip his own skin and wear a beast's - see through its eyes, run on its legs, and, with practice and peril, command it. Those bonded to wolves are called wargs, and the free folk, among whom the gift is not rare, hold them in wary honor. The gift has laws its bearers break at cost: a man who eats human flesh in a beast, or lingers too long, or dies in his second skin, pays in ways the tales lower their voices to describe. When a skinchanger's body dies, the free folk say, the best part of him lives on a while in the beast - and fades.",
+      "Rarest of all is the greenseer. To the children of the forest, greenseers were their wise ones, who took the weirwoods for their thousand eyes: through the carved faces a greenseer might look out of any heart tree in the world, and time itself runs strangely in that seeing - a greenseer might watch a thing a thousand years done as if it happened now. Lesser echoes persist among men as the green dreams - true dreams wearing strange shapes - that crop up in old First Men lines like the Reeds of the Neck.",
+      "South of the Neck all of this is nursery talk, and a man who claimed the gift would be mocked or burned depending on the audience. In the North they only say: the old blood runs thin, but it runs."
+    ]
+  },
+  {
+    "id": "legend_azor_ahai",
+    "name": "Azor Ahai and Lightbringer",
+    "summary": "The hero of the darkness, and the sword tempered in a loving heart.",
+    "tags": ["prophecy", "rhllor", "long night"],
+    "body": [
+      "In the east they tell of Azor Ahai, the hero who rose when the world was dark and cold and terrible, chosen to wield a burning blade against the dark. To forge it he labored thirty days and thirty nights, and when he quenched the blade in water, it shattered. Fifty days and fifty nights he forged anew, and drove the blade into the heart of a lion, and it shattered. A hundred days and a hundred nights he forged the third blade, and knowing at last what it must cost, he called his beloved wife Nissa Nissa to him and asked her to bare her breast.",
+      "Her cry of anguish and ecstasy is said to have cracked the face of the moon. Her soul and strength and love went into the steel, and the sword was Lightbringer, the Red Sword of Heroes, and with it Azor Ahai drove back the dark.",
+      "The priests of R'hllor teach that the darkness will come again, and Azor Ahai with it: born again amid salt and smoke, beneath a bleeding star, to wake dragons out of stone. Wiser heads note that the maesters count a dozen versions of the hero of the Long Night - the last hero of the North, Hyrkoon the Hero, Yin Tar, Eldric Shadowchaser - as if every people remembers the same man by a different name. What no version disagrees on is the dark."
+    ]
+  },
+  {
+    "id": "legend_nights_king",
+    "name": "The Night's King",
+    "summary": "The thirteenth Lord Commander, who wed a corpse queen and ruled the Wall in horror.",
+    "tags": ["nights watch", "north", "horror"],
+    "body": [
+      "The thirteenth Lord Commander of the Night's Watch was a warrior who knew no fear - and that, Old Nan would say, was the fault in him, for fear is wisdom in winter. From atop the Wall he spied a woman with skin white as the moon and eyes like blue stars, and loved her though her skin was cold as ice, and gave his seed and soul to her.",
+      "He brought her back to the Nightfort, named himself the Night's King and her his queen, and for thirteen years ruled the Wall as a sorcerer-tyrant, binding his Sworn Brothers by dark arts and making sacrifice to the cold gods - the tales say the Watch's own records of those years were destroyed for shame. He was thrown down at last by the King of Winter and the King-Beyond-the-Wall making common cause, and when it was done, every record of his name was struck out, that his memory might die.",
+      "It did not quite die. The Nightfort, oldest and largest of the Wall's castles, stands abandoned now, and of all the empty castles it is the one the black brothers do not care to garrison, and the one about which the worst stories cluster. Some say the Night's King was a Bolton, or an Umber, a Flint, a Norrey. Old Nan always said he was a Stark - a brother of the King of Winter who cast him down - and that some doors are best left shut."
+    ]
+  },
+  {
+    "id": "legend_rat_cook",
+    "name": "The Rat Cook",
+    "summary": "The tale that teaches the one law even the gods will not forgive breaking.",
+    "tags": ["guest right", "nights watch", "horror"],
+    "body": [
+      "A cook of the Night's Watch, wronged - the tales differ on how - by a visiting king, took his revenge: he killed the king's son and baked him into a pie of bacon and onions, and served it to the boy's father, who praised the taste and asked for a second slice. The gods turned the cook into a monstrous white rat that could eat only its own young, doomed to scurry the cellars of the Nightfort forever.",
+      "Here is the lesson, and every northman learns it in the nursery: the gods did not curse the cook for murder, nor for serving a man his son. Kings and cooks alike have done worse and slept well. They cursed him because he killed a guest beneath his roof. The guest right - bread and salt given and taken - is the oldest law there is, older than the Pact, and the man who sheds the blood of a guest, or a host, is cursed past all forgiveness, in the eyes of gods old and new alike."
+    ]
+  },
+  {
+    "id": "legend_horn_of_winter",
+    "name": "The Horn of Winter",
+    "summary": "Joramun's horn, that wakes giants from the earth - and might bring down the Wall.",
+    "tags": ["beyond the wall", "wall", "magic"],
+    "body": [
+      "Joramun was a King-Beyond-the-Wall in the morning of the world, who joined the Stark of Winterfell to throw down the Night's King - and who owned, the free folk say, a horn of power: the Horn of Winter, that wakes giants from the earth. The songs are careless, as songs are, about what that means; the free folk are not. They hold that the Wall is not stone and ice only but a binding, and that the Horn of Winter blown at its foot would crack the binding and bring seven hundred feet of ice down in an hour.",
+      "The horn has been lost for thousands of years, if it ever was. But when the free folk gather to a King-Beyond-the-Wall, the whisper always runs ahead of the host: he has been digging in the graves of the Frostfangs. He is looking for the horn. Men of the Watch laugh at the tale from the top of the Wall. From the bottom, at night, fewer laugh."
+    ]
+  },
+  {
+    "id": "legend_grumkins",
+    "name": "Grumkins, Snarks, and the Small Terrors",
+    "summary": "The creatures of the nursery - named in mockery, remembered in the dark.",
+    "tags": ["folklore", "children's tales"],
+    "body": [
+      "When a southron lord wishes to call a danger imaginary, he says 'grumkins and snarks' - the catch-all monsters of the nursery, who steal bad children, sour milk, and grant wishes with a sting in the tail. Alongside them scurry the rest of Old Nan's menagerie: the ice spiders big as hounds that came with the Others; ghouls and shrouded wights of the haunted forest; the squishers of the drowned coasts with their webbed hands and their taste for children; and the Shrykes of the far east, who are probably only men, probably.",
+      "The maesters observe, correctly, that no grumkin has ever been produced for inspection. The old wisdom answers that the nursery tales are a child's first maps of true dangers, drawn small enough to hold: guest right and dark woods, cold and deep water, the price of wishes. The free folk, who live nearest the oldest dark, put it simplest: the monsters in the songs all lived somewhere, once - and north of the Wall, 'once' is not so long ago as kneelers like to think."
+    ]
+  }
+]
